@@ -55,13 +55,13 @@ function Login() {
                                                     <label className="mb-1">
                                                         <strong>Email</strong>
                                                     </label>
-                                                    <input type="email" className="form-control" value="hello@example.com" />
+                                                    <input type="email" className="form-control" placeholder="hello@example.com" autoFocus />
                                                 </div>
                                                 <div className="mb-3">
                                                     <label className="mb-1">
                                                         <strong>Password</strong>
                                                     </label>
-                                                    <input type="password" className="form-control" value="Password" />
+                                                    <input type="password" className="form-control" placeholder="Password" />
                                                 </div>
                                                 <div className="row d-flex justify-content-between mt-4 mb-2">
                                                     <div className="mb-3">
