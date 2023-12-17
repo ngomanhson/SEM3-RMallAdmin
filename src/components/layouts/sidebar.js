@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function Sidebar() {
     return (
         <div className="dlabnav">
@@ -22,22 +24,7 @@ function Sidebar() {
                         </a>
                         <ul aria-expanded="false">
                             <li>
-                                <a href="/">Dashboard Light</a>
-                            </li>
-                            <li>
-                                <a href="balance-page.html">Balance Page</a>
-                            </li>
-                            <li>
-                                <a href="card-center.html">Card Center</a>
-                            </li>
-                            <li>
-                                <a href="invoices.html">Invoices</a>
-                            </li>
-                            <li>
-                                <a href="transaction-details.html">Transaction Details</a>
-                            </li>
-                            <li>
-                                <a href="transaction-history.html">Transaction History</a>
+                                <a href="/">Dashboard</a>
                             </li>
                         </ul>
                     </li>
@@ -67,61 +54,11 @@ function Sidebar() {
                                 </svg>
                             </div>
 
-                            <span className="nav-text">Apps</span>
+                            <span className="nav-text">Customers</span>
                         </a>
                         <ul aria-expanded="false">
                             <li>
-                                <a href="app-profile.html">Profile</a>
-                            </li>
-                            <li>
-                                <a href="post-details.html">Post Details</a>
-                            </li>
-                            <li>
-                                <a className="has-arrow" href="javascript:void()" aria-expanded="false">
-                                    Email
-                                </a>
-                                <ul aria-expanded="false">
-                                    <li>
-                                        <a href="email-compose.html">Compose</a>
-                                    </li>
-                                    <li>
-                                        <a href="email-inbox.html">Inbox</a>
-                                    </li>
-                                    <li>
-                                        <a href="email-read.html">Read</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="app-calender.html">Calendar</a>
-                            </li>
-                            <li>
-                                <a className="has-arrow" href="javascript:void()" aria-expanded="false">
-                                    Shop
-                                </a>
-                                <ul aria-expanded="false">
-                                    <li>
-                                        <a href="ecom-product-grid.html">Product Grid</a>
-                                    </li>
-                                    <li>
-                                        <a href="ecom-product-list.html">Product List</a>
-                                    </li>
-                                    <li>
-                                        <a href="ecom-product-detail.html">Product Details</a>
-                                    </li>
-                                    <li>
-                                        <a href="ecom-product-order.html">Order</a>
-                                    </li>
-                                    <li>
-                                        <a href="ecom-checkout.html">Checkout</a>
-                                    </li>
-                                    <li>
-                                        <a href="ecom-invoice.html">Invoice</a>
-                                    </li>
-                                    <li>
-                                        <a href="ecom-customers.html">Customers</a>
-                                    </li>
-                                </ul>
+                                <Link to="customer-list">Customer List</Link>
                             </li>
                         </ul>
                     </li>

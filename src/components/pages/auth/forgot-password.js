@@ -51,7 +51,7 @@ function ForgotPassword() {
                                                     <label>
                                                         <strong>Email</strong>
                                                     </label>
-                                                    <input type="email" className="form-control" value="hello@example.com" />
+                                                    <input type="email" className="form-control" placeholder="hello@example.com" autoFocus />
                                                 </div>
                                                 <div className="text-center">
                                                     <button type="submit" className="btn btn-primary btn-block">
