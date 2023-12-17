@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
-import Layout from "../../layouts/index";
-function MovieDeleteAt() {
+import Layout from "../../layouts";
+
+function BoothDeleteAt() {
     return (
         <Layout>
             <div className="row page-titles">
@@ -9,7 +10,7 @@ function MovieDeleteAt() {
                         <Link to="/">Dashboard</Link>
                     </li>
                     <li className="breadcrumb-item">
-                        <a href="#!">Movie Delete At</a>
+                        <a href="#!">Booth Delete At</a>
                     </li>
                 </ol>
             </div>
@@ -25,25 +26,10 @@ function MovieDeleteAt() {
                                     <strong>Thumbnail</strong>
                                 </th>
                                 <th>
-                                    <strong>Movie Code</strong>
-                                </th>
-                                <th>
-                                    <strong>Movie Name</strong>
+                                    <strong>Booth Name</strong>
                                 </th>
                                 <th>
                                     <strong>Description</strong>
-                                </th>
-                                <th>
-                                    <strong>Room</strong>
-                                </th>
-                                <th>
-                                    <strong>Ticket</strong>
-                                </th>
-                                <th>
-                                    <strong>Start Date</strong>
-                                </th>
-                                <th>
-                                    <strong>End Date</strong>
                                 </th>
                                 <th>
                                     <strong></strong>
@@ -58,17 +44,8 @@ function MovieDeleteAt() {
                                 <td>
                                     <img src="assets/images/avatar/1.jpg" className="rounded-lg me-2 movie-thumb" alt="" />
                                 </td>
-                                <td>T2207A</td>
-                                <td>
-                                    <div className="d-flex align-items-center">
-                                        <span className="w-space-no">Dr. Jackson</span>
-                                    </div>
-                                </td>
+                                <td>Adidas</td>
                                 <td>The movie is very good</td>
-                                <td>B12</td>
-                                <td>23/10</td>
-                                <td>01 August 2020</td>
-                                <td>01 August 2020</td>
                                 <td>
                                     <div className="d-flex">
                                         <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
@@ -90,17 +67,8 @@ function MovieDeleteAt() {
                                 <td>
                                     <img src="assets/images/avatar/1.jpg" className="rounded-lg me-2 movie-thumb" alt="" />
                                 </td>
-                                <td>T2207A</td>
-                                <td>
-                                    <div className="d-flex align-items-center">
-                                        <span className="w-space-no">Dr. Jackson</span>
-                                    </div>
-                                </td>
+                                <td>Nike</td>
                                 <td>The movie is very good</td>
-                                <td>B12</td>
-                                <td>30/09</td>
-                                <td>01 August 2020</td>
-                                <td>01 August 2020</td>
                                 <td>
                                     <div className="d-flex">
                                         <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
@@ -122,17 +90,8 @@ function MovieDeleteAt() {
                                 <td>
                                     <img src="assets/images/avatar/1.jpg" className="rounded-lg me-2 movie-thumb" alt="" />
                                 </td>
-                                <td>T2207A</td>
-                                <td>
-                                    <div className="d-flex align-items-center">
-                                        <span className="w-space-no">Dr. Jackson</span>
-                                    </div>
-                                </td>
+                                <td>Louis Vuitton</td>
                                 <td>The movie is very good</td>
-                                <td>B12</td>
-                                <td>27/01</td>
-                                <td>01 August 2020</td>
-                                <td>01 August 2020</td>
                                 <td>
                                     <div className="d-flex">
                                         <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
@@ -155,16 +114,7 @@ function MovieDeleteAt() {
                                     <img src="assets/images/avatar/1.jpg" className="rounded-lg me-2 movie-thumb" alt="" />
                                 </td>
                                 <td>T2207A</td>
-                                <td>
-                                    <div className="d-flex align-items-center">
-                                        <span className="w-space-no">Dr. Jackson</span>
-                                    </div>
-                                </td>
                                 <td>The movie is very good</td>
-                                <td>B12</td>
-                                <td>17/04</td>
-                                <td>01 August 2020</td>
-                                <td>01 August 2020</td>
                                 <td>
                                     <div className="d-flex">
                                         <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
@@ -187,4 +137,4 @@ function MovieDeleteAt() {
     );
 }
 
-export default MovieDeleteAt;
+export default BoothDeleteAt;

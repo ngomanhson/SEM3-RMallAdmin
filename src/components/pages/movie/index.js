@@ -13,9 +13,9 @@ function MovieList() {
                     </li>
                 </ol>
             </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-responsive-md">
+            <div className="card-body">
+                <div className="table-responsive">
+                    <table className="table table-responsive-md">
                         <thead>
                             <tr>
                                 <th>
@@ -56,12 +56,12 @@ function MovieList() {
                                     <strong>1</strong>
                                 </td>
                                 <td>
-                                    <img src="assets/images/avatar/1.jpg" class="rounded-lg me-2 movie-thumb" alt="" />
+                                    <img src="assets/images/avatar/1.jpg" className="rounded-lg me-2 movie-thumb" alt="" />
                                 </td>
                                 <td>T2207A</td>
                                 <td>
-                                    <div class="d-flex align-items-center">
-                                        <span class="w-space-no">Dr. Jackson</span>
+                                    <div className="d-flex align-items-center">
+                                        <span className="w-space-no">Dr. Jackson</span>
                                     </div>
                                 </td>
                                 <td>The movie is very good</td>
@@ -70,15 +70,15 @@ function MovieList() {
                                 <td>01 August 2020</td>
                                 <td>01 August 2020</td>
                                 <td>
-                                    <div class="d-flex">
-                                        <a href="#!" class="btn btn-success shadow btn-xs sharp me-1">
-                                            <i class="fa fa-eye"></i>
+                                    <div className="d-flex">
+                                        <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
+                                            <i className="fa fa-eye"></i>
                                         </a>
-                                        <a href="#!" class="btn btn-primary shadow btn-xs sharp me-1">
-                                            <i class="fas fa-pencil-alt"></i>
+                                        <a href="#!" className="btn btn-primary shadow btn-xs sharp me-1">
+                                            <i className="fas fa-pencil-alt"></i>
                                         </a>
-                                        <a href="#!" class="btn btn-danger shadow btn-xs sharp">
-                                            <i class="fa fa-trash"></i>
+                                        <a href="#!" className="btn btn-danger shadow btn-xs sharp">
+                                            <i className="fa fa-trash"></i>
                                         </a>
                                     </div>
                                 </td>
@@ -88,12 +88,12 @@ function MovieList() {
                                     <strong>2</strong>
                                 </td>
                                 <td>
-                                    <img src="assets/images/avatar/1.jpg" class="rounded-lg me-2 movie-thumb" alt="" />
+                                    <img src="assets/images/avatar/1.jpg" className="rounded-lg me-2 movie-thumb" alt="" />
                                 </td>
                                 <td>T2207A</td>
                                 <td>
-                                    <div class="d-flex align-items-center">
-                                        <span class="w-space-no">Dr. Jackson</span>
+                                    <div className="d-flex align-items-center">
+                                        <span className="w-space-no">Dr. Jackson</span>
                                     </div>
                                 </td>
                                 <td>The movie is very good</td>
@@ -102,15 +102,15 @@ function MovieList() {
                                 <td>01 August 2020</td>
                                 <td>01 August 2020</td>
                                 <td>
-                                    <div class="d-flex">
-                                        <a href="#!" class="btn btn-success shadow btn-xs sharp me-1">
-                                            <i class="fa fa-eye"></i>
+                                    <div className="d-flex">
+                                        <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
+                                            <i className="fa fa-eye"></i>
                                         </a>
-                                        <a href="#!" class="btn btn-primary shadow btn-xs sharp me-1">
-                                            <i class="fas fa-pencil-alt"></i>
+                                        <a href="#!" className="btn btn-primary shadow btn-xs sharp me-1">
+                                            <i className="fas fa-pencil-alt"></i>
                                         </a>
-                                        <a href="#!" class="btn btn-danger shadow btn-xs sharp">
-                                            <i class="fa fa-trash"></i>
+                                        <a href="#!" className="btn btn-danger shadow btn-xs sharp">
+                                            <i className="fa fa-trash"></i>
                                         </a>
                                     </div>
                                 </td>
@@ -120,12 +120,12 @@ function MovieList() {
                                     <strong>3</strong>
                                 </td>
                                 <td>
-                                    <img src="assets/images/avatar/1.jpg" class="rounded-lg me-2 movie-thumb" alt="" />
+                                    <img src="assets/images/avatar/1.jpg" className="rounded-lg me-2 movie-thumb" alt="" />
                                 </td>
                                 <td>T2207A</td>
                                 <td>
-                                    <div class="d-flex align-items-center">
-                                        <span class="w-space-no">Dr. Jackson</span>
+                                    <div className="d-flex align-items-center">
+                                        <span className="w-space-no">Dr. Jackson</span>
                                     </div>
                                 </td>
                                 <td>The movie is very good</td>
@@ -134,15 +134,15 @@ function MovieList() {
                                 <td>01 August 2020</td>
                                 <td>01 August 2020</td>
                                 <td>
-                                    <div class="d-flex">
-                                        <a href="#!" class="btn btn-success shadow btn-xs sharp me-1">
-                                            <i class="fa fa-eye"></i>
+                                    <div className="d-flex">
+                                        <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
+                                            <i className="fa fa-eye"></i>
                                         </a>
-                                        <a href="#!" class="btn btn-primary shadow btn-xs sharp me-1">
-                                            <i class="fas fa-pencil-alt"></i>
+                                        <a href="#!" className="btn btn-primary shadow btn-xs sharp me-1">
+                                            <i className="fas fa-pencil-alt"></i>
                                         </a>
-                                        <a href="#!" class="btn btn-danger shadow btn-xs sharp">
-                                            <i class="fa fa-trash"></i>
+                                        <a href="#!" className="btn btn-danger shadow btn-xs sharp">
+                                            <i className="fa fa-trash"></i>
                                         </a>
                                     </div>
                                 </td>
@@ -152,12 +152,12 @@ function MovieList() {
                                     <strong>4</strong>
                                 </td>
                                 <td>
-                                    <img src="assets/images/avatar/1.jpg" class="rounded-lg me-2 movie-thumb" alt="" />
+                                    <img src="assets/images/avatar/1.jpg" className="rounded-lg me-2 movie-thumb" alt="" />
                                 </td>
                                 <td>T2207A</td>
                                 <td>
-                                    <div class="d-flex align-items-center">
-                                        <span class="w-space-no">Dr. Jackson</span>
+                                    <div className="d-flex align-items-center">
+                                        <span className="w-space-no">Dr. Jackson</span>
                                     </div>
                                 </td>
                                 <td>The movie is very good</td>
@@ -166,15 +166,15 @@ function MovieList() {
                                 <td>01 August 2020</td>
                                 <td>01 August 2020</td>
                                 <td>
-                                    <div class="d-flex">
-                                        <a href="#!" class="btn btn-success shadow btn-xs sharp me-1">
-                                            <i class="fa fa-eye"></i>
+                                    <div className="d-flex">
+                                        <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
+                                            <i className="fa fa-eye"></i>
                                         </a>
-                                        <a href="#!" class="btn btn-primary shadow btn-xs sharp me-1">
-                                            <i class="fas fa-pencil-alt"></i>
+                                        <a href="#!" className="btn btn-primary shadow btn-xs sharp me-1">
+                                            <i className="fas fa-pencil-alt"></i>
                                         </a>
-                                        <a href="#!" class="btn btn-danger shadow btn-xs sharp">
-                                            <i class="fa fa-trash"></i>
+                                        <a href="#!" className="btn btn-danger shadow btn-xs sharp">
+                                            <i className="fa fa-trash"></i>
                                         </a>
                                     </div>
                                 </td>
