@@ -4,7 +4,6 @@ import Login from "./components/pages/auth/login";
 import ForgotPassword from "./components/pages/auth/forgot-password";
 import NotFound from "./components/pages/other/not-found";
 import CustomerList from "./components/pages/customer";
-import OrderList from "./components/pages/order";
 import CustomerEdit from "./components/pages/customer/edit";
 import CustomerCreate from "./components/pages/customer/create";
 import CustomerDeleteAt from "./components/pages/customer/delete-at";
@@ -20,6 +19,7 @@ import FoodCounterList from "./components/pages/food-counter";
 import FoodCounterCreate from "./components/pages/food-counter/create";
 import FoodCounterEdit from "./components/pages/food-counter/edit";
 import FoodCounterDeleteAt from "./components/pages/food-counter/delete-at";
+import BookingList from "./components/pages/booking";
 
 function App() {
     return (
@@ -50,9 +50,9 @@ function App() {
                 <Route path="/movie-delete-at" element={<MovieDeleteAt />} />
                 {/* End Movie */}
 
-                {/* Start Order */}
-                <Route path="/order-list" element={<OrderList />} />
-                {/* End Order */}
+                {/* Start Booking */}
+                <Route path="/booking-list" element={<BookingList />} />
+                {/* End Booking */}
 
                 {/* Start Customer */}
                 <Route path="/customer-list" element={<CustomerList />} />

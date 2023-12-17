@@ -2,14 +2,14 @@ import { Helmet } from "react-helmet";
 import Layout from "../../layouts";
 import Breadcrumb from "../../layouts/breadcrumb";
 
-function OrderList() {
+function BookingList() {
     return (
         <>
             <Helmet>
-                <title>Order List | R Mall</title>
+                <title>Booking List | R Mall</title>
             </Helmet>
             <Layout>
-                <Breadcrumb title="Order List" />
+                <Breadcrumb title="Booking List" />
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="card">
@@ -982,4 +982,4 @@ function OrderList() {
         </>
     );
 }
-export default OrderList;
+export default BookingList;
