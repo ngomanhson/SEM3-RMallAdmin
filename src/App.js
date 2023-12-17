@@ -16,6 +16,10 @@ import BoothList from "./components/pages/booth/index";
 import BoothCreate from "./components/pages/booth/create";
 import BoothEdit from "./components/pages/booth/edit";
 import BoothDeleteAt from "./components/pages/booth/delete-at";
+import FoodCounterList from "./components/pages/food-counter";
+import FoodCounterCreate from "./components/pages/food-counter/create";
+import FoodCounterEdit from "./components/pages/food-counter/edit";
+import FoodCounterDeleteAt from "./components/pages/food-counter/delete-at";
 
 function App() {
     return (
@@ -31,6 +35,13 @@ function App() {
                 <Route path="/booth-edit" element={<BoothEdit />} />
                 <Route path="/booth-delete-at" element={<BoothDeleteAt />} />
                 {/* End Booth */}
+
+                {/* Start Food Counter */}
+                <Route path="/food-counter-list" element={<FoodCounterList />} />
+                <Route path="/food-counter-create" element={<FoodCounterCreate />} />
+                <Route path="/food-counter-edit" element={<FoodCounterEdit />} />
+                <Route path="/food-counter-delete-at" element={<FoodCounterDeleteAt />} />
+                {/* End Food Counter */}
 
                 {/* Start Movie */}
                 <Route path="/movie-list" element={<MovieList />} />
