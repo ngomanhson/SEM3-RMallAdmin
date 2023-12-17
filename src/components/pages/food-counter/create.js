@@ -1,19 +1,10 @@
-import { Link } from "react-router-dom";
 import Layout from "../../layouts";
+import Breadcrumb from "../../layouts/breadcrumb";
 
 function FoodCounterCreate() {
     return (
         <Layout>
-            <div className="row page-titles">
-                <ol className="breadcrumb">
-                    <li className="breadcrumb-item active">
-                        <Link to="/">Dashboard</Link>
-                    </li>
-                    <li className="breadcrumb-item">
-                        <a href="#!">Food Counter Create</a>
-                    </li>
-                </ol>
-            </div>
+            <Breadcrumb title="Food Counter Create" />
             <div className="row">
                 <div className="col-xl-12 col-xxl-12">
                     <div className="card">

@@ -1,19 +1,10 @@
-import { Link } from "react-router-dom";
 import Layout from "../../layouts";
+import Breadcrumb from "../../layouts/breadcrumb";
 
 function FoodCounterDeleteAt() {
     return (
         <Layout>
-            <div className="row page-titles">
-                <ol className="breadcrumb">
-                    <li className="breadcrumb-item active">
-                        <Link to="/">Dashboard</Link>
-                    </li>
-                    <li className="breadcrumb-item">
-                        <a href="#!">Food Counter Delete At</a>
-                    </li>
-                </ol>
-            </div>
+            <Breadcrumb title="Food Counter Delete At" />
             <div className="card-body">
                 <div className="table-responsive">
                     <table className="table table-responsive-md">

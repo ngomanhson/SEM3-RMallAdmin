@@ -1,18 +1,10 @@
-import { Link } from "react-router-dom";
 import Layout from "../../layouts/index";
+import Breadcrumb from "../../layouts/breadcrumb";
+import { Link } from "react-router-dom";
 function MovieList() {
     return (
         <Layout>
-            <div className="row page-titles">
-                <ol className="breadcrumb">
-                    <li className="breadcrumb-item active">
-                        <Link to="/">Dashboard</Link>
-                    </li>
-                    <li className="breadcrumb-item">
-                        <a href="#!">Movie List</a>
-                    </li>
-                </ol>
-            </div>
+            <Breadcrumb title="Movie List" />
             <div className="card-body">
                 <div className="table-responsive">
                     <table className="table table-responsive-md">
@@ -74,9 +66,9 @@ function MovieList() {
                                         <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
                                             <i className="fa fa-eye"></i>
                                         </a>
-                                        <a href="#!" className="btn btn-primary shadow btn-xs sharp me-1">
+                                        <Link to="/movie-edit" className="btn btn-primary shadow btn-xs sharp me-1">
                                             <i className="fas fa-pencil-alt"></i>
-                                        </a>
+                                        </Link>
                                         <a href="#!" className="btn btn-danger shadow btn-xs sharp">
                                             <i className="fa fa-trash"></i>
                                         </a>
@@ -106,9 +98,9 @@ function MovieList() {
                                         <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
                                             <i className="fa fa-eye"></i>
                                         </a>
-                                        <a href="#!" className="btn btn-primary shadow btn-xs sharp me-1">
+                                        <Link to="/movie-edit" className="btn btn-primary shadow btn-xs sharp me-1">
                                             <i className="fas fa-pencil-alt"></i>
-                                        </a>
+                                        </Link>
                                         <a href="#!" className="btn btn-danger shadow btn-xs sharp">
                                             <i className="fa fa-trash"></i>
                                         </a>
@@ -138,9 +130,9 @@ function MovieList() {
                                         <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
                                             <i className="fa fa-eye"></i>
                                         </a>
-                                        <a href="#!" className="btn btn-primary shadow btn-xs sharp me-1">
+                                        <Link to="/movie-edit" className="btn btn-primary shadow btn-xs sharp me-1">
                                             <i className="fas fa-pencil-alt"></i>
-                                        </a>
+                                        </Link>
                                         <a href="#!" className="btn btn-danger shadow btn-xs sharp">
                                             <i className="fa fa-trash"></i>
                                         </a>
@@ -170,9 +162,9 @@ function MovieList() {
                                         <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
                                             <i className="fa fa-eye"></i>
                                         </a>
-                                        <a href="#!" className="btn btn-primary shadow btn-xs sharp me-1">
+                                        <Link to="/movie-edit" className="btn btn-primary shadow btn-xs sharp me-1">
                                             <i className="fas fa-pencil-alt"></i>
-                                        </a>
+                                        </Link>
                                         <a href="#!" className="btn btn-danger shadow btn-xs sharp">
                                             <i className="fa fa-trash"></i>
                                         </a>
