@@ -23940,7 +23940,7 @@ pre code.hljs {
 
 .form-control[type="file"] {
     line-height: 44px;
-    padding-left: 12px;
+    padding-left: 10px;
 }
 
 .form-control-sm[type="file"] {
@@ -35086,4 +35086,8 @@ input:checked + .slider:before {
     color: #fff;
 }
 
+/* Custom calender icon */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7436%) hue-rotate(328deg) brightness(101%) contrast(114%);
+}
 /*# sourceMappingURL=style.css.map */

@@ -5,6 +5,7 @@ import ForgotPassword from "./components/pages/auth/forgot-password";
 import NotFound from "./components/pages/other/not-found";
 import CustomerList from "./components/pages/customer";
 import OrderList from "./components/pages/order";
+import CustomerEdit from "./components/pages/customer/edit";
 
 function App() {
     return (
@@ -20,6 +21,7 @@ function App() {
 
                 {/* Start Customer */}
                 <Route path="/customer-list" element={<CustomerList />} />
+                <Route path="/customer-edit" element={<CustomerEdit />} />
                 {/* End Customer */}
 
                 {/* Start Auth */}
