@@ -6,6 +6,8 @@ import NotFound from "./components/pages/other/not-found";
 import CustomerList from "./components/pages/customer";
 import OrderList from "./components/pages/order";
 import CustomerEdit from "./components/pages/customer/edit";
+import CustomerCreate from "./components/pages/customer/create";
+import CustomerDeleteAt from "./components/pages/customer/delete-at";
 
 function App() {
     return (
@@ -21,7 +23,9 @@ function App() {
 
                 {/* Start Customer */}
                 <Route path="/customer-list" element={<CustomerList />} />
+                <Route path="/customer-create" element={<CustomerCreate />} />
                 <Route path="/customer-edit" element={<CustomerEdit />} />
+                <Route path="/customer-delete-at" element={<CustomerDeleteAt />} />
                 {/* End Customer */}
 
                 {/* Start Auth */}

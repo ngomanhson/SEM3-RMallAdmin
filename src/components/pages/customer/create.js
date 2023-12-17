@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
-import Layout from "../../layouts/index";
-function CustomerEdit() {
+import Layout from "../../layouts";
+
+function CustomerCreate() {
     return (
         <Layout>
             <div className="row page-titles">
@@ -9,7 +10,7 @@ function CustomerEdit() {
                         <Link to="/">Dashboard</Link>
                     </li>
                     <li className="breadcrumb-item">
-                        <a href="#!">Customers Edit</a>
+                        <a href="#!">Customers Create</a>
                     </li>
                 </ol>
             </div>
@@ -95,4 +96,4 @@ function CustomerEdit() {
     );
 }
 
-export default CustomerEdit;
+export default CustomerCreate;

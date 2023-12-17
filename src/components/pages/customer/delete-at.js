@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Layout from "../../layouts";
 
-function CustomerList() {
+function CustomerDeleteAt() {
     return (
         <Layout>
             <div className="row page-titles">
@@ -10,7 +10,7 @@ function CustomerList() {
                         <Link to="/">Dashboard</Link>
                     </li>
                     <li className="breadcrumb-item">
-                        <a href="#!">Customers</a>
+                        <a href="#!">Customers Delete At</a>
                     </li>
                 </ol>
             </div>
@@ -1038,4 +1038,4 @@ function CustomerList() {
     );
 }
 
-export default CustomerList;
+export default CustomerDeleteAt;
