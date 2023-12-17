@@ -4,6 +4,7 @@ import Login from "./components/pages/auth/login";
 import ForgotPassword from "./components/pages/auth/forgot-password";
 import NotFound from "./components/pages/other/not-found";
 import CustomerList from "./components/pages/customer";
+import OrderList from "./components/pages/order";
 
 function App() {
     return (
@@ -12,6 +13,10 @@ function App() {
                 {/* Start Dashboard */}
                 <Route path="/" element={<Dashboard />} />
                 {/* End Dashboard */}
+
+                {/* Start Order */}
+                <Route path="/order-list" element={<OrderList />} />
+                {/* End Order */}
 
                 {/* Start Customer */}
                 <Route path="/customer-list" element={<CustomerList />} />

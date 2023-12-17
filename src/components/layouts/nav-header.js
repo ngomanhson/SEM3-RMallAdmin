@@ -1,7 +1,9 @@
+import { Link } from "react-router-dom";
+
 function NavHeader() {
     return (
         <div className="nav-header">
-            <a href="/" className="brand-logo">
+            <Link to="/" className="brand-logo">
                 <div className="logo">
                     <svg className="logo-abbr" width="43" height="34" viewBox="0 0 43 34" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect x="22.6154" width="19.6154" height="6.53846" rx="3.26923" fill="white" />
@@ -18,7 +20,7 @@ function NavHeader() {
                         />
                     </svg>
                 </div>
-            </a>
+            </Link>
             <div className="nav-control">
                 <div className="hamburger">
                     <span className="line"></span>
