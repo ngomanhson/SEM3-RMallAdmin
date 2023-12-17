@@ -1,19 +1,11 @@
 import { Link } from "react-router-dom";
 import Layout from "../../layouts";
+import Breadcrumb from "../../layouts/breadcrumb";
 
 function CustomerDeleteAt() {
     return (
         <Layout>
-            <div className="row page-titles">
-                <ol className="breadcrumb">
-                    <li className="breadcrumb-item active">
-                        <Link to="/">Dashboard</Link>
-                    </li>
-                    <li className="breadcrumb-item">
-                        <a href="#!">Customers Delete At</a>
-                    </li>
-                </ol>
-            </div>
+            <Breadcrumb title="Customer Delete At" />
             <div className="row">
                 <div className="col-lg-12">
                     <div className="card">

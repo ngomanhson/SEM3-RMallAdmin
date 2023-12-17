@@ -1,19 +1,11 @@
 import { Link } from "react-router-dom";
 import Layout from "../../layouts";
+import Breadcrumb from "../../layouts/breadcrumb";
 
 function CustomerList() {
     return (
         <Layout>
-            <div className="row page-titles">
-                <ol className="breadcrumb">
-                    <li className="breadcrumb-item active">
-                        <Link to="/">Dashboard</Link>
-                    </li>
-                    <li className="breadcrumb-item">
-                        <a href="#!">Customers</a>
-                    </li>
-                </ol>
-            </div>
+            <Breadcrumb title="Customers List" />
             <div className="row">
                 <div className="col-lg-12">
                     <div className="card">
@@ -69,36 +61,16 @@ function CustomerList() {
                                             <td className="py-2 ps-5">2392 Main Avenue, Penasauka</td>
                                             <td className="py-2">30/03/2018</td>
                                             <td className="py-2 text-end">
-                                                <div className="dropdown">
-                                                    <button className="btn btn-primary tp-btn-light sharp" type="button" data-bs-toggle="dropdown">
-                                                        <span className="fs--1">
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                xmlnsXlink="http://www.w3.org/1999/xlink"
-                                                                width="18px"
-                                                                height="18px"
-                                                                viewBox="0 0 24 24"
-                                                                version="1.1"
-                                                            >
-                                                                <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                                                                    <rect x="0" y="0" width="24" height="24"></rect>
-                                                                    <circle fill="#000000" cx="5" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="19" cy="12" r="2"></circle>
-                                                                </g>
-                                                            </svg>
-                                                        </span>
-                                                    </button>
-                                                    <div className="dropdown-menu dropdown-menu-end border py-0">
-                                                        <div className="py-2">
-                                                            <Link to="/customer-edit" className="dropdown-item">
-                                                                Edit
-                                                            </Link>
-                                                            <a className="dropdown-item text-danger" href="#!">
-                                                                Delete
-                                                            </a>
-                                                        </div>
-                                                    </div>
+                                                <div className="d-flex">
+                                                    <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
+                                                        <i className="fa fa-eye"></i>
+                                                    </a>
+                                                    <Link to="/customer-edit" className="btn btn-primary shadow btn-xs sharp me-1">
+                                                        <i className="fas fa-pencil-alt"></i>
+                                                    </Link>
+                                                    <a href="#!" className="btn btn-danger shadow btn-xs sharp">
+                                                        <i className="fa fa-trash"></i>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -130,36 +102,16 @@ function CustomerList() {
                                             <td className="py-2 ps-5">2289 5th Avenue, New York</td>
                                             <td className="py-2">11/07/2017</td>
                                             <td className="py-2 text-end">
-                                                <div className="dropdown">
-                                                    <button className="btn btn-primary tp-btn-light sharp" type="button" data-bs-toggle="dropdown">
-                                                        <span className="fs--1">
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                xmlnsXlink="http://www.w3.org/1999/xlink"
-                                                                width="18px"
-                                                                height="18px"
-                                                                viewBox="0 0 24 24"
-                                                                version="1.1"
-                                                            >
-                                                                <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                                                                    <rect x="0" y="0" width="24" height="24"></rect>
-                                                                    <circle fill="#000000" cx="5" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="19" cy="12" r="2"></circle>
-                                                                </g>
-                                                            </svg>
-                                                        </span>
-                                                    </button>
-                                                    <div className="dropdown-menu dropdown-menu-end border py-0">
-                                                        <div className="py-2">
-                                                            <Link to="/customer-edit" className="dropdown-item">
-                                                                Edit
-                                                            </Link>
-                                                            <a className="dropdown-item text-danger" href="#!">
-                                                                Delete
-                                                            </a>
-                                                        </div>
-                                                    </div>
+                                                <div className="d-flex">
+                                                    <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
+                                                        <i className="fa fa-eye"></i>
+                                                    </a>
+                                                    <Link to="/customer-edit" className="btn btn-primary shadow btn-xs sharp me-1">
+                                                        <i className="fas fa-pencil-alt"></i>
+                                                    </Link>
+                                                    <a href="#!" className="btn btn-danger shadow btn-xs sharp">
+                                                        <i className="fa fa-trash"></i>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -193,36 +145,16 @@ function CustomerList() {
                                             <td className="py-2 ps-5">112 Bostwick Avenue, Jersey City</td>
                                             <td className="py-2">05/04/2016</td>
                                             <td className="py-2 text-end">
-                                                <div className="dropdown">
-                                                    <button className="btn btn-primary tp-btn-light sharp" type="button" data-bs-toggle="dropdown">
-                                                        <span className="fs--1">
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                xmlnsXlink="http://www.w3.org/1999/xlink"
-                                                                width="18px"
-                                                                height="18px"
-                                                                viewBox="0 0 24 24"
-                                                                version="1.1"
-                                                            >
-                                                                <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                                                                    <rect x="0" y="0" width="24" height="24"></rect>
-                                                                    <circle fill="#000000" cx="5" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="19" cy="12" r="2"></circle>
-                                                                </g>
-                                                            </svg>
-                                                        </span>
-                                                    </button>
-                                                    <div className="dropdown-menu dropdown-menu-end border py-0">
-                                                        <div className="py-2">
-                                                            <Link to="/customer-edit" className="dropdown-item">
-                                                                Edit
-                                                            </Link>
-                                                            <a className="dropdown-item text-danger" href="#!">
-                                                                Delete
-                                                            </a>
-                                                        </div>
-                                                    </div>
+                                                <div className="d-flex">
+                                                    <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
+                                                        <i className="fa fa-eye"></i>
+                                                    </a>
+                                                    <Link to="/customer-edit" className="btn btn-primary shadow btn-xs sharp me-1">
+                                                        <i className="fas fa-pencil-alt"></i>
+                                                    </Link>
+                                                    <a href="#!" className="btn btn-danger shadow btn-xs sharp">
+                                                        <i className="fa fa-trash"></i>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -254,36 +186,16 @@ function CustomerList() {
                                             <td className="py-2 ps-5">3448 Ile De France St #242, </td>
                                             <td className="py-2">05/04/2018</td>
                                             <td className="py-2 text-end">
-                                                <div className="dropdown">
-                                                    <button className="btn btn-primary tp-btn-light sharp" type="button" data-bs-toggle="dropdown">
-                                                        <span className="fs--1">
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                xmlnsXlink="http://www.w3.org/1999/xlink"
-                                                                width="18px"
-                                                                height="18px"
-                                                                viewBox="0 0 24 24"
-                                                                version="1.1"
-                                                            >
-                                                                <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                                                                    <rect x="0" y="0" width="24" height="24"></rect>
-                                                                    <circle fill="#000000" cx="5" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="19" cy="12" r="2"></circle>
-                                                                </g>
-                                                            </svg>
-                                                        </span>
-                                                    </button>
-                                                    <div className="dropdown-menu dropdown-menu-end border py-0">
-                                                        <div className="py-2">
-                                                            <Link to="/customer-edit" className="dropdown-item">
-                                                                Edit
-                                                            </Link>
-                                                            <a className="dropdown-item text-danger" href="#!">
-                                                                Delete
-                                                            </a>
-                                                        </div>
-                                                    </div>
+                                                <div className="d-flex">
+                                                    <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
+                                                        <i className="fa fa-eye"></i>
+                                                    </a>
+                                                    <Link to="/customer-edit" className="btn btn-primary shadow btn-xs sharp me-1">
+                                                        <i className="fas fa-pencil-alt"></i>
+                                                    </Link>
+                                                    <a href="#!" className="btn btn-danger shadow btn-xs sharp">
+                                                        <i className="fa fa-trash"></i>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -315,36 +227,16 @@ function CustomerList() {
                                             <td className="py-2 ps-5">659 Hannah Street, Charlotte</td>
                                             <td className="py-2">17/03/2016</td>
                                             <td className="py-2 text-end">
-                                                <div className="dropdown">
-                                                    <button className="btn btn-primary tp-btn-light sharp" type="button" data-bs-toggle="dropdown">
-                                                        <span className="fs--1">
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                xmlnsXlink="http://www.w3.org/1999/xlink"
-                                                                width="18px"
-                                                                height="18px"
-                                                                viewBox="0 0 24 24"
-                                                                version="1.1"
-                                                            >
-                                                                <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                                                                    <rect x="0" y="0" width="24" height="24"></rect>
-                                                                    <circle fill="#000000" cx="5" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="19" cy="12" r="2"></circle>
-                                                                </g>
-                                                            </svg>
-                                                        </span>
-                                                    </button>
-                                                    <div className="dropdown-menu dropdown-menu-end border py-0">
-                                                        <div className="py-2">
-                                                            <Link to="/customer-edit" className="dropdown-item">
-                                                                Edit
-                                                            </Link>
-                                                            <a className="dropdown-item text-danger" href="#!">
-                                                                Delete
-                                                            </a>
-                                                        </div>
-                                                    </div>
+                                                <div className="d-flex">
+                                                    <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
+                                                        <i className="fa fa-eye"></i>
+                                                    </a>
+                                                    <Link to="/customer-edit" className="btn btn-primary shadow btn-xs sharp me-1">
+                                                        <i className="fas fa-pencil-alt"></i>
+                                                    </Link>
+                                                    <a href="#!" className="btn btn-danger shadow btn-xs sharp">
+                                                        <i className="fa fa-trash"></i>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -378,36 +270,16 @@ function CustomerList() {
                                             <td className="py-2 ps-5">2298 Locust Court, Artesia</td>
                                             <td className="py-2">12/07/2014</td>
                                             <td className="py-2 text-end">
-                                                <div className="dropdown">
-                                                    <button className="btn btn-primary tp-btn-light sharp" type="button" data-bs-toggle="dropdown">
-                                                        <span className="fs--1">
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                xmlnsXlink="http://www.w3.org/1999/xlink"
-                                                                width="18px"
-                                                                height="18px"
-                                                                viewBox="0 0 24 24"
-                                                                version="1.1"
-                                                            >
-                                                                <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                                                                    <rect x="0" y="0" width="24" height="24"></rect>
-                                                                    <circle fill="#000000" cx="5" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="19" cy="12" r="2"></circle>
-                                                                </g>
-                                                            </svg>
-                                                        </span>
-                                                    </button>
-                                                    <div className="dropdown-menu dropdown-menu-end border py-0">
-                                                        <div className="py-2">
-                                                            <Link to="/customer-edit" className="dropdown-item">
-                                                                Edit
-                                                            </Link>
-                                                            <a className="dropdown-item text-danger" href="#!">
-                                                                Delete
-                                                            </a>
-                                                        </div>
-                                                    </div>
+                                                <div className="d-flex">
+                                                    <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
+                                                        <i className="fa fa-eye"></i>
+                                                    </a>
+                                                    <Link to="/customer-edit" className="btn btn-primary shadow btn-xs sharp me-1">
+                                                        <i className="fas fa-pencil-alt"></i>
+                                                    </Link>
+                                                    <a href="#!" className="btn btn-danger shadow btn-xs sharp">
+                                                        <i className="fa fa-trash"></i>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -439,36 +311,16 @@ function CustomerList() {
                                             <td className="py-2 ps-5">4678 Maud Street, Philadelphia</td>
                                             <td className="py-2">15/06/2014</td>
                                             <td className="py-2 text-end">
-                                                <div className="dropdown">
-                                                    <button className="btn btn-primary tp-btn-light sharp" type="button" data-bs-toggle="dropdown">
-                                                        <span className="fs--1">
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                xmlnsXlink="http://www.w3.org/1999/xlink"
-                                                                width="18px"
-                                                                height="18px"
-                                                                viewBox="0 0 24 24"
-                                                                version="1.1"
-                                                            >
-                                                                <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                                                                    <rect x="0" y="0" width="24" height="24"></rect>
-                                                                    <circle fill="#000000" cx="5" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="19" cy="12" r="2"></circle>
-                                                                </g>
-                                                            </svg>
-                                                        </span>
-                                                    </button>
-                                                    <div className="dropdown-menu dropdown-menu-end border py-0">
-                                                        <div className="py-2">
-                                                            <Link to="/customer-edit" className="dropdown-item">
-                                                                Edit
-                                                            </Link>
-                                                            <a className="dropdown-item text-danger" href="#!">
-                                                                Delete
-                                                            </a>
-                                                        </div>
-                                                    </div>
+                                                <div className="d-flex">
+                                                    <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
+                                                        <i className="fa fa-eye"></i>
+                                                    </a>
+                                                    <Link to="/customer-edit" className="btn btn-primary shadow btn-xs sharp me-1">
+                                                        <i className="fas fa-pencil-alt"></i>
+                                                    </Link>
+                                                    <a href="#!" className="btn btn-danger shadow btn-xs sharp">
+                                                        <i className="fa fa-trash"></i>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -500,36 +352,16 @@ function CustomerList() {
                                             <td className="py-2 ps-5">3412 Crestview Manor, Indianapolis</td>
                                             <td className="py-2">15/04/2015</td>
                                             <td className="py-2 text-end">
-                                                <div className="dropdown">
-                                                    <button className="btn btn-primary tp-btn-light sharp" type="button" data-bs-toggle="dropdown">
-                                                        <span className="fs--1">
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                xmlnsXlink="http://www.w3.org/1999/xlink"
-                                                                width="18px"
-                                                                height="18px"
-                                                                viewBox="0 0 24 24"
-                                                                version="1.1"
-                                                            >
-                                                                <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                                                                    <rect x="0" y="0" width="24" height="24"></rect>
-                                                                    <circle fill="#000000" cx="5" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="19" cy="12" r="2"></circle>
-                                                                </g>
-                                                            </svg>
-                                                        </span>
-                                                    </button>
-                                                    <div className="dropdown-menu dropdown-menu-end border py-0">
-                                                        <div className="py-2">
-                                                            <Link to="/customer-edit" className="dropdown-item">
-                                                                Edit
-                                                            </Link>
-                                                            <a className="dropdown-item text-danger" href="#!">
-                                                                Delete
-                                                            </a>
-                                                        </div>
-                                                    </div>
+                                                <div className="d-flex">
+                                                    <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
+                                                        <i className="fa fa-eye"></i>
+                                                    </a>
+                                                    <Link to="/customer-edit" className="btn btn-primary shadow btn-xs sharp me-1">
+                                                        <i className="fas fa-pencil-alt"></i>
+                                                    </Link>
+                                                    <a href="#!" className="btn btn-danger shadow btn-xs sharp">
+                                                        <i className="fa fa-trash"></i>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -563,36 +395,16 @@ function CustomerList() {
                                             <td className="py-2 ps-5">2392 Main Avenue, Penasauka</td>
                                             <td className="py-2">30/03/2018</td>
                                             <td className="py-2 text-end">
-                                                <div className="dropdown">
-                                                    <button className="btn btn-primary tp-btn-light sharp" type="button" data-bs-toggle="dropdown">
-                                                        <span className="fs--1">
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                xmlnsXlink="http://www.w3.org/1999/xlink"
-                                                                width="18px"
-                                                                height="18px"
-                                                                viewBox="0 0 24 24"
-                                                                version="1.1"
-                                                            >
-                                                                <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                                                                    <rect x="0" y="0" width="24" height="24"></rect>
-                                                                    <circle fill="#000000" cx="5" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="19" cy="12" r="2"></circle>
-                                                                </g>
-                                                            </svg>
-                                                        </span>
-                                                    </button>
-                                                    <div className="dropdown-menu dropdown-menu-end border py-0">
-                                                        <div className="py-2">
-                                                            <Link to="/customer-edit" className="dropdown-item">
-                                                                Edit
-                                                            </Link>
-                                                            <a className="dropdown-item text-danger" href="#!">
-                                                                Delete
-                                                            </a>
-                                                        </div>
-                                                    </div>
+                                                <div className="d-flex">
+                                                    <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
+                                                        <i className="fa fa-eye"></i>
+                                                    </a>
+                                                    <Link to="/customer-edit" className="btn btn-primary shadow btn-xs sharp me-1">
+                                                        <i className="fas fa-pencil-alt"></i>
+                                                    </Link>
+                                                    <a href="#!" className="btn btn-danger shadow btn-xs sharp">
+                                                        <i className="fa fa-trash"></i>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -624,36 +436,16 @@ function CustomerList() {
                                             <td className="py-2 ps-5">2289 5th Avenue, New York</td>
                                             <td className="py-2">11/07/2017</td>
                                             <td className="py-2 text-end">
-                                                <div className="dropdown">
-                                                    <button className="btn btn-primary tp-btn-light sharp" type="button" data-bs-toggle="dropdown">
-                                                        <span className="fs--1">
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                xmlnsXlink="http://www.w3.org/1999/xlink"
-                                                                width="18px"
-                                                                height="18px"
-                                                                viewBox="0 0 24 24"
-                                                                version="1.1"
-                                                            >
-                                                                <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                                                                    <rect x="0" y="0" width="24" height="24"></rect>
-                                                                    <circle fill="#000000" cx="5" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="19" cy="12" r="2"></circle>
-                                                                </g>
-                                                            </svg>
-                                                        </span>
-                                                    </button>
-                                                    <div className="dropdown-menu dropdown-menu-end border py-0">
-                                                        <div className="py-2">
-                                                            <Link to="/customer-edit" className="dropdown-item">
-                                                                Edit
-                                                            </Link>
-                                                            <a className="dropdown-item text-danger" href="#!">
-                                                                Delete
-                                                            </a>
-                                                        </div>
-                                                    </div>
+                                                <div className="d-flex">
+                                                    <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
+                                                        <i className="fa fa-eye"></i>
+                                                    </a>
+                                                    <Link to="/customer-edit" className="btn btn-primary shadow btn-xs sharp me-1">
+                                                        <i className="fas fa-pencil-alt"></i>
+                                                    </Link>
+                                                    <a href="#!" className="btn btn-danger shadow btn-xs sharp">
+                                                        <i className="fa fa-trash"></i>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -687,36 +479,16 @@ function CustomerList() {
                                             <td className="py-2 ps-5">112 Bostwick Avenue, Jersey City</td>
                                             <td className="py-2">05/04/2016</td>
                                             <td className="py-2 text-end">
-                                                <div className="dropdown">
-                                                    <button className="btn btn-primary tp-btn-light sharp" type="button" data-bs-toggle="dropdown">
-                                                        <span className="fs--1">
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                xmlnsXlink="http://www.w3.org/1999/xlink"
-                                                                width="18px"
-                                                                height="18px"
-                                                                viewBox="0 0 24 24"
-                                                                version="1.1"
-                                                            >
-                                                                <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                                                                    <rect x="0" y="0" width="24" height="24"></rect>
-                                                                    <circle fill="#000000" cx="5" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="19" cy="12" r="2"></circle>
-                                                                </g>
-                                                            </svg>
-                                                        </span>
-                                                    </button>
-                                                    <div className="dropdown-menu dropdown-menu-end border py-0">
-                                                        <div className="py-2">
-                                                            <Link to="/customer-edit" className="dropdown-item">
-                                                                Edit
-                                                            </Link>
-                                                            <a className="dropdown-item text-danger" href="#!">
-                                                                Delete
-                                                            </a>
-                                                        </div>
-                                                    </div>
+                                                <div className="d-flex">
+                                                    <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
+                                                        <i className="fa fa-eye"></i>
+                                                    </a>
+                                                    <Link to="/customer-edit" className="btn btn-primary shadow btn-xs sharp me-1">
+                                                        <i className="fas fa-pencil-alt"></i>
+                                                    </Link>
+                                                    <a href="#!" className="btn btn-danger shadow btn-xs sharp">
+                                                        <i className="fa fa-trash"></i>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -748,36 +520,16 @@ function CustomerList() {
                                             <td className="py-2 ps-5">3448 Ile De France St #242</td>
                                             <td className="py-2">05/04/2018</td>
                                             <td className="py-2 text-end">
-                                                <div className="dropdown">
-                                                    <button className="btn btn-primary tp-btn-light sharp" type="button" data-bs-toggle="dropdown">
-                                                        <span className="fs--1">
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                xmlnsXlink="http://www.w3.org/1999/xlink"
-                                                                width="18px"
-                                                                height="18px"
-                                                                viewBox="0 0 24 24"
-                                                                version="1.1"
-                                                            >
-                                                                <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                                                                    <rect x="0" y="0" width="24" height="24"></rect>
-                                                                    <circle fill="#000000" cx="5" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="19" cy="12" r="2"></circle>
-                                                                </g>
-                                                            </svg>
-                                                        </span>
-                                                    </button>
-                                                    <div className="dropdown-menu dropdown-menu-end border py-0">
-                                                        <div className="py-2">
-                                                            <Link to="/customer-edit" className="dropdown-item">
-                                                                Edit
-                                                            </Link>
-                                                            <a className="dropdown-item text-danger" href="#!">
-                                                                Delete
-                                                            </a>
-                                                        </div>
-                                                    </div>
+                                                <div className="d-flex">
+                                                    <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
+                                                        <i className="fa fa-eye"></i>
+                                                    </a>
+                                                    <Link to="/customer-edit" className="btn btn-primary shadow btn-xs sharp me-1">
+                                                        <i className="fas fa-pencil-alt"></i>
+                                                    </Link>
+                                                    <a href="#!" className="btn btn-danger shadow btn-xs sharp">
+                                                        <i className="fa fa-trash"></i>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -809,36 +561,16 @@ function CustomerList() {
                                             <td className="py-2 ps-5">659 Hannah Street, Charlotte</td>
                                             <td className="py-2">17/03/2016</td>
                                             <td className="py-2 text-end">
-                                                <div className="dropdown">
-                                                    <button className="btn btn-primary tp-btn-light sharp" type="button" data-bs-toggle="dropdown">
-                                                        <span className="fs--1">
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                xmlnsXlink="http://www.w3.org/1999/xlink"
-                                                                width="18px"
-                                                                height="18px"
-                                                                viewBox="0 0 24 24"
-                                                                version="1.1"
-                                                            >
-                                                                <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                                                                    <rect x="0" y="0" width="24" height="24"></rect>
-                                                                    <circle fill="#000000" cx="5" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="19" cy="12" r="2"></circle>
-                                                                </g>
-                                                            </svg>
-                                                        </span>
-                                                    </button>
-                                                    <div className="dropdown-menu dropdown-menu-end border py-0">
-                                                        <div className="py-2">
-                                                            <Link to="/customer-edit" className="dropdown-item">
-                                                                Edit
-                                                            </Link>
-                                                            <a className="dropdown-item text-danger" href="#!">
-                                                                Delete
-                                                            </a>
-                                                        </div>
-                                                    </div>
+                                                <div className="d-flex">
+                                                    <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
+                                                        <i className="fa fa-eye"></i>
+                                                    </a>
+                                                    <Link to="/customer-edit" className="btn btn-primary shadow btn-xs sharp me-1">
+                                                        <i className="fas fa-pencil-alt"></i>
+                                                    </Link>
+                                                    <a href="#!" className="btn btn-danger shadow btn-xs sharp">
+                                                        <i className="fa fa-trash"></i>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -872,36 +604,16 @@ function CustomerList() {
                                             <td className="py-2 ps-5">2298 Locust Court, Artesia</td>
                                             <td className="py-2">12/07/2014</td>
                                             <td className="py-2 text-end">
-                                                <div className="dropdown">
-                                                    <button className="btn btn-primary tp-btn-light sharp" type="button" data-bs-toggle="dropdown">
-                                                        <span className="fs--1">
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                xmlnsXlink="http://www.w3.org/1999/xlink"
-                                                                width="18px"
-                                                                height="18px"
-                                                                viewBox="0 0 24 24"
-                                                                version="1.1"
-                                                            >
-                                                                <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                                                                    <rect x="0" y="0" width="24" height="24"></rect>
-                                                                    <circle fill="#000000" cx="5" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="19" cy="12" r="2"></circle>
-                                                                </g>
-                                                            </svg>
-                                                        </span>
-                                                    </button>
-                                                    <div className="dropdown-menu dropdown-menu-end border py-0">
-                                                        <div className="py-2">
-                                                            <Link to="/customer-edit" className="dropdown-item">
-                                                                Edit
-                                                            </Link>
-                                                            <a className="dropdown-item text-danger" href="#!">
-                                                                Delete
-                                                            </a>
-                                                        </div>
-                                                    </div>
+                                                <div className="d-flex">
+                                                    <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
+                                                        <i className="fa fa-eye"></i>
+                                                    </a>
+                                                    <Link to="/customer-edit" className="btn btn-primary shadow btn-xs sharp me-1">
+                                                        <i className="fas fa-pencil-alt"></i>
+                                                    </Link>
+                                                    <a href="#!" className="btn btn-danger shadow btn-xs sharp">
+                                                        <i className="fa fa-trash"></i>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -933,36 +645,16 @@ function CustomerList() {
                                             <td className="py-2 ps-5">4678 Maud Street, Philadelphia</td>
                                             <td className="py-2">15/06/2014</td>
                                             <td className="py-2 text-end">
-                                                <div className="dropdown">
-                                                    <button className="btn btn-primary tp-btn-light sharp" type="button" data-bs-toggle="dropdown">
-                                                        <span className="fs--1">
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                xmlnsXlink="http://www.w3.org/1999/xlink"
-                                                                width="18px"
-                                                                height="18px"
-                                                                viewBox="0 0 24 24"
-                                                                version="1.1"
-                                                            >
-                                                                <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                                                                    <rect x="0" y="0" width="24" height="24"></rect>
-                                                                    <circle fill="#000000" cx="5" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="19" cy="12" r="2"></circle>
-                                                                </g>
-                                                            </svg>
-                                                        </span>
-                                                    </button>
-                                                    <div className="dropdown-menu dropdown-menu-end border py-0">
-                                                        <div className="py-2">
-                                                            <Link to="/customer-edit" className="dropdown-item">
-                                                                Edit
-                                                            </Link>
-                                                            <a className="dropdown-item text-danger" href="#!">
-                                                                Delete
-                                                            </a>
-                                                        </div>
-                                                    </div>
+                                                <div className="d-flex">
+                                                    <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
+                                                        <i className="fa fa-eye"></i>
+                                                    </a>
+                                                    <Link to="/customer-edit" className="btn btn-primary shadow btn-xs sharp me-1">
+                                                        <i className="fas fa-pencil-alt"></i>
+                                                    </Link>
+                                                    <a href="#!" className="btn btn-danger shadow btn-xs sharp">
+                                                        <i className="fa fa-trash"></i>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -994,36 +686,16 @@ function CustomerList() {
                                             <td className="py-2 ps-5">3412 Crestview Manor, Indianapolis</td>
                                             <td className="py-2">15/04/2015</td>
                                             <td className="py-2 text-end">
-                                                <div className="dropdown">
-                                                    <button className="btn btn-primary tp-btn-light sharp" type="button" data-bs-toggle="dropdown">
-                                                        <span className="fs--1">
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                xmlnsXlink="http://www.w3.org/1999/xlink"
-                                                                width="18px"
-                                                                height="18px"
-                                                                viewBox="0 0 24 24"
-                                                                version="1.1"
-                                                            >
-                                                                <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                                                                    <rect x="0" y="0" width="24" height="24"></rect>
-                                                                    <circle fill="#000000" cx="5" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-                                                                    <circle fill="#000000" cx="19" cy="12" r="2"></circle>
-                                                                </g>
-                                                            </svg>
-                                                        </span>
-                                                    </button>
-                                                    <div className="dropdown-menu dropdown-menu-end border py-0">
-                                                        <div className="py-2">
-                                                            <Link to="/customer-edit" className="dropdown-item">
-                                                                Edit
-                                                            </Link>
-                                                            <a className="dropdown-item text-danger" href="#!">
-                                                                Delete
-                                                            </a>
-                                                        </div>
-                                                    </div>
+                                                <div className="d-flex">
+                                                    <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
+                                                        <i className="fa fa-eye"></i>
+                                                    </a>
+                                                    <Link to="/customer-edit" className="btn btn-primary shadow btn-xs sharp me-1">
+                                                        <i className="fas fa-pencil-alt"></i>
+                                                    </Link>
+                                                    <a href="#!" className="btn btn-danger shadow btn-xs sharp">
+                                                        <i className="fa fa-trash"></i>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>

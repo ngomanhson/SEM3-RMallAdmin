@@ -1,18 +1,9 @@
-import { Link } from "react-router-dom";
 import Layout from "../../layouts/index";
+import Breadcrumb from "../../layouts/breadcrumb";
 function CustomerEdit() {
     return (
         <Layout>
-            <div className="row page-titles">
-                <ol className="breadcrumb">
-                    <li className="breadcrumb-item active">
-                        <Link to="/">Dashboard</Link>
-                    </li>
-                    <li className="breadcrumb-item">
-                        <a href="#!">Customers Edit</a>
-                    </li>
-                </ol>
-            </div>
+            <Breadcrumb title="Customer Edit" />
             <div className="row">
                 <div className="col-xl-12 col-xxl-12">
                     <div className="card">

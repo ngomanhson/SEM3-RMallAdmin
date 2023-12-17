@@ -1,18 +1,10 @@
 import { Link } from "react-router-dom";
 import Layout from "../../layouts/index";
+import Breadcrumb from "../../layouts/breadcrumb";
 function MovieDeleteAt() {
     return (
         <Layout>
-            <div className="row page-titles">
-                <ol className="breadcrumb">
-                    <li className="breadcrumb-item active">
-                        <Link to="/">Dashboard</Link>
-                    </li>
-                    <li className="breadcrumb-item">
-                        <a href="#!">Movie Delete At</a>
-                    </li>
-                </ol>
-            </div>
+            <Breadcrumb title="Movie Delete At" />
             <div className="card-body">
                 <div className="table-responsive">
                     <table className="table table-responsive-md">

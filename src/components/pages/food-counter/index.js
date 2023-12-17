@@ -1,19 +1,11 @@
 import { Link } from "react-router-dom";
 import Layout from "../../layouts";
+import Breadcrumb from "../../layouts/breadcrumb";
 
 function FoodCounterList() {
     return (
         <Layout>
-            <div className="row page-titles">
-                <ol className="breadcrumb">
-                    <li className="breadcrumb-item active">
-                        <Link to="/">Dashboard</Link>
-                    </li>
-                    <li className="breadcrumb-item">
-                        <a href="#!">Food Counter List</a>
-                    </li>
-                </ol>
-            </div>
+            <Breadcrumb title="Food Counter List" />
             <div className="card-body">
                 <div className="table-responsive">
                     <table className="table table-responsive-md">
@@ -51,9 +43,9 @@ function FoodCounterList() {
                                         <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
                                             <i className="fa fa-eye"></i>
                                         </a>
-                                        <a href="#!" className="btn btn-primary shadow btn-xs sharp me-1">
+                                        <Link to="/food-counter-edit" className="btn btn-primary shadow btn-xs sharp me-1">
                                             <i className="fas fa-pencil-alt"></i>
-                                        </a>
+                                        </Link>
                                         <a href="#!" className="btn btn-danger shadow btn-xs sharp">
                                             <i className="fa fa-trash"></i>
                                         </a>
@@ -74,9 +66,9 @@ function FoodCounterList() {
                                         <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
                                             <i className="fa fa-eye"></i>
                                         </a>
-                                        <a href="#!" className="btn btn-primary shadow btn-xs sharp me-1">
+                                        <Link to="/food-counter-edit" className="btn btn-primary shadow btn-xs sharp me-1">
                                             <i className="fas fa-pencil-alt"></i>
-                                        </a>
+                                        </Link>
                                         <a href="#!" className="btn btn-danger shadow btn-xs sharp">
                                             <i className="fa fa-trash"></i>
                                         </a>
@@ -97,9 +89,9 @@ function FoodCounterList() {
                                         <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
                                             <i className="fa fa-eye"></i>
                                         </a>
-                                        <a href="#!" className="btn btn-primary shadow btn-xs sharp me-1">
+                                        <Link to="/food-counter-edit" className="btn btn-primary shadow btn-xs sharp me-1">
                                             <i className="fas fa-pencil-alt"></i>
-                                        </a>
+                                        </Link>
                                         <a href="#!" className="btn btn-danger shadow btn-xs sharp">
                                             <i className="fa fa-trash"></i>
                                         </a>
@@ -120,9 +112,9 @@ function FoodCounterList() {
                                         <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
                                             <i className="fa fa-eye"></i>
                                         </a>
-                                        <a href="#!" className="btn btn-primary shadow btn-xs sharp me-1">
+                                        <Link to="/food-counter-edit" className="btn btn-primary shadow btn-xs sharp me-1">
                                             <i className="fas fa-pencil-alt"></i>
-                                        </a>
+                                        </Link>
                                         <a href="#!" className="btn btn-danger shadow btn-xs sharp">
                                             <i className="fa fa-trash"></i>
                                         </a>

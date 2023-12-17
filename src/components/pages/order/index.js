@@ -1,8 +1,10 @@
 import Layout from "../../layouts";
+import Breadcrumb from "../../layouts/breadcrumb";
 
 function OrderList() {
     return (
         <Layout>
+            <Breadcrumb title="Order List" />
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
