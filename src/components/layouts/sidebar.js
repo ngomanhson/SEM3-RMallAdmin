@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 function Sidebar() {
@@ -6,7 +7,7 @@ function Sidebar() {
             <div className="dlabnav-scroll">
                 <ul className="metismenu" id="menu">
                     <li>
-                        <a className="has-arrow" href="javascript:void()" aria-expanded="false">
+                        <Link className="has-arrow" to="/" aria-expanded="false">
                             <div className="menu-icon">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <g id="IconlyHome">
@@ -21,7 +22,7 @@ function Sidebar() {
                                 </svg>
                             </div>
                             <span className="nav-text">Dashboard</span>
-                        </a>
+                        </Link>
                         <ul aria-expanded="false">
                             <li>
                                 <Link to="/">Dashboard</Link>
@@ -171,6 +172,40 @@ function Sidebar() {
                             </li>
                             <li>
                                 <Link to="/customer-delete-at">Customer Delete At</Link>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a className="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <div className="menu-icon">
+                                <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g id="SVGRepo_bgCarrier" strokeWidth="0" />
+
+                                    <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round" />
+
+                                    <g id="SVGRepo_iconCarrier">
+                                        <path
+                                            fillRule="evenodd"
+                                            clipRule="evenodd"
+                                            d="M12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2Z"
+                                            fill="#c8c8c8"
+                                        />
+                                        <path
+                                            fillRule="evenodd"
+                                            clipRule="evenodd"
+                                            d="M9 13C7.33726 13 5.73823 13.7585 4.80115 14.9004C4.32556 15.48 3.99121 16.1971 3.9621 16.9919C3.93237 17.8036 4.22536 18.5958 4.82958 19.2871C6.30215 20.9716 8.65327 22 12 22C15.3467 22 17.6979 20.9716 19.1704 19.2871C19.7746 18.5958 20.0676 17.8036 20.0379 16.9919C20.0088 16.1971 19.6744 15.48 19.1989 14.9004C18.2618 13.7585 16.6627 13 15 13H9Z"
+                                            fill="#c8c8c8"
+                                        />
+                                    </g>
+                                </svg>
+                            </div>
+
+                            <span className="nav-text">Profile</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li>
+                                <Link to="/profile">Profile</Link>
                             </li>
                         </ul>
                     </li>
