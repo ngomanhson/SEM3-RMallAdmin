@@ -20,6 +20,7 @@ import FoodCounterCreate from "./components/pages/food-counter/create";
 import FoodCounterEdit from "./components/pages/food-counter/edit";
 import FoodCounterDeleteAt from "./components/pages/food-counter/delete-at";
 import BookingList from "./components/pages/booking";
+import Profile from "./components/pages/auth/profile";
 
 function App() {
     return (
@@ -64,6 +65,8 @@ function App() {
                 {/* Start Auth */}
                 <Route path="/login" element={<Login />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/profile" element={<Profile />} />
+
                 {/* End Auth */}
 
                 {/* Start Other page */}
