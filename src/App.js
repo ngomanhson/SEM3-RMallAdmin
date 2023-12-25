@@ -47,7 +47,7 @@ function App() {
                 {/* Start Movie */}
                 <Route path="/movie-list" element={<MovieList />} />
                 <Route path="/movie-create" element={<MovieCreate />} />
-                <Route path="/movie-edit" element={<MovieEdit />} />
+                <Route path="/movie-edit/:id" element={<MovieEdit />} />
                 <Route path="/movie-delete-at" element={<MovieDeleteAt />} />
                 {/* End Movie */}
 
