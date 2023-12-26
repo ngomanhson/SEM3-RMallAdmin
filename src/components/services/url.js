@@ -12,5 +12,12 @@ const url = {
     LANGUAGE: {
         LIST: "/language",
     },
+
+    AUTH: {
+        LOGIN: "/auth/login",
+        FORGOT_PASSWORD: "/auth/forgot-password",
+        PROFILE: "/auth/profile",
+        UPDATE_PROFILE: "/auth/update-profile",
+    },
 };
 export default url;

@@ -11896,7 +11896,7 @@ label {
     box-sizing: border-box;
 }
 
-#preloader {
+.preloader {
     background-color: var(--bs-body-bg);
     padding: 0;
     margin: 0;
@@ -11905,13 +11905,13 @@ label {
     z-index: 99999;
     width: 100%;
 }
-#preloader .inner {
+.preloader .inner {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
-#preloader span {
+.preloader span {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -11977,7 +11977,7 @@ label {
 
 
 [data-theme-version="dark"] {
-	#preloader{
+	.preloader{
 		background-color: $d-bg;
 	}
 } */
@@ -13145,7 +13145,7 @@ svg.pulse-svg .third-circle {
 }
 
 .header-profile2 .header-info2 img {
-    border-radius: 10px;
+    border-radius: 50%;
     margin-right: 10px;
 }
 
@@ -22673,7 +22673,7 @@ pre code.hljs {
     position: relative;
 }
 .photo-content .cover-photo {
-    background: url(../images/profile/cover.jpg);
+    background: url(../images/profile/cover.png);
     background-size: cover;
     background-position: center;
     min-height: 15.625rem;
@@ -22681,7 +22681,7 @@ pre code.hljs {
 }
 
 .profile .profile-photo {
-    max-width: 6.25rem;
+    max-width: 11.25rem;
     position: relative;
     z-index: 1;
     margin-top: -4.5rem;
@@ -35113,5 +35113,31 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     width: 55px;
     height: 55px;
     object-fit: contain;
+}
+
+.custom-input-height {
+    height: 2.6rem;
+}
+
+.profile-avatar,
+.avatar-default {
+    width: 150px;
+    height: 150px;
+}
+
+.profile-avatar {
+    position: relative;
+}
+
+.avatar-default {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+.border-avatar {
+    border: 5px solid rgba(255, 255, 255, 0.2);
 }
 /*# sourceMappingURL=style.css.map */

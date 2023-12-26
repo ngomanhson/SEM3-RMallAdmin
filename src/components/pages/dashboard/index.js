@@ -1,12 +1,24 @@
 import { Helmet } from "react-helmet";
 import Layout from "../../layouts";
+import Loading from "../../layouts/loading";
+import { useEffect, useState } from "react";
 
 function Dashboard() {
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        setLoading(true);
+
+        setTimeout(() => {
+            setLoading(false);
+        }, 2000);
+    }, []);
     return (
         <>
             <Helmet>
                 <title>Dashboard | R Mall</title>
             </Helmet>
+            {loading ? <Loading /> : ""}
             <Layout>
                 <div className="row">
                     <div className="col-xl-9">

@@ -1,12 +1,141 @@
 import Layout from "../../layouts/index";
 import Breadcrumb from "../../layouts/breadcrumb";
 import { Helmet } from "react-helmet";
+import Loading from "../../layouts/loading";
+import { useEffect, useState } from "react";
+import { getAccessToken } from "../../../utils/auth";
+import api from "../../services/api";
+import url from "../../services/url";
+import Swal from "sweetalert2";
+import { format } from "date-fns";
 function Profile() {
+    const [loading, setLoading] = useState(false);
+    const [info, setInfo] = useState("");
+
+    const [isEditButtonVisible, setEditButtonVisible] = useState(true);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editedInfo, setEditedInfo] = useState({});
+
+    const [avatarFile, setAvatarFile] = useState(null);
+    const [avatarPreview, setAvatarPreview] = useState(null);
+
+    useEffect(() => {
+        setLoading(true);
+
+        setTimeout(() => {
+            setLoading(false);
+        }, 1000);
+    }, []);
+
+    const loadProfile = async () => {
+        const userToken = getAccessToken();
+
+        try {
+            const config = {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${userToken}`,
+                },
+            };
+
+            const profileResponse = await api.get(url.AUTH.PROFILE, config);
+            setInfo(profileResponse.data);
+        } catch (error) {}
+    };
+
+    useEffect(() => {
+        loadProfile();
+    }, []);
+
+    const allowedExtensions = ["png", "jpg", "jpeg", "heic"];
+
+    const handleAvatarChange = (e) => {
+        const file = e.target.files[0];
+
+        if (file) {
+            const fileExtension = file.name.split(".").pop().toLowerCase();
+
+            if (!allowedExtensions.includes(fileExtension)) {
+                // You can also reset the input field if needed
+                e.target.value = "";
+                return;
+            }
+
+            setAvatarFile(file);
+            setAvatarPreview(URL.createObjectURL(file));
+        }
+    };
+
+    const handleEditClick = () => {
+        setIsEditing(!isEditing);
+        setEditButtonVisible(false);
+
+        if (!isEditing) {
+            setEditedInfo({ ...info });
+        }
+    };
+
+    const handleCancelClick = () => {
+        setIsEditing(false);
+        setEditButtonVisible(true);
+
+        setEditedInfo({});
+    };
+
+    const handleSaveClick = async () => {
+        setEditButtonVisible(true);
+        try {
+            const userToken = getAccessToken();
+
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${userToken}`,
+                },
+            };
+
+            const formData = new FormData();
+
+            // If avatarFile is present, append it to the FormData
+            //  if (avatarFile) {
+            //     formData.append("avatar", avatarFile);
+            // }
+
+            for (const key in editedInfo) {
+                formData.append(key, editedInfo[key]);
+            }
+
+            // Send the request
+            const isConfirmed = await Swal.fire({
+                title: "Are you sure?",
+                text: "You want to update your information?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "I'm sure",
+            });
+
+            if (isConfirmed.isConfirmed) {
+                const updateResponse = await api.put(url.AUTH.UPDATE_PROFILE, formData, config);
+
+                if (updateResponse.status === 204) {
+                    console.log("Successfully updated");
+                } else {
+                }
+            }
+
+            // Update the local state with edited information
+            setInfo(editedInfo);
+            setIsEditing(false);
+        } catch (error) {}
+    };
+
     return (
         <>
             <Helmet>
-                <title>Profile | R Mall</title>
+                <title>Profile | R Mall Admin</title>
             </Helmet>
+            {loading ? <Loading /> : ""}
             <Layout>
                 <Breadcrumb title="Profile" />
                 <div className="row">
@@ -18,42 +147,30 @@ function Profile() {
                                 </div>
                                 <div className="profile-info">
                                     <div className="profile-photo">
-                                        <img src="assets/images/profile/profile.png" className="img-fluid rounded-circle" alt="" />
+                                        {/* <img src="assets/images/profile/profile.png" className="img-fluid rounded-circle" alt="" /> */}
+                                        <label htmlFor="avatarInput">
+                                            {isEditing ? (
+                                                avatarPreview ? (
+                                                    <div className="avatar-inner">
+                                                        <img src={avatarPreview} alt="Avatar Preview" className="profile-avatar rounded-circle border-avatar" />
+                                                        <img src="./assets/images/avatar/default-placeholder.png" alt="" className="avatar-default rounded-circle" />
+                                                    </div>
+                                                ) : (
+                                                    <div className="avatar-inner">
+                                                        <img src="./assets/images/avatar/4.jpeg" alt={info.fullname} className="profile-avatar rounded-circle border-avatar" />
+                                                        <img src="./assets/images/avatar/default-placeholder.png" alt="" className="avatar-default rounded-circle" />
+                                                    </div>
+                                                )
+                                            ) : (
+                                                <img src="./assets/images/avatar/4.jpeg" alt={info.fullname} className="profile-avatar rounded-circle border-avatar" />
+                                            )}
+                                        </label>
+                                        {isEditing && <input id="avatarInput" type="file" accept="image/*" style={{ display: "none" }} onChange={handleAvatarChange} />}
                                     </div>
                                     <div className="profile-details">
                                         <div className="profile-name px-3 pt-2">
-                                            <h4 className="text-white mb-0">Mitchell C. Shay</h4>
-                                            <p>UX / UI Designer</p>
-                                        </div>
-                                        <div className="profile-email px-2 pt-2">
-                                            <h4 className="mb-0">info@example.com</h4>
-                                            <p>Email</p>
-                                        </div>
-                                        <div className="dropdown ms-auto">
-                                            <a href="#!" className="btn btn-primary light sharp" data-bs-toggle="dropdown" aria-expanded="true">
-                                                <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="18px" height="18px" viewBox="0 0 24 24" version="1.1">
-                                                    <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                                                        <rect x="0" y="0" width="24" height="24"></rect>
-                                                        <circle fill="#000000" cx="5" cy="12" r="2"></circle>
-                                                        <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-                                                        <circle fill="#000000" cx="19" cy="12" r="2"></circle>
-                                                    </g>
-                                                </svg>
-                                            </a>
-                                            <ul className="dropdown-menu dropdown-menu-end">
-                                                <li className="dropdown-item">
-                                                    <i className="fa fa-user-circle text-primary me-2"></i> View profile
-                                                </li>
-                                                <li className="dropdown-item">
-                                                    <i className="fa fa-users text-primary me-2"></i> Add to btn-close friends
-                                                </li>
-                                                <li className="dropdown-item">
-                                                    <i className="fa fa-plus text-primary me-2"></i> Add to group
-                                                </li>
-                                                <li className="dropdown-item">
-                                                    <i className="fa fa-ban text-primary me-2"></i> Block
-                                                </li>
-                                            </ul>
+                                            <h4 className="text-white mb-0">{info.fullname}</h4>
+                                            <p>{info.email}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -62,585 +179,104 @@ function Profile() {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-xl-4">
-                        <div className="row">
-                            <div className="col-xl-12">
-                                <div className="card">
-                                    <div className="card-body">
-                                        <div className="profile-statistics">
-                                            <div className="text-center">
-                                                <div className="row">
-                                                    <div className="col border-end">
-                                                        <h3 className="m-b-0">150</h3>
-                                                        <span>Follower</span>
-                                                    </div>
-                                                    <div className="col border-end">
-                                                        <h3 className="m-b-0">140</h3>
-                                                        <span>Place Stay</span>
-                                                    </div>
-                                                    <div className="col ">
-                                                        <h3 className="m-b-0">45</h3>
-                                                        <span>Reviews</span>
-                                                    </div>
-                                                </div>
-                                                <div className="mt-4">
-                                                    <a href="javascript:void(0);" className="btn btn-primary mb-1 me-1 btn-sm">
-                                                        Follow
-                                                    </a>
-                                                    <a href="javascript:void(0);" className="btn btn-primary mb-1 btn-sm" data-bs-toggle="modal" data-bs-target="#sendMessageModal">
-                                                        Send Message
-                                                    </a>
-                                                </div>
-                                            </div>
+                    <div className="col-xl-8">
+                        <div className="card h-auto">
+                            <div className="d-flex p-4 pb-0">
+                                <h2>Personal info</h2>
+                                <div className="dropdown ms-auto">
+                                    <button className="btn btn-primary light sharp" onClick={handleEditClick} style={{ display: isEditButtonVisible ? "block" : "none" }}>
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M13.7471 20.4428H20.9997" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                            <path
+                                                fillRule="evenodd"
+                                                clipRule="evenodd"
+                                                d="M12.78 3.79479C13.5557 2.86779 14.95 2.73186 15.8962 3.49173C15.9485 3.53296 17.6295 4.83879 17.6295 4.83879C18.669 5.46719 18.992 6.80311 18.3494 7.82259C18.3153 7.87718 8.81195 19.7645 8.81195 19.7645C8.49578 20.1589 8.01583 20.3918 7.50291 20.3973L3.86353 20.443L3.04353 16.9723C2.92866 16.4843 3.04353 15.9718 3.3597 15.5773L12.78 3.79479Z"
+                                                stroke="#fff"
+                                                strokeWidth="1.5"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            />
+                                            <path d="M11.0205 6.00098L16.4728 10.1881" stroke="#1A162E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
 
-                                            <div className="modal fade" id="sendMessageModal">
-                                                <div className="modal-dialog modal-dialog-centered" role="document">
-                                                    <div className="modal-content">
-                                                        <div className="modal-header">
-                                                            <h5 className="modal-title">Send Message</h5>
-                                                            <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
-                                                        </div>
-                                                        <div className="modal-body">
-                                                            <form className="comment-form">
-                                                                <div className="row">
-                                                                    <div className="col-lg-6">
-                                                                        <div className="mb-3">
-                                                                            <label className="text-white font-w600 form-label">
-                                                                                Name <span className="required">*</span>
-                                                                            </label>
-                                                                            <input type="text" className="form-control" value="Author" name="Author" placeholder="Author" />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="col-lg-6">
-                                                                        <div className="mb-3">
-                                                                            <label className="text-white font-w600 form-label">
-                                                                                Email <span className="required">*</span>
-                                                                            </label>
-                                                                            <input type="text" className="form-control" value="Email" placeholder="Email" name="Email" />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="col-lg-12">
-                                                                        <div className="mb-3">
-                                                                            <label className="text-white font-w600 form-label">Comment</label>
-                                                                            <textarea rows="8" className="form-control" name="comment">
-                                                                                Comment
-                                                                            </textarea>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="col-lg-12">
-                                                                        <div className="mb-3 mb-0">
-                                                                            <input type="submit" value="Post Comment" className="submit btn btn-primary btn-sm" name="submit" />
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <div className="card-body">
+                                <div className="row">
+                                    <p className="col-sm-3 mt-1">Full Name</p>
+                                    <p className="col-sm-5 mt-1 text-white">{info.fullname}</p>
                                 </div>
-                            </div>
-                            <div className="col-xl-12">
-                                <div className="card">
-                                    <div className="card-body">
-                                        <div className="profile-blog">
-                                            <h4 className="text-white d-inline">Today Highlights</h4>
-                                            <img src="assets/images/profile/1.jpg" alt="" className="img-fluid mt-4 mb-4 w-100 rounded" />
-                                            <h4>
-                                                <a href="post-details.html" className="text-white">
-                                                    Darwin Creative Agency Theme
-                                                </a>
-                                            </h4>
-                                            <p className="mb-0">
-                                                A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of
-                                                sentences fly into your mouth.
-                                            </p>
-                                        </div>
-                                    </div>
+                                <div className="row">
+                                    <p className="col-sm-3 mt-1">Email</p>
+                                    <p className="col-sm-5 mt-1 text-white">{info.email}</p>
                                 </div>
-                            </div>
-                            <div className="col-xl-12">
-                                <div className="card">
-                                    <div className="card-body">
-                                        <div className="profile-interest">
-                                            <h4 className="text-white d-inline">Interest</h4>
-                                            <div className="row mt-4 sp4">
-                                                <a
-                                                    href="images/profile/2.jpg"
-                                                    data-exthumbimage="images/profile/2.jpg"
-                                                    data-src="images/profile/2.jpg"
-                                                    className="mb-1 col-lg-4 col-xl-4 col-sm-4 col-6"
-                                                >
-                                                    <img src="assets/images/profile/2.jpg" alt="" className="img-fluid" />
-                                                </a>
-                                                <a
-                                                    href="images/profile/3.jpg"
-                                                    data-exthumbimage="images/profile/3.jpg"
-                                                    data-src="images/profile/3.jpg"
-                                                    className="mb-1 col-lg-4 col-xl-4 col-sm-4 col-6"
-                                                >
-                                                    <img src="assets/images/profile/3.jpg" alt="" className="img-fluid" />
-                                                </a>
-                                                <a
-                                                    href="images/profile/4.jpg"
-                                                    data-exthumbimage="images/profile/4.jpg"
-                                                    data-src="images/profile/4.jpg"
-                                                    className="mb-1 col-lg-4 col-xl-4 col-sm-4 col-6"
-                                                >
-                                                    <img src="assets/images/profile/4.jpg" alt="" className="img-fluid" />
-                                                </a>
-                                                <a
-                                                    href="images/profile/3.jpg"
-                                                    data-exthumbimage="images/profile/3.jpg"
-                                                    data-src="images/profile/3.jpg"
-                                                    className="mb-1 col-lg-4 col-xl-4 col-sm-4 col-6"
-                                                >
-                                                    <img src="assets/images/profile/3.jpg" alt="" className="img-fluid" />
-                                                </a>
-                                                <a
-                                                    href="images/profile/4.jpg"
-                                                    data-exthumbimage="images/profile/4.jpg"
-                                                    data-src="images/profile/4.jpg"
-                                                    className="mb-1 col-lg-4 col-xl-4 col-sm-4 col-6"
-                                                >
-                                                    <img src="assets/images/profile/4.jpg" alt="" className="img-fluid" />
-                                                </a>
-                                                <a
-                                                    href="images/profile/2.jpg"
-                                                    data-exthumbimage="images/profile/2.jpg"
-                                                    data-src="images/profile/2.jpg"
-                                                    className="mb-1 col-lg-4 col-xl-4 col-sm-4 col-6"
-                                                >
-                                                    <img src="assets/images/profile/2.jpg" alt="" className="img-fluid" />
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div className="row">
+                                    <p className="col-sm-3 mt-1">Birthday</p>
+                                    <p className="col-sm-5 mt-1 text-white">
+                                        {isEditing ? (
+                                            <input
+                                                type="date"
+                                                className="form-control input-default custom-input-height"
+                                                value={format(new Date(editedInfo.birthday), "yyyy-MM-dd") || ""}
+                                                onChange={(e) => setEditedInfo({ ...editedInfo, birthday: e.target.value })}
+                                            />
+                                        ) : (
+                                            info.birthday && format(new Date(info.birthday), "dd/MM/yyyy")
+                                        )}
+                                    </p>
                                 </div>
-                            </div>
-                            <div className="col-xl-12">
-                                <div className="card">
-                                    <div className="card-body">
-                                        <div className="profile-news">
-                                            <h4 className="text-white d-inline">Our Latest News</h4>
-                                            <div className="media pt-3 pb-3">
-                                                <img src="assets/images/profile/5.jpg" alt="" className="me-3 rounded" width="75" />
-                                                <div className="media-body">
-                                                    <h5 className="m-b-5">
-                                                        <a href="post-details.html" className="text-white">
-                                                            Collection of textile samples
-                                                        </a>
-                                                    </h5>
-                                                    <p className="mb-0">I shared this on my fb wall a few months back, and I thought.</p>
-                                                </div>
-                                            </div>
-                                            <div className="media pt-3 pb-3">
-                                                <img src="assets/images/profile/6.jpg" alt="" className="me-3 rounded" width="75" />
-                                                <div className="media-body">
-                                                    <h5 className="m-b-5">
-                                                        <a href="post-details.html" className="text-white">
-                                                            Collection of textile samples
-                                                        </a>
-                                                    </h5>
-                                                    <p className="mb-0">I shared this on my fb wall a few months back, and I thought.</p>
-                                                </div>
-                                            </div>
-                                            <div className="media pt-3 pb-3">
-                                                <img src="assets/images/profile/7.jpg" alt="" className="me-3 rounded" width="75" />
-                                                <div className="media-body">
-                                                    <h5 className="m-b-5">
-                                                        <a href="post-details.html" className="text-white">
-                                                            Collection of textile samples
-                                                        </a>
-                                                    </h5>
-                                                    <p className="mb-0">I shared this on my fb wall a few months back, and I thought.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div className="row">
+                                    <p className="col-sm-3 mt-1">Phone</p>
+                                    <p className="col-sm-5 mt-1 text-white">
+                                        {isEditing ? (
+                                            <input
+                                                type="tel"
+                                                className="form-control input-default custom-input-height"
+                                                value={editedInfo.phone || ""}
+                                                onChange={(e) => setEditedInfo({ ...editedInfo, phone: e.target.value })}
+                                            />
+                                        ) : (
+                                            info.phone
+                                        )}
+                                    </p>
                                 </div>
+                                {isEditing && (
+                                    <div className="d-flex justify-content-end">
+                                        <button className="btn light btn-danger" onClick={handleCancelClick}>
+                                            Cancel
+                                        </button>
+                                        <button className="btn light btn-success" style={{ marginLeft: "15px" }} onClick={handleSaveClick}>
+                                            Save
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
-                    <div className="col-xl-8">
+                    <div className="col-xl-4">
                         <div className="card h-auto">
-                            <div className="card-body">
-                                <div className="profile-tab">
-                                    <div className="custom-tab-1">
-                                        <ul className="nav nav-tabs">
-                                            <li className="nav-item">
-                                                <a href="#my-posts" data-bs-toggle="tab" className="nav-link active show">
-                                                    Posts
-                                                </a>
-                                            </li>
-                                            <li className="nav-item">
-                                                <a href="#about-me" data-bs-toggle="tab" className="nav-link">
-                                                    About Me
-                                                </a>
-                                            </li>
-                                            <li className="nav-item">
-                                                <a href="#profile-settings" data-bs-toggle="tab" className="nav-link">
-                                                    Setting
-                                                </a>
-                                            </li>
-                                        </ul>
-                                        <div className="tab-content">
-                                            <div id="my-posts" className="tab-pane fade active show">
-                                                <div className="my-post-content pt-3">
-                                                    <div className="post-input">
-                                                        <textarea name="textarea" id="textarea" cols="30" rows="5" className="form-control bg-transparent">
-                                                            Please type what you want....
-                                                        </textarea>
-                                                        <a href="javascript:void(0);" className="btn btn-primary light me-1 px-3 btn-sm" data-bs-toggle="modal" data-bs-target="#linkModal">
-                                                            <i className="fa fa-link m-0"></i>
-                                                        </a>
-
-                                                        <div className="modal fade" id="linkModal">
-                                                            <div className="modal-dialog modal-dialog-centered" role="document">
-                                                                <div className="modal-content">
-                                                                    <div className="modal-header">
-                                                                        <h5 className="modal-title">Social Links</h5>
-                                                                        <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
-                                                                    </div>
-                                                                    <div className="modal-body">
-                                                                        <a className="btn-social facebook" href="javascript:void(0)">
-                                                                            <i className="fab fa-facebook-f"></i>
-                                                                        </a>
-                                                                        <a className="btn-social google-plus" href="javascript:void(0)">
-                                                                            <i className="fab fa-google-plus-g"></i>
-                                                                        </a>
-                                                                        <a className="btn-social linkedin" href="javascript:void(0)">
-                                                                            <i className="fab fa-linkedin-in"></i>
-                                                                        </a>
-                                                                        <a className="btn-social instagram" href="javascript:void(0)">
-                                                                            <i className="fab fa-instagram"></i>
-                                                                        </a>
-                                                                        <a className="btn-social twitter" href="javascript:void(0)">
-                                                                            <i className="fab fa-twitter"></i>
-                                                                        </a>
-                                                                        <a className="btn-social youtube" href="javascript:void(0)">
-                                                                            <i className="fab fa-youtube"></i>
-                                                                        </a>
-                                                                        <a className="btn-social whatsapp" href="javascript:void(0)">
-                                                                            <i className="fab fa-whatsapp"></i>
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <a href="javascript:void(0);" className="btn btn-primary light me-1 px-3 btn-sm" data-bs-toggle="modal" data-bs-target="#cameraModal">
-                                                            <i className="fa fa-camera m-0"></i>
-                                                        </a>
-
-                                                        <div className="modal fade" id="cameraModal">
-                                                            <div className="modal-dialog modal-dialog-centered" role="document">
-                                                                <div className="modal-content">
-                                                                    <div className="modal-header">
-                                                                        <h5 className="modal-title">Upload images</h5>
-                                                                        <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
-                                                                    </div>
-                                                                    <div className="modal-body">
-                                                                        <div className="input-group mb-3">
-                                                                            <span className="input-group-text">Upload</span>
-                                                                            <div className="form-file">
-                                                                                <input type="file" className="form-file-input form-control" />
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <a href="javascript:void(0);" className="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#postModal">
-                                                            Post
-                                                        </a>
-
-                                                        <div className="modal fade" id="postModal">
-                                                            <div className="modal-dialog modal-dialog-centered" role="document">
-                                                                <div className="modal-content">
-                                                                    <div className="modal-header">
-                                                                        <h5 className="modal-title">Post</h5>
-                                                                        <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
-                                                                    </div>
-                                                                    <div className="modal-body">
-                                                                        <textarea name="textarea" id="textarea2" cols="30" rows="5" className="form-control bg-transparent">
-                                                                            Please type what you want....
-                                                                        </textarea>
-                                                                        <a className="btn btn-primary btn-sm" href="javascript:void(0)">
-                                                                            Post
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="profile-uoloaded-post border-bottom-1 pb-5">
-                                                        <img src="assets/images/profile/8.jpg" alt="" className="img-fluid w-100 rounded" />
-                                                        <a className="post-title" href="post-details.html">
-                                                            <h3 className="text-white">Collection of textile samples lay spread</h3>
-                                                        </a>
-                                                        <p>
-                                                            A wonderful serenity has take possession of my entire soul like these sweet morning of spare which enjoy whole heart.A wonderful serenity
-                                                            has take possession of my entire soul like these sweet morning of spare which enjoy whole heart.
-                                                        </p>
-                                                        <button className="btn btn-primary me-2 btn-sm" id="btn-like">
-                                                            <span className="me-2 ">
-                                                                <i className="fa fa-heart"></i>
-                                                            </span>
-                                                            Like
-                                                        </button>
-                                                        <button className="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#replyModal">
-                                                            <span className="me-2 text-white">
-                                                                <i className="fa fa-reply"></i>
-                                                            </span>
-                                                            Reply
-                                                        </button>
-                                                    </div>
-                                                    <div className="profile-uoloaded-post border-bottom-1 pb-5">
-                                                        <img src="assets/images/profile/9.jpg" alt="" className="img-fluid w-100 rounded" />
-                                                        <a className="post-title" href="post-details.html">
-                                                            <h3 className="text-white">Collection of textile samples lay spread</h3>
-                                                        </a>
-                                                        <p>
-                                                            A wonderful serenity has take possession of my entire soul like these sweet morning of spare which enjoy whole heart.A wonderful serenity
-                                                            has take possession of my entire soul like these sweet morning of spare which enjoy whole heart.
-                                                        </p>
-                                                        <button className="btn btn-primary me-2 btn-sm" id="btn-like">
-                                                            <span className="me-2">
-                                                                <i className="fa fa-heart "></i>
-                                                            </span>
-                                                            Like
-                                                        </button>
-                                                        <button className="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#replyModal">
-                                                            <span className="me-2 text-white">
-                                                                <i className="fa fa-reply"></i>
-                                                            </span>
-                                                            Reply
-                                                        </button>
-                                                    </div>
-                                                    <div className="profile-uoloaded-post pb-3">
-                                                        <img src="assets/images/profile/8.jpg" alt="" className="img-fluid w-100 rounded" />
-                                                        <a className="post-title" href="post-details.html">
-                                                            <h3 className="text-white">Collection of textile samples lay spread</h3>
-                                                        </a>
-                                                        <p>
-                                                            A wonderful serenity has take possession of my entire soul like these sweet morning of spare which enjoy whole heart.A wonderful serenity
-                                                            has take possession of my entire soul like these sweet morning of spare which enjoy whole heart.
-                                                        </p>
-                                                        <button className="btn btn-primary me-2 btn-sm" id="btn-like">
-                                                            <span className="me-2 ">
-                                                                <i className="fa fa-heart "></i>
-                                                            </span>
-                                                            Like
-                                                        </button>
-                                                        <button className="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#replyModal">
-                                                            <span className="me-2 text-white">
-                                                                <i className="fa fa-reply"></i>
-                                                            </span>
-                                                            Reply
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div id="about-me" className="tab-pane fade">
-                                                <div className="profile-about-me">
-                                                    <div className="pt-4 border-bottom-1 pb-3">
-                                                        <h4 className="text-primary">About Me</h4>
-                                                        <p className="mb-2">
-                                                            A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart. I am
-                                                            alone, and feel the charm of existence was created for the bliss of souls like mine.I am so happy, my dear friend, so absorbed in the
-                                                            exquisite sense of mere tranquil existence, that I neglect my talents.
-                                                        </p>
-                                                        <p>
-                                                            A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture that he
-                                                            had recently cut out of an illustrated magazine and housed in a nice, gilded frame.
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <div className="profile-skills mb-5">
-                                                    <h4 className="text-primary mb-2">Skills</h4>
-                                                    <a href="javascript:void(0);" className="btn btn-primary light btn-xs mb-1">
-                                                        Admin
-                                                    </a>
-                                                    <a href="javascript:void(0);" className="btn btn-primary light btn-xs mb-1">
-                                                        Dashboard
-                                                    </a>
-                                                    <a href="javascript:void(0);" className="btn btn-primary light btn-xs mb-1">
-                                                        Photoshop
-                                                    </a>
-                                                    <a href="javascript:void(0);" className="btn btn-primary light btn-xs mb-1">
-                                                        Bootstrap
-                                                    </a>
-                                                    <a href="javascript:void(0);" className="btn btn-primary light btn-xs mb-1">
-                                                        Responsive
-                                                    </a>
-                                                    <a href="javascript:void(0);" className="btn btn-primary light btn-xs mb-1">
-                                                        Crypto
-                                                    </a>
-                                                </div>
-                                                <div className="profile-lang  mb-5">
-                                                    <h4 className="text-primary mb-2">Language</h4>
-                                                    <a href="javascript:void(0);" className="text-muted pe-3 f-s-16">
-                                                        <i className="flag-icon flag-icon-us"></i> English
-                                                    </a>
-                                                    <a href="javascript:void(0);" className="text-muted pe-3 f-s-16">
-                                                        <i className="flag-icon flag-icon-fr"></i> French
-                                                    </a>
-                                                    <a href="javascript:void(0);" className="text-muted pe-3 f-s-16">
-                                                        <i className="flag-icon flag-icon-bd"></i> Bangla
-                                                    </a>
-                                                </div>
-                                                <div className="profile-personal-info">
-                                                    <h4 className="text-primary mb-4">Personal Information</h4>
-                                                    <div className="row mb-2">
-                                                        <div className="col-sm-3 col-5">
-                                                            <h5 className="f-w-500">
-                                                                Name <span className="pull-end">:</span>
-                                                            </h5>
-                                                        </div>
-                                                        <div className="col-sm-9 col-7">
-                                                            <span>Mitchell C.Shay</span>
-                                                        </div>
-                                                    </div>
-                                                    <div className="row mb-2">
-                                                        <div className="col-sm-3 col-5">
-                                                            <h5 className="f-w-500">
-                                                                Email <span className="pull-end">:</span>
-                                                            </h5>
-                                                        </div>
-                                                        <div className="col-sm-9 col-7">
-                                                            <span>example@examplel.com</span>
-                                                        </div>
-                                                    </div>
-                                                    <div className="row mb-2">
-                                                        <div className="col-sm-3 col-5">
-                                                            <h5 className="f-w-500">
-                                                                Availability <span className="pull-end">:</span>
-                                                            </h5>
-                                                        </div>
-                                                        <div className="col-sm-9 col-7">
-                                                            <span>Full Time (Free Lancer)</span>
-                                                        </div>
-                                                    </div>
-                                                    <div className="row mb-2">
-                                                        <div className="col-sm-3 col-5">
-                                                            <h5 className="f-w-500">
-                                                                Age <span className="pull-end">:</span>
-                                                            </h5>
-                                                        </div>
-                                                        <div className="col-sm-9 col-7">
-                                                            <span>27</span>
-                                                        </div>
-                                                    </div>
-                                                    <div className="row mb-2">
-                                                        <div className="col-sm-3 col-5">
-                                                            <h5 className="f-w-500">
-                                                                Location <span className="pull-end">:</span>
-                                                            </h5>
-                                                        </div>
-                                                        <div className="col-sm-9 col-7">
-                                                            <span>Rosemont Avenue Melbourne, Florida</span>
-                                                        </div>
-                                                    </div>
-                                                    <div className="row mb-2">
-                                                        <div className="col-sm-3 col-5">
-                                                            <h5 className="f-w-500">
-                                                                Year Experience <span className="pull-end">:</span>
-                                                            </h5>
-                                                        </div>
-                                                        <div className="col-sm-9 col-7">
-                                                            <span>07 Year Experiences</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div id="profile-settings" className="tab-pane fade">
-                                                <div className="pt-3">
-                                                    <div className="settings-form">
-                                                        <h4 className="text-primary">Account Setting</h4>
-                                                        <form>
-                                                            <div className="row">
-                                                                <div className="mb-3 col-md-6">
-                                                                    <label className="form-label">Email</label>
-                                                                    <input type="email" placeholder="Email" className="form-control" />
-                                                                </div>
-                                                                <div className="mb-3 col-md-6">
-                                                                    <label className="form-label">Password</label>
-                                                                    <input type="password" placeholder="Password" className="form-control" />
-                                                                </div>
-                                                            </div>
-                                                            <div className="mb-3">
-                                                                <label className="form-label">Address</label>
-                                                                <input type="text" placeholder="1234 Main St" className="form-control" />
-                                                            </div>
-                                                            <div className="mb-3">
-                                                                <label className="form-label">Address 2</label>
-                                                                <input type="text" placeholder="Apartment, studio, or floor" className="form-control" />
-                                                            </div>
-                                                            <div className="row">
-                                                                <div className="mb-3 col-md-6">
-                                                                    <label className="form-label">City</label>
-                                                                    <input type="text" className="form-control" />
-                                                                </div>
-                                                                <div className="mb-3 col-md-4">
-                                                                    <label className="form-label">State</label>
-                                                                    <select className="form-control default-select wide" id="inputState">
-                                                                        <option>Choose...</option>
-                                                                        <option>Option 1</option>
-                                                                        <option>Option 2</option>
-                                                                        <option>Option 3</option>
-                                                                    </select>
-                                                                </div>
-                                                                <div className="mb-3 col-md-2">
-                                                                    <label className="form-label">Zip</label>
-                                                                    <input type="text" className="form-control" />
-                                                                </div>
-                                                            </div>
-                                                            <div className="mb-3">
-                                                                <div className="form-check custom-checkbox">
-                                                                    <input type="checkbox" className="form-check-input" id="gridCheck" />
-                                                                    <label className="form-check-label form-label" htmlFor="gridCheck">
-                                                                        Check me out
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                            <button className="btn btn-primary btn-sm" type="submit">
-                                                                Sign in
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="modal fade" id="replyModal">
-                                        <div className="modal-dialog modal-dialog-centered" role="document">
-                                            <div className="modal-content">
-                                                <div className="modal-header">
-                                                    <h5 className="modal-title">Post Reply</h5>
-                                                    <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
-                                                </div>
-                                                <div className="modal-body">
-                                                    <form>
-                                                        <textarea className="form-control" rows="4">
-                                                            Message
-                                                        </textarea>
-                                                    </form>
-                                                </div>
-                                                <div className="modal-footer">
-                                                    <button type="button" className="btn btn-danger btn-sm" data-bs-dismiss="modal">
-                                                        Close
-                                                    </button>
-                                                    <button type="button" className="btn btn-primary btn-sm">
-                                                        Reply
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div className="card-body text-center ai-icon text-primary p-5">
+                                <svg
+                                    id="rocket-icon"
+                                    className="my-2"
+                                    viewBox="0 0 24 24"
+                                    width="80"
+                                    height="80"
+                                    stroke="currentColor"
+                                    strokeWidth="1"
+                                    fill="none"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                >
+                                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                                </svg>
+                                <h4 className="my-2">You don’t have badges yet</h4>
+                                <button className="btn my-2 btn-primary btn-lg px-4">
+                                    <i className="fa fa-usd"></i> Earn Budges
+                                </button>
                             </div>
                         </div>
                     </div>

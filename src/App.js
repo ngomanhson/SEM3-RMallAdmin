@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Dashboard from "./components/pages/dashboard";
 import Login from "./components/pages/auth/login";
 import ForgotPassword from "./components/pages/auth/forgot-password";
@@ -21,51 +21,76 @@ import FoodCounterEdit from "./components/pages/food-counter/edit";
 import FoodCounterDeleteAt from "./components/pages/food-counter/delete-at";
 import BookingList from "./components/pages/booking";
 import Profile from "./components/pages/auth/profile";
+import { useJwt } from "react-jwt";
+import { getAccessToken, removeAccessToken } from "./utils/auth";
 
 function App() {
+    const ProtectedRoute = ({ element }) => {
+        const token = getAccessToken();
+        const { isExpired, isInvalid } = useJwt(token);
+
+        if (!token || isExpired || isInvalid) {
+            removeAccessToken();
+            return <Navigate to="/login" />;
+        }
+
+        return element;
+    };
+
+    const ProtectedLoginRoute = ({ element }) => {
+        const token = getAccessToken();
+        const { isExpired, isInvalid } = useJwt(token);
+
+        if (token && !isExpired && !isInvalid) {
+            return <Navigate to="/" />;
+        }
+
+        return element;
+    };
+
     return (
         <div className="App">
             <Routes>
                 {/* Start Dashboard */}
-                <Route path="/" element={<Dashboard />} />
+                <Route path="/" element={<ProtectedRoute element={<Dashboard />} />} />
                 {/* End Dashboard */}
 
                 {/* Start Booth */}
-                <Route path="/booth-list" element={<BoothList />} />
-                <Route path="/booth-create" element={<BoothCreate />} />
-                <Route path="/booth-edit" element={<BoothEdit />} />
-                <Route path="/booth-delete-at" element={<BoothDeleteAt />} />
+                <Route path="/booth-list" element={<ProtectedRoute element={<BoothList />} />} />
+                <Route path="/booth-create" element={<ProtectedRoute element={<BoothCreate />} />} />
+                <Route path="/booth-edit" element={<ProtectedRoute element={<BoothEdit />} />} />
+                <Route path="/booth-delete-at" element={<ProtectedRoute element={<BoothDeleteAt />} />} />
                 {/* End Booth */}
 
                 {/* Start Food Counter */}
-                <Route path="/food-counter-list" element={<FoodCounterList />} />
-                <Route path="/food-counter-create" element={<FoodCounterCreate />} />
-                <Route path="/food-counter-edit" element={<FoodCounterEdit />} />
-                <Route path="/food-counter-delete-at" element={<FoodCounterDeleteAt />} />
+                <Route path="/food-counter-list" element={<ProtectedRoute element={<FoodCounterList />} />} />
+                <Route path="/food-counter-create" element={<ProtectedRoute element={<FoodCounterCreate />} />} />
+                <Route path="/food-counter-edit" element={<ProtectedRoute element={<FoodCounterEdit />} />} />
+                <Route path="/food-counter-delete-at" element={<ProtectedRoute element={<FoodCounterDeleteAt />} />} />
                 {/* End Food Counter */}
 
                 {/* Start Movie */}
-                <Route path="/movie-list" element={<MovieList />} />
-                <Route path="/movie-create" element={<MovieCreate />} />
-                <Route path="/movie-edit/:id" element={<MovieEdit />} />
-                <Route path="/movie-delete-at" element={<MovieDeleteAt />} />
+                <Route path="/movie-list" element={<ProtectedRoute element={<MovieList />} />} />
+                <Route path="/movie-create" element={<ProtectedRoute element={<MovieCreate />} />} />
+                <Route path="/movie-edit/:id" element={<ProtectedRoute element={<MovieEdit />} />} />
+                <Route path="/movie-delete-at" element={<ProtectedRoute element={<MovieDeleteAt />} />} />
                 {/* End Movie */}
 
                 {/* Start Booking */}
-                <Route path="/booking-list" element={<BookingList />} />
+                <Route path="/booking-list" element={<ProtectedRoute element={<BookingList />} />} />
                 {/* End Booking */}
 
                 {/* Start Customer */}
-                <Route path="/customer-list" element={<CustomerList />} />
-                <Route path="/customer-create" element={<CustomerCreate />} />
-                <Route path="/customer-edit" element={<CustomerEdit />} />
-                <Route path="/customer-delete-at" element={<CustomerDeleteAt />} />
+                <Route path="/customer-list" element={<ProtectedRoute element={<CustomerList />} />} />
+                <Route path="/customer-create" element={<ProtectedRoute element={<CustomerCreate />} />} />
+                <Route path="/customer-edit" element={<ProtectedRoute element={<CustomerEdit />} />} />
+                <Route path="/customer-delete-at" element={<ProtectedRoute element={<CustomerDeleteAt />} />} />
                 {/* End Customer */}
 
                 {/* Start Auth */}
-                <Route path="/login" element={<Login />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route path="/profile" element={<Profile />} />
+                <Route path="/login" element={<ProtectedLoginRoute element={<Login />} />} />
+                <Route path="/forgot-password" element={<ProtectedLoginRoute element={<ForgotPassword />} />} />
+                <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
 
                 {/* End Auth */}
 
