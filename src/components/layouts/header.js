@@ -1,4 +1,29 @@
+import { Link, useNavigate } from "react-router-dom";
+import { getDecodedToken, removeAccessToken } from "../../utils/auth";
+import { useEffect, useState } from "react";
+
 function Header() {
+    const navigate = useNavigate();
+    const [userName, setUserName] = useState("");
+    const [roleName, setRole] = useState("");
+
+    useEffect(() => {
+        // Get information form token
+        const decodedToken = getDecodedToken();
+
+        if (decodedToken) {
+            const userName = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
+            const roleName = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
+            setUserName(userName);
+            setRole(roleName);
+        }
+    }, []);
+
+    const handleLogout = () => {
+        removeAccessToken();
+        navigate("/login");
+    };
     return (
         <div className="header">
             <div className="header-content">
@@ -23,7 +48,7 @@ function Header() {
                                                     d="M12.8333 18.6667C16.055 18.6667 18.6667 16.055 18.6667 12.8334C18.6667 9.61169 16.055 7.00002 12.8333 7.00002C9.61166 7.00002 6.99999 9.61169 6.99999 12.8334C6.99999 16.055 9.61166 18.6667 12.8333 18.6667ZM12.8333 21C8.323 21 4.66666 17.3437 4.66666 12.8334C4.66666 8.32303 8.323 4.66669 12.8333 4.66669C17.3436 4.66669 21 8.32303 21 12.8334C21 17.3437 17.3436 21 12.8333 21Z"
                                                     fill="white"
                                                 />
-                                            </svg>{" "}
+                                            </svg>
                                         </a>
                                     </span>
                                 </div>
@@ -233,11 +258,11 @@ function Header() {
                             </ul>
                             <a className="nav-link user-profile" href="javascript:void(0);" role="button" data-bs-toggle="dropdown">
                                 <div className="header-info2 d-flex align-items-center">
-                                    <img src="assets/images/placeholder.jpg" alt="" />
+                                    <img src="./assets/images/avatar/4.jpeg" alt="" />
                                     <div className="d-flex align-items-center sidebar-info">
                                         <div className="user-info">
-                                            <span className="font-w500 d-block fs-5 text-white">Adam Joe</span>
-                                            <small className="text-end font-w400">Admin</small>
+                                            <span className="font-w500 d-block fs-5 text-white">{userName}</span>
+                                            <small className="text-end font-w400">{roleName}</small>
                                         </div>
                                         <svg width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M12.8334 1.08331L7.00002 6.91665L1.16669 1.08331" stroke="#FFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -246,7 +271,7 @@ function Header() {
                                 </div>
                             </a>
                             <div className="dropdown-menu profile dropdown-menu-end">
-                                <a href="app-profile.html" className="dropdown-item ai-icon">
+                                <Link to="/profile" className="dropdown-item ai-icon">
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         className="text-primary"
@@ -263,7 +288,7 @@ function Header() {
                                         <circle cx="12" cy="7" r="4"></circle>
                                     </svg>
                                     <span className="ms-2">Profile </span>
-                                </a>
+                                </Link>
                                 <a href="email-inbox.html" className="dropdown-item ai-icon">
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
@@ -282,7 +307,7 @@ function Header() {
                                     </svg>
                                     <span className="ms-2">Inbox </span>
                                 </a>
-                                <a href="page-login.html" className="dropdown-item ai-icon">
+                                <p className="dropdown-item ai-icon" onClick={handleLogout}>
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         className="text-danger"
@@ -300,7 +325,7 @@ function Header() {
                                         <line x1="21" y1="12" x2="9" y2="12"></line>
                                     </svg>
                                     <span className="ms-2">Logout </span>
-                                </a>
+                                </p>
                             </div>
                         </div>
                     </div>
