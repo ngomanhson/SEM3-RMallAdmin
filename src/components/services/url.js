@@ -5,12 +5,17 @@ const url = {
         DETAIL: "/movie/{}",
         CREATE: "/movie/create",
         UPDATE: "/movie/edit",
+        DELETE: "/movie/delete",
+    },
+    SHOW: {
+        LIST: "/show",
+        CREATE: "/show",
     },
     GENRE: {
         LIST: "/genre",
     },
     LANGUAGE: {
-        LIST: "/language",
+        LIST: "/language/get-all",
     },
 
     AUTH: {

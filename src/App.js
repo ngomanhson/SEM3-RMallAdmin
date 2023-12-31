@@ -23,6 +23,7 @@ import BookingList from "./components/pages/booking";
 import Profile from "./components/pages/auth/profile";
 import { useJwt } from "react-jwt";
 import { getAccessToken, removeAccessToken } from "./utils/auth";
+import ShowTimes from "./components/pages/showtimes";
 
 function App() {
     const ProtectedRoute = ({ element }) => {
@@ -75,6 +76,10 @@ function App() {
                 <Route path="/movie-edit/:id" element={<ProtectedRoute element={<MovieEdit />} />} />
                 <Route path="/movie-delete-at" element={<ProtectedRoute element={<MovieDeleteAt />} />} />
                 {/* End Movie */}
+
+                {/* Start Show Time */}
+                <Route path="/show-times" element={<ProtectedRoute element={<ShowTimes />} />} />
+                {/* End Show Time */}
 
                 {/* Start Booking */}
                 <Route path="/booking-list" element={<ProtectedRoute element={<BookingList />} />} />
