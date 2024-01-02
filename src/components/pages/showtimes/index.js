@@ -14,9 +14,11 @@ import listPlugin from "@fullcalendar/list";
 import interactionPlugin from "@fullcalendar/interaction";
 function ShowTimes() {
     const [events, setEvents] = useState([]);
+    const eventColors = ["#53CAFD", "#FFAA2B", "#1EAE7A", "#B9A8FF"];
     const [isSelecting, setIsSelecting] = useState(false);
     const [selectedTime, setSelectedTime] = useState("");
     const [movies, setMovies] = useState([]);
+    const [rooms, setRooms] = useState([]);
     const [formShow, setFormShow] = useState({
         showCode: "",
         movieId: "",
@@ -145,6 +147,7 @@ function ShowTimes() {
                     const durationHours = movie ? movie.duration : 0;
                     const startDate = moment(newShow.startDate);
                     const endDate = startDate.clone().add(durationHours, "hours");
+                    const randomColor = eventColors[Math.floor(Math.random() * eventColors.length)];
                     setEvents((prevEvents) => [
                         ...prevEvents,
                         {
@@ -152,6 +155,7 @@ function ShowTimes() {
                             title: movie ? movie.title : newShow.movieId,
                             start: startDate.toISOString(),
                             end: endDate.toISOString(),
+                            backgroundColor: randomColor,
                         },
                     ]);
                 } else {
@@ -209,15 +213,30 @@ function ShowTimes() {
             const durationHours = movie ? movie.duration : 0;
             const startDate = moment(show.startDate);
             const endDate = startDate.clone().add(durationHours, "hours");
+            const randomColor = eventColors[Math.floor(Math.random() * eventColors.length)];
             return {
                 id: show.id,
                 title: show.movieName,
                 start: startDate.toISOString(),
                 end: endDate.toISOString(),
+                backgroundColor: randomColor,
             };
         });
         setEvents(updatedEvents);
     }, [showslist, durationMovie]);
+
+    // lấy ra danh sách phòng
+    useEffect(() => {
+        const fetchRooms = async () => {
+            try {
+                const response = await api.get(url.ROOM.LIST);
+                setRooms(response.data);
+                console.log(response.data);
+            } catch (error) {}
+        };
+        fetchRooms();
+    }, []);
+    const roomColors = ["btn-warning light", "btn-danger light", "btn-info light", "btn-dark light", "btn-secondary light"];
 
     return (
         <>
@@ -231,29 +250,18 @@ function ShowTimes() {
                         <div className="card">
                             <div className="card-body">
                                 <h4 className="card-intro-title">Rooms List</h4>
-
                                 <div className="">
                                     <div id="external-events" className="my-3">
                                         <p>Phần này có api danh sách phòng thì sẽ cho chọn phòng tại đây !</p>
-                                        <div className="external-event btn-primary light" data-className="bg-primary">
-                                            <i className="fa fa-move"></i>
-                                            <span>Room 1</span>
-                                        </div>
-                                        <div className="external-event btn-warning light" data-className="bg-warning">
-                                            <i className="fa fa-move"></i>Room 2
-                                        </div>
-                                        <div className="external-event btn-danger light" data-className="bg-danger">
-                                            <i className="fa fa-move"></i>Room 3
-                                        </div>
-                                        <div className="external-event btn-info light" data-className="bg-info">
-                                            <i className="fa fa-move"></i>Room 4
-                                        </div>
-                                        <div className="external-event btn-dark light" data-className="bg-dark">
-                                            <i className="fa fa-move"></i>Room 5
-                                        </div>
-                                        <div className="external-event btn-secondary light" data-className="bg-secondary">
-                                            <i className="fa fa-move"></i>Room 6
-                                        </div>
+                                        {rooms.map((item, index) => {
+                                            const randomColor = roomColors[Math.floor(Math.random() * roomColors.length)];
+                                            return (
+                                                <div className={`external-event ${randomColor}`} key={index}>
+                                                    <i className="fa fa-move"></i>
+                                                    <span>{item.name}</span>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                     <a href="javascript:void()" className="btn btn-primary btn-event w-100">
                                         <span className="align-middle">

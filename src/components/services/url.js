@@ -11,8 +11,16 @@ const url = {
         LIST: "/show",
         CREATE: "/show",
     },
+    PROMOTION: {
+        LIST: "/promotion/get-all",
+        CREATE: "/promotion/create",
+        DELETE: "/promotion/delete",
+    },
     GENRE: {
         LIST: "/genre",
+    },
+    ROOM: {
+        LIST: "/room/get-all",
     },
     LANGUAGE: {
         LIST: "/language/get-all",

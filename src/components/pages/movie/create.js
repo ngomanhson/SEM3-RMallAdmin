@@ -21,7 +21,6 @@ function MovieCreate() {
         language: "English",
         ratings: "",
         trailer: "",
-        cast: "",
         release_date: "",
         genreIds: [],
         languageIds: [],
@@ -128,10 +127,6 @@ function MovieCreate() {
         }
         if (formMovie.ratings === "") {
             newErrors.ratings = "Please choose ratings";
-            valid = false;
-        }
-        if (formMovie.cast === "") {
-            newErrors.cast = "Please enter cast";
             valid = false;
         }
         if (formMovie.release_date === "") {
@@ -275,16 +270,6 @@ function MovieCreate() {
                                                 </label>
                                                 <input type="text" name="director" onChange={handleChange} className="form-control" placeholder="Please enter director name" />
                                                 {errors.director && <div className="text-danger">{errors.director}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Cast <span className="text-danger">*</span>
-                                                </label>
-                                                <input type="text" name="cast" onChange={handleChange} className="form-control" placeholder="Please enter cast" />
-                                                {errors.cast && <div className="text-danger">{errors.cast}</div>}
                                             </div>
                                         </div>
 
