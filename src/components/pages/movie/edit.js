@@ -119,10 +119,6 @@ function MovieEdit() {
             newErrors.ratings = "Please choose ratings";
             valid = false;
         }
-        if (movieData.cast === "") {
-            newErrors.cast = "Please enter cast";
-            valid = false;
-        }
         if (movieData.release_date === "") {
             newErrors.release_date = "Please enter release_date";
             valid = false;
@@ -306,26 +302,6 @@ function MovieEdit() {
                                                     className="form-control"
                                                 />
                                                 {errors.director && <div className="text-danger">{errors.director}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Cast <span className="text-danger">*</span>
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={movieData.cast}
-                                                    onChange={(e) =>
-                                                        setMovieData({
-                                                            ...movieData,
-                                                            cast: e.target.value,
-                                                        })
-                                                    }
-                                                    className="form-control"
-                                                />
-                                                {errors.cast && <div className="text-danger">{errors.cast}</div>}
                                             </div>
                                         </div>
 

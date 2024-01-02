@@ -24,6 +24,9 @@ import Profile from "./components/pages/auth/profile";
 import { useJwt } from "react-jwt";
 import { getAccessToken, removeAccessToken } from "./utils/auth";
 import ShowTimes from "./components/pages/showtimes";
+import PromotionList from "./components/pages/Promotion";
+import PromotionCreate from "./components/pages/Promotion/create";
+import PromotionEdit from "./components/pages/Promotion/edit";
 
 function App() {
     const ProtectedRoute = ({ element }) => {
@@ -84,6 +87,12 @@ function App() {
                 {/* Start Booking */}
                 <Route path="/booking-list" element={<ProtectedRoute element={<BookingList />} />} />
                 {/* End Booking */}
+
+                {/* Start Promotion */}
+                <Route path="/promotion-list" element={<ProtectedRoute element={<PromotionList />} />} />
+                <Route path="/promotion-create" element={<ProtectedRoute element={<PromotionCreate />} />} />
+                <Route path="/promotion-edit/:id" element={<ProtectedRoute element={<PromotionEdit />} />} />
+                {/* End Promotion */}
 
                 {/* Start Customer */}
                 <Route path="/customer-list" element={<ProtectedRoute element={<CustomerList />} />} />
