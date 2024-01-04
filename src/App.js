@@ -27,6 +27,7 @@ import ShowTimes from "./components/pages/showtimes";
 import PromotionList from "./components/pages/Promotion";
 import PromotionCreate from "./components/pages/Promotion/create";
 import PromotionEdit from "./components/pages/Promotion/edit";
+import Room from "./components/pages/showtimes/room";
 
 function App() {
     const ProtectedRoute = ({ element }) => {
@@ -80,9 +81,10 @@ function App() {
                 <Route path="/movie-delete-at" element={<ProtectedRoute element={<MovieDeleteAt />} />} />
                 {/* End Movie */}
 
-                {/* Start Show Time */}
-                <Route path="/show-times" element={<ProtectedRoute element={<ShowTimes />} />} />
-                {/* End Show Time */}
+                {/* Start Room and Show Time */}
+                <Route path="/room" element={<ProtectedRoute element={<Room />} />} />
+                <Route path="/show-times/:id" element={<ProtectedRoute element={<ShowTimes />} />} />
+                {/* End Room and Show Time */}
 
                 {/* Start Booking */}
                 <Route path="/booking-list" element={<ProtectedRoute element={<BookingList />} />} />

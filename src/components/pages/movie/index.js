@@ -102,7 +102,7 @@ function MovieList() {
                                                 </div>
                                             </td>
                                             <td>{format(new Date(item.release_date), "yyyy-MM-dd")}</td>
-                                            <td>{item.duration}</td>
+                                            <td>{item.duration} (Minutes)</td>
                                             <td>
                                                 <div className="d-flex">
                                                     <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">

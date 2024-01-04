@@ -1,6 +1,6 @@
 import Layout from "../../layouts/index";
 import Breadcrumb from "../../layouts/breadcrumb";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import api from "../../services/api";
 import url from "../../services/url";
@@ -12,7 +12,19 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import interactionPlugin from "@fullcalendar/interaction";
+import Loading from "../../layouts/loading";
+
 function ShowTimes() {
+    const [loading, setLoading] = useState(false);
+    useEffect(() => {
+        setLoading(true);
+        setTimeout(() => {
+            setLoading(false);
+        }, 2000);
+    }, []);
+
+    const { id } = useParams();
+    const [currentRoomId, setCurrentRoomId] = useState(id);
     const [events, setEvents] = useState([]);
     const eventColors = ["#53CAFD", "#FFAA2B", "#1EAE7A", "#B9A8FF"];
     const [isSelecting, setIsSelecting] = useState(false);
@@ -22,7 +34,7 @@ function ShowTimes() {
     const [formShow, setFormShow] = useState({
         showCode: "",
         movieId: "",
-        roomId: 1,
+        roomId: id,
         startDate: "",
         language: "",
         seatPricings: [
@@ -144,9 +156,9 @@ function ShowTimes() {
                     //hiển thị lịch chiếu vừa thêm trên FullCalendar
                     const newShow = response.data;
                     const movie = durationMovie.find((m) => m.id === newShow.movieId);
-                    const durationHours = movie ? movie.duration : 0;
+                    const durationMinutes = movie ? movie.duration : 0;
                     const startDate = moment(newShow.startDate);
-                    const endDate = startDate.clone().add(durationHours, "hours");
+                    const endDate = startDate.clone().add(durationMinutes, "minutes");
                     const randomColor = eventColors[Math.floor(Math.random() * eventColors.length)];
                     setEvents((prevEvents) => [
                         ...prevEvents,
@@ -166,14 +178,19 @@ function ShowTimes() {
                         position: toast.POSITION.TOP_RIGHT,
                         autoClose: 3000,
                     });
+                } else if (error.response.status === 400 && error.response.data.title === "Bad Request") {
+                    toast.error("Each movie must be 10 minutes apart, please choose the time again!", {
+                        position: toast.POSITION.TOP_RIGHT,
+                        autoClose: 3000,
+                    });
                 } else {
                     toast.error("Unable to add movie to showtime, please try again!", {
                         position: toast.POSITION.TOP_RIGHT,
                         autoClose: 3000,
                     });
                 }
-                // console.error("Error creating test:", error);
-                // console.error("Response data:", error.response.data);
+                console.error("Error creating test:", error);
+                console.error("Response data:", error.response.data);
             }
         }
     };
@@ -201,22 +218,24 @@ function ShowTimes() {
     useEffect(() => {
         const loadShowsList = async () => {
             try {
-                const response = await api.get(url.SHOW.LIST); //lấy danh sách show
+                const response = await api.get(`${url.SHOW.GETBYROOM.replace("{}", currentRoomId)}`);
                 setShowsList(response.data);
+                // console.log(response.data);
             } catch (error) {}
         };
         loadShowsList();
-    }, []);
+    }, [currentRoomId]);
+
     useEffect(() => {
         const updatedEvents = showslist.map((show) => {
             const movie = durationMovie.find((m) => m.id === show.movieId);
-            const durationHours = movie ? movie.duration : 0;
+            const durationMinutes = movie ? movie.duration : 0;
             const startDate = moment(show.startDate);
-            const endDate = startDate.clone().add(durationHours, "hours");
+            const endDate = startDate.clone().add(durationMinutes, "minutes");
             const randomColor = eventColors[Math.floor(Math.random() * eventColors.length)];
             return {
                 id: show.id,
-                title: show.movieName,
+                title: movie ? movie.title : show.movieId,
                 start: startDate.toISOString(),
                 end: endDate.toISOString(),
                 backgroundColor: randomColor,
@@ -231,18 +250,18 @@ function ShowTimes() {
             try {
                 const response = await api.get(url.ROOM.LIST);
                 setRooms(response.data);
-                console.log(response.data);
+                // console.log(response.data);
             } catch (error) {}
         };
         fetchRooms();
     }, []);
-    const roomColors = ["btn-warning light", "btn-danger light", "btn-info light", "btn-dark light", "btn-secondary light"];
 
     return (
         <>
             <Helmet>
                 <title>Show Times | R Mall</title>
             </Helmet>
+            {loading ? <Loading /> : ""}
             <Layout>
                 <Breadcrumb title="Show Times" />
                 <div className="row">
@@ -250,26 +269,25 @@ function ShowTimes() {
                         <div className="card">
                             <div className="card-body">
                                 <h4 className="card-intro-title">Rooms List</h4>
-                                <div className="">
-                                    <div id="external-events" className="my-3">
-                                        <p>Phần này có api danh sách phòng thì sẽ cho chọn phòng tại đây !</p>
-                                        {rooms.map((item, index) => {
-                                            const randomColor = roomColors[Math.floor(Math.random() * roomColors.length)];
-                                            return (
-                                                <div className={`external-event ${randomColor}`} key={index}>
-                                                    <i className="fa fa-move"></i>
-                                                    <span>{item.name}</span>
-                                                </div>
-                                            );
-                                        })}
+                                <div id="external-events" className="my-3">
+                                    <p>Click on each room to see that room's showtime!</p>
+                                    <div className="nav flex-column nav-pills mb-3">
+                                        {rooms.map((item, index) => (
+                                            <NavLink key={index} to={`/show-times/${item.id}`}>
+                                                <a className={`nav-link ${item.id === currentRoomId ? "active show" : ""}`} onClick={() => setCurrentRoomId(item.id)}>
+                                                    {item.name}
+                                                </a>
+                                            </NavLink>
+                                        ))}
                                     </div>
-                                    <a href="javascript:void()" className="btn btn-primary btn-event w-100">
-                                        <span className="align-middle">
-                                            <i className="ti-plus me-1"></i>
-                                        </span>{" "}
-                                        Create New Room
-                                    </a>
                                 </div>
+
+                                {/* <a href="javascript:void()" className="btn btn-primary btn-event w-100">
+                                    <span className="align-middle">
+                                        <i className="ti-plus me-1"></i>
+                                    </span>{" "}
+                                    Create New Room
+                                </a> */}
                             </div>
                         </div>
                     </div>
