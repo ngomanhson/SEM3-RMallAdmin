@@ -10,6 +10,7 @@ const url = {
     SHOW: {
         LIST: "/show",
         CREATE: "/show",
+        GETBYROOM: "/show/get-by-room/{}",
     },
     PROMOTION: {
         LIST: "/promotion/get-all",

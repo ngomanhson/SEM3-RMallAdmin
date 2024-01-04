@@ -88,6 +88,43 @@ function PromotionList() {
         }
     };
 
+    //search, filter
+    const [searchName, setSearchName] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+    const handleSearchNameChange = (e) => {
+        setSearchName(e.target.value);
+    };
+    const handleStartDateChange = (e) => {
+        setStartDate(e.target.value);
+    };
+    const handleEndDateChange = (e) => {
+        setEndDate(e.target.value);
+    };
+    const filteredPromotions = promotions.filter((item) => {
+        const nameMatch = item.name.toLowerCase().includes(searchName.toLowerCase());
+        const startDateMatch = startDate ? new Date(item.startDate) >= new Date(startDate) : true;
+        const endDateMatch = endDate ? new Date(item.endDate) <= new Date(endDate) : true;
+        return nameMatch && startDateMatch && endDateMatch;
+    });
+
+    //paginate
+    const [currentPage, setCurrentPage] = useState(1);
+    const promotionsPerPage = 10;
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+    const handlePrevPage = () => {
+        setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    };
+    const handleNextPage = () => {
+        setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+    };
+    const totalPages = Math.ceil(filteredPromotions.length / promotionsPerPage);
+    const indexOfLastPromotion = currentPage * promotionsPerPage;
+    const indexOfFirstPromotion = indexOfLastPromotion - promotionsPerPage;
+    const currentPromotions = filteredPromotions.slice(indexOfFirstPromotion, indexOfLastPromotion);
+
     return (
         <>
             <Helmet>
@@ -95,49 +132,52 @@ function PromotionList() {
             </Helmet>
             <Layout>
                 <Breadcrumb title="Promotion Create" />
+
                 <div className="row page-titles">
                     <div className="col-lg-4">
-                        <input type="text" class="form-control input-rounded" placeholder="Search name . . ." />
+                        <input type="text" className="form-control input-rounded" placeholder="Search name . . ." value={searchName} onChange={handleSearchNameChange} />
                     </div>
                     <div className="col-lg-4">
-                        <input type="datetime-local" class="form-control input-rounded" />
+                        <input type="datetime-local" className="form-control input-rounded" value={startDate} onChange={handleStartDateChange} />
                     </div>
                     <div className="col-lg-4">
-                        <input type="datetime-local" class="form-control input-rounded" />
+                        <input type="datetime-local" className="form-control input-rounded" value={endDate} onChange={handleEndDateChange} />
                     </div>
                 </div>
-                <div className="row page-titles">
-                    <div className="col-lg-4 text-center">
-                        <NavLink to="/promotion-create">
-                            <button type="button" className="btn btn-rounded btn-info">
-                                <span className="btn-icon-start text-info">
-                                    <i className="fa fa-plus color-info"></i>
-                                </span>
-                                Create Promotion
-                            </button>
-                        </NavLink>
-                    </div>
-                    <div className="col-lg-4 text-center">
-                        <NavLink to="">
-                            <button type="button" className="btn btn-rounded btn-warning">
-                                <span className="btn-icon-start text-warning">
-                                    <i class="fa fa-trash"></i>
-                                </span>
-                                Deleted List
-                            </button>
-                        </NavLink>
-                    </div>
-                    <div className="col-lg-4 text-center">
-                        <NavLink onClick={handleDeletePromotion}>
-                            <button type="button" className={`btn btn-danger ${isDeleteVisible ? "" : "d-none"}`}>
-                                <i className="fa fa-trash"></i>
-                            </button>
-                        </NavLink>
-                    </div>
-                </div>
+
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="card">
+                            <div className="card-header">
+                                <div className="col-lg-6"></div>
+                                <div className="col-lg-1 text-end">
+                                    <NavLink onClick={handleDeletePromotion}>
+                                        <button type="button" className={`btn btn-danger ${isDeleteVisible ? "" : "d-none"}`}>
+                                            <i className="fa fa-trash"></i>
+                                        </button>
+                                    </NavLink>
+                                </div>
+                                <div className="col-lg-2 text-end">
+                                    <NavLink to="">
+                                        <button type="button" className="btn btn-rounded btn-warning">
+                                            <span className="btn-icon-start text-warning">
+                                                <i className="fa fa-trash"></i>
+                                            </span>
+                                            Deleted List
+                                        </button>
+                                    </NavLink>
+                                </div>
+                                <div className="col-lg-3 text-end">
+                                    <NavLink to="/promotion-create">
+                                        <button type="button" className="btn btn-rounded btn-info">
+                                            <span className="btn-icon-start text-info">
+                                                <i className="fa fa-plus color-info"></i>
+                                            </span>
+                                            Create New Promotion
+                                        </button>
+                                    </NavLink>
+                                </div>
+                            </div>
                             <div className="card-body">
                                 <div className="table-responsive">
                                     <div className="text-end"></div>
@@ -168,7 +208,7 @@ function PromotionList() {
                                             </tr>
                                         </thead>
                                         <tbody id="orders">
-                                            {promotions.map((item, index) => {
+                                            {currentPromotions.map((item, index) => {
                                                 return (
                                                     <tr className="btn-reveal-trigger">
                                                         <td className="py-2">
@@ -187,8 +227,8 @@ function PromotionList() {
                                                             </a>
                                                         </td>
                                                         <td className="py-2">{item.couponCode}</td>
-                                                        <td className="py-2">{format(new Date(item.startDate), "yyyy-MM-dd")}</td>
-                                                        <td className="py-2">{format(new Date(item.endDate), "yyyy-MM-dd")}</td>
+                                                        <td className="py-2">{format(new Date(item.startDate), "yyyy-MM-dd HH:mm")}</td>
+                                                        <td className="py-2">{format(new Date(item.endDate), "yyyy-MM-dd HH:mm")}</td>
                                                         <td className="py-2">{item.discountPercentage}%</td>
                                                         <td className="py-2">{item.limit}</td>
                                                         <td className="py-2 text-center">${item.minPurchaseAmount}</td>
@@ -207,6 +247,35 @@ function PromotionList() {
                                             })}
                                         </tbody>
                                     </table>
+                                </div>
+                            </div>
+                            <div className="card-footer">
+                                <div className="row">
+                                    <div className="col-lg-5"></div>
+                                    <div className="col-lg-4"></div>
+                                    <div className="col-lg-3 text-end">
+                                        <nav>
+                                            <ul className="pagination pagination-gutter pagination-primary no-bg">
+                                                <li className={`page-item page-indicator ${currentPage === 1 ? "disabled" : ""}`}>
+                                                    <a className="page-link" href="javascript:void(0)" onClick={handlePrevPage}>
+                                                        <i className="la la-angle-left"></i>
+                                                    </a>
+                                                </li>
+                                                {Array.from({ length: totalPages }).map((_, index) => (
+                                                    <li key={index} className={`page-item ${currentPage === index + 1 ? "active" : ""}`}>
+                                                        <a className="page-link" href="javascript:void(0)" onClick={() => handlePageChange(index + 1)}>
+                                                            {index + 1}
+                                                        </a>
+                                                    </li>
+                                                ))}
+                                                <li className={`page-item page-indicator ${currentPage === totalPages ? "disabled" : ""}`}>
+                                                    <a className="page-link" href="javascript:void(0)" onClick={handleNextPage}>
+                                                        <i className="la la-angle-right"></i>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                    </div>
                                 </div>
                             </div>
                         </div>

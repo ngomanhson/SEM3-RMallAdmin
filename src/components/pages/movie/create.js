@@ -120,8 +120,8 @@ function MovieCreate() {
             valid = false;
         } else {
             const durationValue = parseFloat(formMovie.duration);
-            if (isNaN(durationValue) || durationValue < 1 || durationValue > 5) {
-                newErrors.duration = "Please enter a valid duration between 1 and 5 hours";
+            if (isNaN(durationValue) || durationValue < 60 || durationValue > 200) {
+                newErrors.duration = "Please enter a valid duration between 60 and 200 Minute";
                 valid = false;
             }
         }
@@ -346,7 +346,7 @@ function MovieCreate() {
                                         <div className="col-lg-6 mb-2">
                                             <div className="mb-3">
                                                 <label className="text-label form-label">
-                                                    Movie duration (Hours) <span className="text-danger">*</span>
+                                                    Movie duration (Minute) <span className="text-danger">*</span>
                                                 </label>
                                                 <input type="number" name="duration" onChange={handleChange} className="form-control" placeholder="Please enter duration" />
                                                 {errors.duration && <div className="text-danger">{errors.duration}</div>}
