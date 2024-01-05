@@ -8,25 +8,69 @@ import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import Loading from "../../layouts/loading";
+
 function MovieList() {
+    const [loading, setLoading] = useState(false);
+    useEffect(() => {
+        setLoading(true);
+        setTimeout(() => {
+            setLoading(false);
+        }, 2000);
+    }, []);
+
     const [movies, setMovies] = useState([]);
+    const [isDeleteVisible, setDeleteVisible] = useState(false);
+    const [tbodyCheckboxes, setTbodyCheckboxes] = useState([]);
+    const [selectAll, setSelectAll] = useState(false);
 
     //hiển thị danh sách movie
-    const loadMovies = async () => {
-        try {
-            const response = await api.get(url.MOVIE.LIST);
-            setMovies(response.data);
-        } catch (error) {}
-    };
     useEffect(() => {
+        const loadMovies = async () => {
+            try {
+                const response = await api.get(url.MOVIE.LIST);
+                setMovies(response.data);
+            } catch (error) {}
+        };
         loadMovies();
     }, []);
 
+    //xử lý check tất cả và hiển thị thùng rác
+    const handleSelectAll = () => {
+        setSelectAll(!selectAll);
+        const checkboxes = document.querySelectorAll('#orders input[type="checkbox"]');
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = !selectAll;
+        });
+        setDeleteVisible(!selectAll);
+    };
+    const handleCheckboxChange = () => {
+        const checkboxes = document.querySelectorAll('#orders input[type="checkbox"]');
+        const selectedCheckboxes = Array.from(checkboxes).filter((checkbox) => checkbox.checked);
+        setDeleteVisible(selectedCheckboxes.length > 0);
+    };
+    const handleTbodyCheckboxChange = (index) => {
+        const updatedTbodyCheckboxes = [...tbodyCheckboxes];
+        updatedTbodyCheckboxes[index] = !updatedTbodyCheckboxes[index];
+        setTbodyCheckboxes(updatedTbodyCheckboxes);
+        const isDeleteVisible = selectAll || updatedTbodyCheckboxes.some((checkbox) => checkbox);
+        setDeleteVisible(isDeleteVisible);
+    };
+
     //xử lý xoá movie
-    const handleDeleteMovie = async (id) => {
+    const handleDeleteMovie = async (ids) => {
+        const selectedMovieIds = [];
+
+        // lấy id của các movie đã được chọn
+        movies.forEach((item, index) => {
+            if (selectAll || tbodyCheckboxes[index]) {
+                selectedMovieIds.push(item.id);
+            }
+        });
+
         const isConfirmed = await Swal.fire({
             title: "Are you sure?",
-            text: "You want to delete movie?",
+            text: "You want to delete selected movies?",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -35,12 +79,16 @@ function MovieList() {
         });
         if (isConfirmed.isConfirmed) {
             try {
-                await api.delete(url.MOVIE.DELETE, { data: { ids: [id] } });
-                setMovies((prevMovies) => prevMovies.filter((movie) => movie.id !== id));
-                toast.success("Delete Movie Successfully.", {
-                    position: toast.POSITION.TOP_RIGHT,
-                    autoClose: 3000,
-                });
+                const deleteResponse = await api.delete(url.MOVIE.DELETE, { params: { ids: selectedMovieIds } });
+                if (deleteResponse.status === 200) {
+                    setMovies((prevMovies) => prevMovies.filter((movie) => !selectedMovieIds.includes(movie.id)));
+                    toast.success("Delete Movie Successfully.", {
+                        position: toast.POSITION.TOP_RIGHT,
+                        autoClose: 3000,
+                    });
+                    // console.log("data:", deleteResponse.data);
+                } else {
+                }
             } catch (error) {
                 toast.error("Cannot Delete Movie!", {
                     position: toast.POSITION.TOP_RIGHT,
@@ -50,20 +98,113 @@ function MovieList() {
             }
         }
     };
+
+    //search, filter
+    const [searchTitle, setSearchTitle] = useState("");
+    const [searchDirector, setSearchDirector] = useState("");
+    const [releaseDate, setReleaseDate] = useState("");
+    const handleSearchTitleChange = (e) => {
+        setSearchTitle(e.target.value);
+    };
+    const handleSearchDirectorChange = (e) => {
+        setSearchDirector(e.target.value);
+    };
+    const handleReleaseDateChange = (e) => {
+        setReleaseDate(e.target.value);
+    };
+    const filteredMovies = movies.filter((item) => {
+        const titleMatch = item.title.toLowerCase().includes(searchTitle.toLowerCase());
+        const directorMatch = item.director.toLowerCase().includes(searchDirector.toLowerCase());
+        const releaseDateMatch = releaseDate ? new Date(item.release_date) >= new Date(releaseDate) : true;
+        return titleMatch && directorMatch && releaseDateMatch;
+    });
+
+    //paginate
+    const [currentPage, setCurrentPage] = useState(1);
+    const moviesPerPage = 10;
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+    const handlePrevPage = () => {
+        setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    };
+    const handleNextPage = () => {
+        setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+    };
+    const totalPages = Math.ceil(filteredMovies.length / moviesPerPage);
+    const indexOfLastMovie = currentPage * moviesPerPage;
+    const indexOfFirstMovie = indexOfLastMovie - moviesPerPage;
+    const currentMovies = filteredMovies.slice(indexOfFirstMovie, indexOfLastMovie);
+
     return (
         <>
             <Helmet>
                 <title>Movie List | R Mall</title>
             </Helmet>
+            {loading ? <Loading /> : ""}
             <Layout>
                 <Breadcrumb title="Movie List" />
+
+                <div className="row page-titles">
+                    <div className="col-lg-4">
+                        <input type="text" className="form-control input-rounded" placeholder="Search title movie . . ." value={searchTitle} onChange={handleSearchTitleChange} />
+                    </div>
+                    <div className="col-lg-4">
+                        <input type="text" className="form-control input-rounded" placeholder="Search director movie . . ." value={searchDirector} onChange={handleSearchDirectorChange} />
+                    </div>
+                    <div className="col-lg-4">
+                        <input type="date" className="form-control input-rounded" value={releaseDate} onChange={handleReleaseDateChange} />
+                    </div>
+                </div>
+
+                <div className="card-header">
+                    <div className="col-lg-6"></div>
+                    <div className="col-lg-1 text-end">
+                        <NavLink onClick={handleDeleteMovie}>
+                            <button type="button" className={`btn btn-danger ${isDeleteVisible ? "" : "d-none"}`}>
+                                <i className="fa fa-trash"></i>
+                            </button>
+                        </NavLink>
+                    </div>
+                    <div className="col-lg-2 text-end">
+                        <NavLink to="/movie-delete-at">
+                            <button type="button" className="btn btn-rounded btn-warning">
+                                <span className="btn-icon-start text-warning">
+                                    <i className="fa fa-trash"></i>
+                                </span>
+                                Deleted List
+                            </button>
+                        </NavLink>
+                    </div>
+                    <div className="col-lg-3 text-end">
+                        <NavLink to="/movie-create">
+                            <button type="button" className="btn btn-rounded btn-info">
+                                <span className="btn-icon-start text-info">
+                                    <i className="fa fa-plus color-info"></i>
+                                </span>
+                                Create New Movie
+                            </button>
+                        </NavLink>
+                    </div>
+                </div>
                 <div className="card-body">
                     <div className="table-responsive">
-                        <table className="table table-responsive-md">
+                        <div className="text-end"></div>
+                        <table className="table table-sm mb-0">
                             <thead>
                                 <tr>
                                     <th>
-                                        <strong>No.</strong>
+                                        <div className="form-check custom-checkbox">
+                                            <input
+                                                type="checkbox"
+                                                className="form-check-input"
+                                                onChange={() => {
+                                                    handleSelectAll();
+                                                    handleCheckboxChange();
+                                                }}
+                                                checked={selectAll}
+                                            />
+                                        </div>
                                     </th>
                                     <th>
                                         <strong>Thumbnail</strong>
@@ -81,16 +222,21 @@ function MovieList() {
                                         <strong>Movie Duration</strong>
                                     </th>
                                     <th>
+                                        <strong>Genres</strong>
+                                    </th>
+                                    <th>
                                         <strong>Action</strong>
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {movies.map((item, index) => {
+                            <tbody id="orders">
+                                {currentMovies.map((item, index) => {
                                     return (
                                         <tr>
                                             <td>
-                                                <strong>{index + 1}</strong>
+                                                <div className="form-check custom-checkbox checkbox-primary">
+                                                    <input type="checkbox" className="form-check-input" onChange={() => handleTbodyCheckboxChange(index)} checked={tbodyCheckboxes[index]} />
+                                                </div>
                                             </td>
                                             <td>
                                                 <img src={item.movie_image} className="rounded-lg me-2 movie-thumb" alt="" />
@@ -104,6 +250,12 @@ function MovieList() {
                                             <td>{format(new Date(item.release_date), "yyyy-MM-dd")}</td>
                                             <td>{item.duration} (Minutes)</td>
                                             <td>
+                                                <span key={item.genres[0].id} className="badge light badge-dark">
+                                                    {item.genres[0].name}
+                                                </span>
+                                                {item.genres.length > 1 && <span className="badge light badge-dark">+{item.genres.length - 1}</span>}
+                                            </td>
+                                            <td>
                                                 <div className="d-flex">
                                                     <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
                                                         <i className="fa fa-eye"></i>
@@ -111,9 +263,6 @@ function MovieList() {
                                                     <Link to={`/movie-edit/${item.id}`} className="btn btn-primary shadow btn-xs sharp me-1">
                                                         <i className="fas fa-pencil-alt"></i>
                                                     </Link>
-                                                    <NavLink onClick={() => handleDeleteMovie(item.id)} className="btn btn-danger shadow btn-xs sharp">
-                                                        <i className="fa fa-trash"></i>
-                                                    </NavLink>
                                                 </div>
                                             </td>
                                         </tr>
@@ -121,6 +270,35 @@ function MovieList() {
                                 })}
                             </tbody>
                         </table>
+                    </div>
+                </div>
+                <div className="card-footer">
+                    <div className="row">
+                        <div className="col-lg-5"></div>
+                        <div className="col-lg-4"></div>
+                        <div className="col-lg-3 text-end">
+                            <nav>
+                                <ul className="pagination pagination-gutter pagination-primary no-bg">
+                                    <li className={`page-item page-indicator ${currentPage === 1 ? "disabled" : ""}`}>
+                                        <a className="page-link" href="javascript:void(0)" onClick={handlePrevPage}>
+                                            <i className="la la-angle-left"></i>
+                                        </a>
+                                    </li>
+                                    {Array.from({ length: totalPages }).map((_, index) => (
+                                        <li key={index} className={`page-item ${currentPage === index + 1 ? "active" : ""}`}>
+                                            <a className="page-link" href="javascript:void(0)" onClick={() => handlePageChange(index + 1)}>
+                                                {index + 1}
+                                            </a>
+                                        </li>
+                                    ))}
+                                    <li className={`page-item page-indicator ${currentPage === totalPages ? "disabled" : ""}`}>
+                                        <a className="page-link" href="javascript:void(0)" onClick={handleNextPage}>
+                                            <i className="la la-angle-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
                     </div>
                 </div>
             </Layout>

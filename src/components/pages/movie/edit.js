@@ -9,8 +9,17 @@ import api from "../../services/api";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import { format } from "date-fns";
+import Loading from "../../layouts/loading";
 
 function MovieEdit() {
+    const [loading, setLoading] = useState(false);
+    useEffect(() => {
+        setLoading(true);
+        setTimeout(() => {
+            setLoading(false);
+        }, 2000);
+    }, []);
+
     const { id } = useParams();
     const [movieData, setMovieData] = useState({});
     const [errors, setErrors] = useState({});
@@ -217,6 +226,7 @@ function MovieEdit() {
             <Helmet>
                 <title>Movie Edit | R Mall</title>
             </Helmet>
+            {loading ? <Loading /> : ""}
             <Layout>
                 <Breadcrumb title="Movie Edit" />
                 <div className="row">
