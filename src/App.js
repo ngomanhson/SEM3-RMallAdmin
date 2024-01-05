@@ -28,6 +28,7 @@ import PromotionList from "./components/pages/Promotion";
 import PromotionCreate from "./components/pages/Promotion/create";
 import PromotionEdit from "./components/pages/Promotion/edit";
 import Room from "./components/pages/showtimes/room";
+import PromotionDeleteAt from "./components/pages/Promotion/delete-at";
 
 function App() {
     const ProtectedRoute = ({ element }) => {
@@ -94,6 +95,7 @@ function App() {
                 <Route path="/promotion-list" element={<ProtectedRoute element={<PromotionList />} />} />
                 <Route path="/promotion-create" element={<ProtectedRoute element={<PromotionCreate />} />} />
                 <Route path="/promotion-edit/:id" element={<ProtectedRoute element={<PromotionEdit />} />} />
+                <Route path="/promotion-delete-at" element={<ProtectedRoute element={<PromotionDeleteAt />} />} />
                 {/* End Promotion */}
 
                 {/* Start Customer */}
