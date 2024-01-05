@@ -81,7 +81,7 @@ function PromotionCreate() {
         return valid;
     };
 
-    //xử lý tạo phim
+    //xử lý tạo promotion
     const handleSubmit = async (e) => {
         e.preventDefault();
         const isFormValid = validateForm();

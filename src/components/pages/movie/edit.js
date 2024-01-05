@@ -12,7 +12,7 @@ import { format } from "date-fns";
 
 function MovieEdit() {
     const { id } = useParams();
-    const [movieData, setMovieData] = useState({ language: "English" });
+    const [movieData, setMovieData] = useState({});
     const [errors, setErrors] = useState({});
     const [nameExistsError, setNameExistsError] = useState("");
     const [languages, setLanguages] = useState([]);

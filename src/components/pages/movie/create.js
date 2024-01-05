@@ -18,7 +18,6 @@ function MovieCreate() {
         describe: "",
         director: "",
         duration: "",
-        language: "English",
         ratings: "",
         trailer: "",
         release_date: "",

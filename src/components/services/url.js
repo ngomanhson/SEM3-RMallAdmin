@@ -14,8 +14,12 @@ const url = {
     },
     PROMOTION: {
         LIST: "/promotion/get-all",
+        DETAIL: "/promotion/get-by-id/{}",
         CREATE: "/promotion/create",
+        UPDATE: "/promotion/edit",
+        TRASH: "/promotion/trash-can",
         DELETE: "/promotion/delete",
+        RESTORE: "/promotion/restore/{}",
     },
     GENRE: {
         LIST: "/genre",

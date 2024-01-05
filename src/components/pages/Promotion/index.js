@@ -158,7 +158,7 @@ function PromotionList() {
                                     </NavLink>
                                 </div>
                                 <div className="col-lg-2 text-end">
-                                    <NavLink to="">
+                                    <NavLink to="/promotion-delete-at">
                                         <button type="button" className="btn btn-rounded btn-warning">
                                             <span className="btn-icon-start text-warning">
                                                 <i className="fa fa-trash"></i>
@@ -237,7 +237,7 @@ function PromotionList() {
                                                                 <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
                                                                     <i className="fa fa-eye"></i>
                                                                 </a>
-                                                                <Link to={`/movie-edit/${item.id}`} className="btn btn-primary shadow btn-xs sharp me-1">
+                                                                <Link to={`/promotion-edit/${item.id}`} className="btn btn-primary shadow btn-xs sharp me-1">
                                                                     <i className="fas fa-pencil-alt"></i>
                                                                 </Link>
                                                             </div>
