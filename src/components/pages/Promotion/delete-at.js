@@ -7,7 +7,16 @@ import url from "../../services/url";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { toast } from "react-toastify";
+import Loading from "../../layouts/loading";
 function PromotionDeleteAt() {
+    const [loading, setLoading] = useState(false);
+    useEffect(() => {
+        setLoading(true);
+        setTimeout(() => {
+            setLoading(false);
+        }, 2000);
+    }, []);
+
     const [promotions, setPromotions] = useState([]);
     const navigate = useNavigate();
 
@@ -66,7 +75,7 @@ function PromotionDeleteAt() {
             <Helmet>
                 <title>Promotion Delete At | R Mall</title>
             </Helmet>
-
+            {loading ? <Loading /> : ""}
             <Layout>
                 <Breadcrumb title="Promotion Delete At" />
 

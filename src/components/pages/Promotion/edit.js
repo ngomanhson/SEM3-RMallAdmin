@@ -7,11 +7,18 @@ import api from "../../services/api";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import { format } from "date-fns";
-
+import Loading from "../../layouts/loading";
 function PromotionEdit() {
+    const [loading, setLoading] = useState(false);
+    useEffect(() => {
+        setLoading(true);
+        setTimeout(() => {
+            setLoading(false);
+        }, 2000);
+    }, []);
+
     const { id } = useParams();
     const [promotionData, setPromotionData] = useState({});
-
     const [errors, setErrors] = useState({});
     const [couponExistsError, setCouponExistsError] = useState("");
     const navigate = useNavigate();
@@ -119,7 +126,7 @@ function PromotionEdit() {
                         autoClose: 3000,
                     });
                 } else {
-                    toast.error("Unable to create promotion, please try again", {
+                    toast.error("Unable to update promotion, please try again", {
                         position: toast.POSITION.TOP_RIGHT,
                         autoClose: 3000,
                     });
@@ -135,6 +142,7 @@ function PromotionEdit() {
             <Helmet>
                 <title>Promotion Edit | R Mall</title>
             </Helmet>
+            {loading ? <Loading /> : ""}
             <Layout>
                 <Breadcrumb title="Promotion Edit" />
                 <div className="row">

@@ -5,7 +5,9 @@ const url = {
         DETAIL: "/movie/{}",
         CREATE: "/movie/create",
         UPDATE: "/movie/edit",
+        TRASH: "/movie/trash-can",
         DELETE: "/movie/delete",
+        RESTORE: "/movie/restore/{}",
     },
     SHOW: {
         LIST: "/show",

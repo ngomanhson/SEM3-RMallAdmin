@@ -8,7 +8,17 @@ import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import Loading from "../../layouts/loading";
+
 function PromotionList() {
+    const [loading, setLoading] = useState(false);
+    useEffect(() => {
+        setLoading(true);
+        setTimeout(() => {
+            setLoading(false);
+        }, 2000);
+    }, []);
+
     const [promotions, setPromotions] = useState([]);
     const [isDeleteVisible, setDeleteVisible] = useState(false);
     const [tbodyCheckboxes, setTbodyCheckboxes] = useState([]);
@@ -130,6 +140,7 @@ function PromotionList() {
             <Helmet>
                 <title>Promotion List | R Mall</title>
             </Helmet>
+            {loading ? <Loading /> : ""}
             <Layout>
                 <Breadcrumb title="Promotion Create" />
 
