@@ -25,6 +25,12 @@ const url = {
     },
     GENRE: {
         LIST: "/genre",
+        DETAIL: "/genre/get-by-id/{}",
+        CREATE: "/genre/create",
+        UPDATE: "/genre/edit",
+        TRASH: "/genre/trash-can",
+        DELETE: "/genre/delete",
+        RESTORE: "/genre/restore/{}",
     },
     FOOD: {
         LIST: "/food/get-all",

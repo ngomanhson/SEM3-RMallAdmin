@@ -166,7 +166,7 @@ function FoodCreate() {
 
                                         <div className="text-end">
                                             <button type="submit" className="btn btn-default">
-                                                Save
+                                                Create
                                             </button>
                                         </div>
                                     </div>
