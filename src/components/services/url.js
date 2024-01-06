@@ -26,6 +26,15 @@ const url = {
     GENRE: {
         LIST: "/genre",
     },
+    FOOD: {
+        LIST: "/food/get-all",
+        DETAIL: "/food/get-by-id/{}",
+        CREATE: "/food/create",
+        UPDATE: "/food/edit",
+        TRASH: "/food/trash-can",
+        DELETE: "/food/delete/{}",
+        RESTORE: "/food/restore/{}",
+    },
     ROOM: {
         LIST: "/room/get-all",
     },
