@@ -9,7 +9,7 @@ import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import Loading from "../../layouts/loading";
 
-function FoodList() {
+function GenreList() {
     const [loading, setLoading] = useState(false);
     useEffect(() => {
         setLoading(true);
@@ -18,24 +18,24 @@ function FoodList() {
         }, 2000);
     }, []);
 
-    const [foods, setFoods] = useState([]);
+    const [genres, setGenres] = useState([]);
 
-    //hiển thị danh sách food
+    //hiển thị danh sách genre
     useEffect(() => {
-        const loadFoods = async () => {
+        const loadGenres = async () => {
             try {
-                const response = await api.get(url.FOOD.LIST);
-                setFoods(response.data);
+                const response = await api.get(url.GENRE.LIST);
+                setGenres(response.data);
             } catch (error) {}
         };
-        loadFoods();
+        loadGenres();
     }, []);
 
-    //xử lý xoá food
-    const handleDeleteFood = async (id) => {
+    //xử lý xoá genre
+    const handleDeleteGenre = async (id) => {
         const isConfirmed = await Swal.fire({
             title: "Are you sure?",
-            text: "You want to delete food?",
+            text: "You want to delete selected genre?",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -44,21 +44,21 @@ function FoodList() {
         });
         if (isConfirmed.isConfirmed) {
             try {
-                const deleteResponse = await api.delete(`${url.FOOD.DELETE.replace("{}", id)}`);
+                const deleteResponse = await api.delete(`${url.GENRE.DELETE.replace("{}", id)}`);
                 if (deleteResponse.status === 200) {
-                    setFoods((prevFoods) => prevFoods.filter((food) => food.id !== id));
-                    toast.success("Delete Food Successfully.", {
+                    setGenres((prevGenres) => prevGenres.filter((genre) => genre.id !== id));
+                    toast.success("Delete Genre Successfully.", {
                         position: toast.POSITION.TOP_RIGHT,
                         autoClose: 3000,
                     });
                 } else {
                 }
             } catch (error) {
-                toast.error("Cannot Delete Food!", {
+                toast.error("Cannot Delete Genre!", {
                     position: toast.POSITION.TOP_RIGHT,
                     autoClose: 3000,
                 });
-                console.error("Failed to delete food:", error);
+                console.error("Failed to delete genre:", error);
             }
         }
     };
@@ -68,14 +68,14 @@ function FoodList() {
     const handleSearchNameChange = (e) => {
         setSearchName(e.target.value);
     };
-    const filteredFoods = foods.filter((item) => {
+    const filteredGenres = genres.filter((item) => {
         const nameMatch = item.name.toLowerCase().includes(searchName.toLowerCase());
         return nameMatch;
     });
 
     //paginate
     const [currentPage, setCurrentPage] = useState(1);
-    const foodsPerPage = 10;
+    const genresPerPage = 10;
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
@@ -85,26 +85,26 @@ function FoodList() {
     const handleNextPage = () => {
         setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
     };
-    const totalPages = Math.ceil(filteredFoods.length / foodsPerPage);
-    const indexOfLastFood = currentPage * foodsPerPage;
-    const indexOfFirstFood = indexOfLastFood - foodsPerPage;
-    const currentFoods = filteredFoods.slice(indexOfFirstFood, indexOfLastFood);
+    const totalPages = Math.ceil(filteredGenres.length / genresPerPage);
+    const indexOfLastGenre = currentPage * genresPerPage;
+    const indexOfFirstGenre = indexOfLastGenre - genresPerPage;
+    const currentGenres = filteredGenres.slice(indexOfFirstGenre, indexOfLastGenre);
 
     return (
         <>
             <Helmet>
-                <title>Food List | R Mall</title>
+                <title>Genre List | R Mall</title>
             </Helmet>
             {loading ? <Loading /> : ""}
             <Layout>
-                <Breadcrumb title="Food List" />
+                <Breadcrumb title="Genre List" />
 
                 <div className="row page-titles">
                     <div className="col-lg-6">
-                        <input type="text" className="form-control input-rounded" placeholder="Search name food . . ." value={searchName} onChange={handleSearchNameChange} />
+                        <input type="text" className="form-control input-rounded" placeholder="Search name genre . . ." value={searchName} onChange={handleSearchNameChange} />
                     </div>
                     <div className="col-lg-3 text-center">
-                        <NavLink to="/food-delete-at">
+                        <NavLink to="/genre-delete-at">
                             <button type="button" className="btn btn-rounded btn-warning">
                                 <span className="btn-icon-start text-warning">
                                     <i className="fa fa-trash"></i>
@@ -114,12 +114,12 @@ function FoodList() {
                         </NavLink>
                     </div>
                     <div className="col-lg-3 text-center">
-                        <NavLink to="/food-create">
+                        <NavLink to="/genre-create">
                             <button type="button" className="btn btn-rounded btn-info">
                                 <span className="btn-icon-start text-info">
                                     <i className="fa fa-plus color-info"></i>
                                 </span>
-                                Create New Food
+                                Create New Genre
                             </button>
                         </NavLink>
                     </div>
@@ -134,16 +134,7 @@ function FoodList() {
                                         <strong>No.</strong>
                                     </th>
                                     <th>
-                                        <strong>Thumbnail</strong>
-                                    </th>
-                                    <th>
-                                        <strong>Food Name</strong>
-                                    </th>
-                                    <th>
-                                        <strong>Price</strong>
-                                    </th>
-                                    <th>
-                                        <strong>Quantity</strong>
+                                        <strong>Genre Name</strong>
                                     </th>
                                     <th>
                                         <strong>Action</strong>
@@ -151,27 +142,22 @@ function FoodList() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {currentFoods.map((item, index) => {
+                                {currentGenres.map((item, index) => {
                                     return (
                                         <tr>
                                             <td>
                                                 <strong>{index + 1}</strong>
                                             </td>
-                                            <td>
-                                                <img src={item.image} className="rounded-lg me-2 movie-thumb" alt="" />
-                                            </td>
                                             <td>{item.name}</td>
-                                            <td>{item.price}</td>
-                                            <td>{item.quantity}</td>
                                             <td>
                                                 <div className="d-flex">
                                                     <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
                                                         <i className="fa fa-eye"></i>
                                                     </a>
-                                                    <Link to={`/food-edit/${item.id}`} className="btn btn-primary shadow btn-xs sharp me-1">
+                                                    <Link to={`/genre-edit/${item.id}`} className="btn btn-primary shadow btn-xs sharp me-1">
                                                         <i className="fas fa-pencil-alt"></i>
                                                     </Link>
-                                                    <NavLink onClick={() => handleDeleteFood(item.id)} className="btn btn-danger shadow btn-xs sharp">
+                                                    <NavLink onClick={() => handleDeleteGenre(item.id)} className="btn btn-danger shadow btn-xs sharp">
                                                         <i className="fa fa-trash"></i>
                                                     </NavLink>
                                                 </div>
@@ -218,4 +204,4 @@ function FoodList() {
     );
 }
 
-export default FoodList;
+export default GenreList;

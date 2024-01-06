@@ -33,6 +33,10 @@ import FoodList from "./components/pages/food";
 import FoodCreate from "./components/pages/food/create";
 import FoodEdit from "./components/pages/food/edit";
 import FoodDeleteAt from "./components/pages/food/delete-at";
+import GenreList from "./components/pages/genre";
+import GenreCreate from "./components/pages/genre/create";
+import GenreEdit from "./components/pages/genre/edit";
+import GenreDeleteAt from "./components/pages/genre/delete-at";
 
 function App() {
     const ProtectedRoute = ({ element }) => {
@@ -90,6 +94,13 @@ function App() {
                 <Route path="/room" element={<ProtectedRoute element={<Room />} />} />
                 <Route path="/show-times/:id" element={<ProtectedRoute element={<ShowTimes />} />} />
                 {/* End Room and Show Time */}
+
+                {/* Start Genre */}
+                <Route path="/genre-list" element={<ProtectedRoute element={<GenreList />} />} />
+                <Route path="/genre-create" element={<ProtectedRoute element={<GenreCreate />} />} />
+                <Route path="/genre-edit/:id" element={<ProtectedRoute element={<GenreEdit />} />} />
+                <Route path="/genre-delete-at" element={<ProtectedRoute element={<GenreDeleteAt />} />} />
+                {/* End Genre */}
 
                 {/* Start Food */}
                 <Route path="/food-list" element={<ProtectedRoute element={<FoodList />} />} />

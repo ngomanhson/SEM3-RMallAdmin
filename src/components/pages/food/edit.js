@@ -74,7 +74,7 @@ function FoodEdit() {
                 const response = await api.put(url.FOOD.UPDATE, foodData, {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
-                if (response.status === 201) {
+                if (response.status === 200) {
                     // console.log(response.data);
                     toast.success("Update Food Successffuly.", {
                         position: toast.POSITION.TOP_RIGHT,
@@ -115,16 +115,16 @@ function FoodEdit() {
     return (
         <>
             <Helmet>
-                <title>Food Create | R Mall</title>
+                <title>Food Edit | R Mall</title>
             </Helmet>
             {loading ? <Loading /> : ""}
             <Layout>
-                <Breadcrumb title="Food Create" />
+                <Breadcrumb title="Food Edit" />
                 <div className="row">
                     <div className="col-xl-12 col-xxl-12">
                         <div className="card">
                             <div className="card-header">
-                                <h4 className="card-title">Food Create</h4>
+                                <h4 className="card-title">Food Edit</h4>
                             </div>
                             <div className="card-body">
                                 <form onSubmit={handleSubmit}>
@@ -209,7 +209,7 @@ function FoodEdit() {
 
                                         <div className="text-end">
                                             <button type="submit" className="btn btn-default">
-                                                Save
+                                                Update
                                             </button>
                                         </div>
                                     </div>
