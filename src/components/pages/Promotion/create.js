@@ -14,11 +14,11 @@ function PromotionCreate() {
         endDate: "",
         discountPercentage: "",
         limit: "",
-        couponCode: "",
+        // couponCode: "",
         minPurchaseAmount: "",
     });
     const [errors, setErrors] = useState({});
-    const [couponExistsError, setCouponExistsError] = useState("");
+    // const [couponExistsError, setCouponExistsError] = useState("");
     const navigate = useNavigate();
 
     //validate
@@ -63,10 +63,10 @@ function PromotionCreate() {
                 valid = false;
             }
         }
-        if (formPromotion.couponCode === "") {
-            newErrors.couponCode = "Please enter coupon code";
-            valid = false;
-        }
+        // if (formPromotion.couponCode === "") {
+        //     newErrors.couponCode = "Please enter coupon code";
+        //     valid = false;
+        // }
         if (formPromotion.minPurchaseAmount === "") {
             newErrors.minPurchaseAmount = "Please enter min purchase amount";
             valid = false;
@@ -101,18 +101,18 @@ function PromotionCreate() {
                 } else {
                 }
             } catch (error) {
-                if (error.response.status === 400 && error.response.data.message === "Coupon Code already exists") {
-                    setCouponExistsError("This coupon code already exists");
-                    toast.error("This coupon code already exists", {
-                        position: toast.POSITION.TOP_RIGHT,
-                        autoClose: 3000,
-                    });
-                } else {
-                    toast.error("Unable to create promotion, please try again", {
-                        position: toast.POSITION.TOP_RIGHT,
-                        autoClose: 3000,
-                    });
-                }
+                // if (error.response.status === 400 && error.response.data.message === "Coupon Code already exists") {
+                //     setCouponExistsError("This coupon code already exists");
+                //     toast.error("This coupon code already exists", {
+                //         position: toast.POSITION.TOP_RIGHT,
+                //         autoClose: 3000,
+                //     });
+                // } else {
+                toast.error("Unable to create promotion, please try again", {
+                    position: toast.POSITION.TOP_RIGHT,
+                    autoClose: 3000,
+                });
+                // }
                 // console.error("Error creating test:", error);
                 // console.error("Response data:", error.response.data);
             }
@@ -122,7 +122,7 @@ function PromotionCreate() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormPromotion({ ...formPromotion, [name]: value });
-        setCouponExistsError("");
+        // setCouponExistsError("");
     };
 
     return (
@@ -191,7 +191,7 @@ function PromotionCreate() {
                                             </div>
                                         </div>
 
-                                        <div className="col-lg-6 mb-2">
+                                        {/* <div className="col-lg-6 mb-2">
                                             <div className="mb-3">
                                                 <label className="text-label form-label">
                                                     Coupon Code <span className="text-danger">*</span>
@@ -200,7 +200,7 @@ function PromotionCreate() {
                                                 {errors.couponCode && <div className="text-danger">{errors.couponCode}</div>}
                                                 {couponExistsError && <div className="text-danger">{couponExistsError}</div>}
                                             </div>
-                                        </div>
+                                        </div> */}
 
                                         <div className="col-lg-6 mb-2">
                                             <div className="mb-3">

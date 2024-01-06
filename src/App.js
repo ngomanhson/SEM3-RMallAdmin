@@ -29,6 +29,10 @@ import PromotionCreate from "./components/pages/Promotion/create";
 import PromotionEdit from "./components/pages/Promotion/edit";
 import Room from "./components/pages/showtimes/room";
 import PromotionDeleteAt from "./components/pages/Promotion/delete-at";
+import FoodList from "./components/pages/food";
+import FoodCreate from "./components/pages/food/create";
+import FoodEdit from "./components/pages/food/edit";
+import FoodDeleteAt from "./components/pages/food/delete-at";
 
 function App() {
     const ProtectedRoute = ({ element }) => {
@@ -86,6 +90,13 @@ function App() {
                 <Route path="/room" element={<ProtectedRoute element={<Room />} />} />
                 <Route path="/show-times/:id" element={<ProtectedRoute element={<ShowTimes />} />} />
                 {/* End Room and Show Time */}
+
+                {/* Start Food */}
+                <Route path="/food-list" element={<ProtectedRoute element={<FoodList />} />} />
+                <Route path="/food-create" element={<ProtectedRoute element={<FoodCreate />} />} />
+                <Route path="/food-edit/:id" element={<ProtectedRoute element={<FoodEdit />} />} />
+                <Route path="/food-delete-at" element={<ProtectedRoute element={<FoodDeleteAt />} />} />
+                {/* End Food */}
 
                 {/* Start Booking */}
                 <Route path="/booking-list" element={<ProtectedRoute element={<BookingList />} />} />

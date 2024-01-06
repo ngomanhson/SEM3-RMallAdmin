@@ -170,7 +170,7 @@ function MovieEdit() {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
                 if (response && response.data) {
-                    console.log(response.data);
+                    // console.log(response.data);
                     toast.success("Update Movie Successffuly.", {
                         position: toast.POSITION.TOP_RIGHT,
                         autoClose: 3000,
