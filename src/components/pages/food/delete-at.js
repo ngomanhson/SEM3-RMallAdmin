@@ -98,6 +98,9 @@ function FoodDeleteAt() {
                                                     <strong>Food Name</strong>
                                                 </th>
                                                 <th>
+                                                    <strong>Description</strong>
+                                                </th>
+                                                <th>
                                                     <strong>Price</strong>
                                                 </th>
                                                 <th>
@@ -119,6 +122,7 @@ function FoodDeleteAt() {
                                                             <img src={item.image} className="rounded-lg me-2 movie-thumb" alt="" />
                                                         </td>
                                                         <td>{item.name}</td>
+                                                        <td>{item.description}</td>
                                                         <td>{item.price}</td>
                                                         <td>{item.quantity}</td>
                                                         <td>

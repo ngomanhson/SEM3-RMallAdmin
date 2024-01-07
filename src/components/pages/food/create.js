@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 function FoodCreate() {
     const [formFood, setFormFood] = useState({
         name: "",
+        description: "",
         image: null,
         price: "",
         quantity: "",
@@ -29,6 +30,10 @@ function FoodCreate() {
             valid = false;
         } else if (formFood.name.length > 255) {
             newErrors.name = "Enter up to 255 characters";
+            valid = false;
+        }
+        if (formFood.description === "") {
+            newErrors.description = "Please enter description";
             valid = false;
         }
         if (formFood.image === null) {
@@ -124,6 +129,16 @@ function FoodCreate() {
                                                 </label>
                                                 <input type="text" name="name" onChange={handleChange} className="form-control" placeholder="Please enter name food" autoFocus />
                                                 {errors.name && <div className="text-danger">{errors.name}</div>}
+                                            </div>
+                                        </div>
+
+                                        <div className="col-lg-6 mb-2">
+                                            <div className="mb-3">
+                                                <label className="text-label form-label">
+                                                    Description <span className="text-danger">*</span>
+                                                </label>
+                                                <input type="text" name="description" onChange={handleChange} className="form-control" placeholder="Please enter description" />
+                                                {errors.description && <div className="text-danger">{errors.description}</div>}
                                             </div>
                                         </div>
 
