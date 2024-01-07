@@ -36,6 +36,10 @@ function FoodEdit() {
             newErrors.name = "Enter up to 255 characters";
             valid = false;
         }
+        if (foodData.description === "") {
+            newErrors.description = "Please enter description";
+            valid = false;
+        }
         if (foodData.image === null) {
             newErrors.image = "Please choose food photo";
             valid = false;
@@ -147,6 +151,26 @@ function FoodEdit() {
                                                     autoFocus
                                                 />
                                                 {errors.name && <div className="text-danger">{errors.name}</div>}
+                                            </div>
+                                        </div>
+
+                                        <div className="col-lg-6 mb-2">
+                                            <div className="mb-3">
+                                                <label className="text-label form-label">
+                                                    Description <span className="text-danger">*</span>
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    value={foodData.description}
+                                                    onChange={(e) =>
+                                                        setFoodData({
+                                                            ...foodData,
+                                                            description: e.target.value,
+                                                        })
+                                                    }
+                                                    className="form-control"
+                                                />
+                                                {errors.description && <div className="text-danger">{errors.description}</div>}
                                             </div>
                                         </div>
 
