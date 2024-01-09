@@ -11,10 +11,7 @@ import MovieList from "./components/pages/movie";
 import MovieCreate from "./components/pages/movie/create";
 import MovieEdit from "./components/pages/movie/edit";
 import MovieDeleteAt from "./components/pages/movie/delete-at";
-import BoothList from "./components/pages/booth/index";
-import BoothCreate from "./components/pages/booth/create";
 import BoothEdit from "./components/pages/booth/edit";
-import BoothDeleteAt from "./components/pages/booth/delete-at";
 import FoodCounterList from "./components/pages/food-counter";
 import FoodCounterCreate from "./components/pages/food-counter/create";
 import FoodCounterEdit from "./components/pages/food-counter/edit";
@@ -37,6 +34,9 @@ import GenreList from "./components/pages/genre";
 import GenreCreate from "./components/pages/genre/create";
 import GenreEdit from "./components/pages/genre/edit";
 import GenreDeleteAt from "./components/pages/genre/delete-at";
+import ShopList from "./components/pages/booth/index";
+import ShopDeleteAt from "./components/pages/booth/delete-at";
+import ShopEdit from "./components/pages/booth/edit";
 
 function App() {
     const ProtectedRoute = ({ element }) => {
@@ -70,10 +70,9 @@ function App() {
                 {/* End Dashboard */}
 
                 {/* Start Booth */}
-                <Route path="/booth-list" element={<ProtectedRoute element={<BoothList />} />} />
-                <Route path="/booth-create" element={<ProtectedRoute element={<BoothCreate />} />} />
-                <Route path="/booth-edit" element={<ProtectedRoute element={<BoothEdit />} />} />
-                <Route path="/booth-delete-at" element={<ProtectedRoute element={<BoothDeleteAt />} />} />
+                <Route path="/shop-list" element={<ProtectedRoute element={<ShopList />} />} />
+                <Route path="/shop-edit/:slug" element={<ProtectedRoute element={<ShopEdit />} />} />
+                <Route path="/shop-delete-at" element={<ProtectedRoute element={<ShopDeleteAt />} />} />
                 {/* End Booth */}
 
                 {/* Start Food Counter */}

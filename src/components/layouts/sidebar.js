@@ -31,8 +31,8 @@ function Sidebar() {
                         </Link>
                     </li>
 
-                    <li className={isActive("/booth-list") ? "mm-active" : ""}>
-                        <NavLink className="has-arrow" to="/booth-list" aria-expanded="false">
+                    <li className={isActive("/shop-list") ? "mm-active" : ""}>
+                        <NavLink className="has-arrow" to="/shop-list" aria-expanded="false">
                             <div className="menu-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 576 512">
                                     <path
@@ -41,7 +41,7 @@ function Sidebar() {
                                     />
                                 </svg>
                             </div>
-                            <span className="nav-text">Booth</span>
+                            <span className="nav-text">Shop</span>
                         </NavLink>
                     </li>
 
