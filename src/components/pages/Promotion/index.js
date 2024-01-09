@@ -78,7 +78,9 @@ function PromotionList() {
         });
         if (isConfirmed.isConfirmed) {
             try {
-                const deleteResponse = await api.delete(url.PROMOTION.DELETE, { params: { ids: selectedPromotionIds } });
+                const deleteResponse = await api.delete(url.PROMOTION.DELETE, {
+                    data: selectedPromotionIds,
+                });
                 if (deleteResponse.status === 200) {
                     setPromotions((prevPromotions) => prevPromotions.filter((promotion) => !selectedPromotionIds.includes(promotion.id)));
                     toast.success("Delete Promotions Successfully.", {

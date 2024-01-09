@@ -58,7 +58,7 @@ function MovieList() {
     };
 
     //xử lý xoá movie
-    const handleDeleteMovie = async (ids) => {
+    const handleDeleteMovie = async () => {
         const selectedMovieIds = [];
 
         // lấy id của các movie đã được chọn
@@ -79,7 +79,9 @@ function MovieList() {
         });
         if (isConfirmed.isConfirmed) {
             try {
-                const deleteResponse = await api.delete(url.MOVIE.DELETE, { params: { ids: selectedMovieIds } });
+                const deleteResponse = await api.delete(url.MOVIE.DELETE, {
+                    data: selectedMovieIds,
+                });
                 if (deleteResponse.status === 200) {
                     setMovies((prevMovies) => prevMovies.filter((movie) => !selectedMovieIds.includes(movie.id)));
                     toast.success("Delete Movie Successfully.", {

@@ -14,6 +14,15 @@ const url = {
         CREATE: "/show",
         GETBYROOM: "/show/get-by-room/{}",
     },
+    SHOP: {
+        LIST: "/shop/get-all",
+        DETAIL: "/shop/detail/{}",
+        CREATE: "/shop/create",
+        UPDATE: "/shop/edit",
+        TRASH: "/shop/trash-can",
+        DELETE: "/shop/delete",
+        RESTORE: "/shop/restore/{}",
+    },
     PROMOTION: {
         LIST: "/promotion/get-all",
         DETAIL: "/promotion/get-by-id/{}",
@@ -34,6 +43,7 @@ const url = {
     },
     FOOD: {
         LIST: "/food/get-all",
+        GETBYFLOOR: "/shop/get-all-by-floor/{}",
         DETAIL: "/food/get-by-id/{}",
         CREATE: "/food/create",
         UPDATE: "/food/edit",
@@ -47,7 +57,12 @@ const url = {
     LANGUAGE: {
         LIST: "/language/get-all",
     },
-
+    CATEGORY: {
+        LIST: "/category/get-all",
+    },
+    FLOOR: {
+        LIST: "/floor/get-all",
+    },
     AUTH: {
         LOGIN: "/auth/login",
         FORGOT_PASSWORD: "/auth/forgot-password",

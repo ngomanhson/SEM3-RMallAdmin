@@ -19,6 +19,31 @@ function GenreList() {
     }, []);
 
     const [genres, setGenres] = useState([]);
+    const [isDeleteVisible, setDeleteVisible] = useState(false);
+    const [tbodyCheckboxes, setTbodyCheckboxes] = useState([]);
+    const [selectAll, setSelectAll] = useState(false);
+
+    //xử lý check tất cả và hiển thị thùng rác
+    const handleSelectAll = () => {
+        setSelectAll(!selectAll);
+        const checkboxes = document.querySelectorAll('#orders input[type="checkbox"]');
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = !selectAll;
+        });
+        setDeleteVisible(!selectAll);
+    };
+    const handleCheckboxChange = () => {
+        const checkboxes = document.querySelectorAll('#orders input[type="checkbox"]');
+        const selectedCheckboxes = Array.from(checkboxes).filter((checkbox) => checkbox.checked);
+        setDeleteVisible(selectedCheckboxes.length > 0);
+    };
+    const handleTbodyCheckboxChange = (index) => {
+        const updatedTbodyCheckboxes = [...tbodyCheckboxes];
+        updatedTbodyCheckboxes[index] = !updatedTbodyCheckboxes[index];
+        setTbodyCheckboxes(updatedTbodyCheckboxes);
+        const isDeleteVisible = selectAll || updatedTbodyCheckboxes.some((checkbox) => checkbox);
+        setDeleteVisible(isDeleteVisible);
+    };
 
     //hiển thị danh sách genre
     useEffect(() => {
@@ -32,7 +57,16 @@ function GenreList() {
     }, []);
 
     //xử lý xoá genre
-    const handleDeleteGenre = async (id) => {
+    const handleDeleteGenre = async () => {
+        const selectedGenreIds = [];
+
+        // lấy id của các shop đã được chọn
+        genres.forEach((item, index) => {
+            if (selectAll || tbodyCheckboxes[index]) {
+                selectedGenreIds.push(item.id);
+            }
+        });
+
         const isConfirmed = await Swal.fire({
             title: "Are you sure?",
             text: "You want to delete selected genre?",
@@ -44,9 +78,11 @@ function GenreList() {
         });
         if (isConfirmed.isConfirmed) {
             try {
-                const deleteResponse = await api.delete(`${url.GENRE.DELETE.replace("{}", id)}`);
+                const deleteResponse = await api.delete(url.GENRE.DELETE, {
+                    data: selectedGenreIds,
+                });
                 if (deleteResponse.status === 200) {
-                    setGenres((prevGenres) => prevGenres.filter((genre) => genre.id !== id));
+                    setGenres((prevGenres) => prevGenres.filter((genre) => !selectedGenreIds.includes(genre.id)));
                     toast.success("Delete Genre Successfully.", {
                         position: toast.POSITION.TOP_RIGHT,
                         autoClose: 3000,
@@ -113,13 +149,20 @@ function GenreList() {
                             </button>
                         </NavLink>
                     </div>
-                    <div className="col-lg-3 text-center">
+                    <div className="col-lg-2 text-center">
                         <NavLink to="/genre-create">
                             <button type="button" className="btn btn-rounded btn-info">
                                 <span className="btn-icon-start text-info">
                                     <i className="fa fa-plus color-info"></i>
                                 </span>
-                                Create New Genre
+                                Create
+                            </button>
+                        </NavLink>
+                    </div>
+                    <div className="col-lg-1 text-end">
+                        <NavLink onClick={handleDeleteGenre}>
+                            <button type="button" className={`btn btn-danger ${isDeleteVisible ? "" : "d-none"}`}>
+                                <i className="fa fa-trash"></i>
                             </button>
                         </NavLink>
                     </div>
@@ -131,6 +174,19 @@ function GenreList() {
                             <thead>
                                 <tr>
                                     <th>
+                                        <div className="form-check custom-checkbox">
+                                            <input
+                                                type="checkbox"
+                                                className="form-check-input"
+                                                onChange={() => {
+                                                    handleSelectAll();
+                                                    handleCheckboxChange();
+                                                }}
+                                                checked={selectAll}
+                                            />
+                                        </div>
+                                    </th>
+                                    <th>
                                         <strong>No.</strong>
                                     </th>
                                     <th>
@@ -141,10 +197,15 @@ function GenreList() {
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="orders">
                                 {currentGenres.map((item, index) => {
                                     return (
                                         <tr>
+                                            <td>
+                                                <div className="form-check custom-checkbox checkbox-primary">
+                                                    <input type="checkbox" className="form-check-input" onChange={() => handleTbodyCheckboxChange(index)} checked={tbodyCheckboxes[index]} />
+                                                </div>{" "}
+                                            </td>
                                             <td>
                                                 <strong>{index + 1}</strong>
                                             </td>
@@ -157,9 +218,6 @@ function GenreList() {
                                                     <Link to={`/genre-edit/${item.id}`} className="btn btn-primary shadow btn-xs sharp me-1">
                                                         <i className="fas fa-pencil-alt"></i>
                                                     </Link>
-                                                    <NavLink onClick={() => handleDeleteGenre(item.id)} className="btn btn-danger shadow btn-xs sharp">
-                                                        <i className="fa fa-trash"></i>
-                                                    </NavLink>
                                                 </div>
                                             </td>
                                         </tr>
