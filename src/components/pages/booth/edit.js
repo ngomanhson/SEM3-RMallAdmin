@@ -23,6 +23,7 @@ function ShopEdit() {
     const [floors, setFloors] = useState([]);
     const [imagePreview, setImagePreview] = useState("");
     const [errors, setErrors] = useState({});
+    const [nameExistsError, setNameExistsError] = useState("");
     const navigate = useNavigate();
 
     //validate
@@ -111,10 +112,18 @@ function ShopEdit() {
                 } else {
                 }
             } catch (error) {
-                toast.error("Unable to update shop, please try again", {
-                    position: toast.POSITION.TOP_RIGHT,
-                    autoClose: 3000,
-                });
+                if (error.response.status === 400 && error.response.data.message === "Shop name already exists") {
+                    setNameExistsError("The name of this shop already exists");
+                    toast.error("The name of this shop already exists", {
+                        position: toast.POSITION.TOP_RIGHT,
+                        autoClose: 3000,
+                    });
+                } else {
+                    toast.error("Unable to update shop, please try again", {
+                        position: toast.POSITION.TOP_RIGHT,
+                        autoClose: 3000,
+                    });
+                }
                 // console.error("Error creating test:", error);
                 // console.error("Response data:", error.response.data);
             }
@@ -156,6 +165,7 @@ function ShopEdit() {
                                                     autoFocus
                                                 />
                                                 {errors.name && <div className="text-danger">{errors.name}</div>}
+                                                {nameExistsError && <div className="text-danger">{nameExistsError}</div>}
                                             </div>
                                         </div>
 

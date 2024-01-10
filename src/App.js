@@ -11,11 +11,6 @@ import MovieList from "./components/pages/movie";
 import MovieCreate from "./components/pages/movie/create";
 import MovieEdit from "./components/pages/movie/edit";
 import MovieDeleteAt from "./components/pages/movie/delete-at";
-import BoothEdit from "./components/pages/booth/edit";
-import FoodCounterList from "./components/pages/food-counter";
-import FoodCounterCreate from "./components/pages/food-counter/create";
-import FoodCounterEdit from "./components/pages/food-counter/edit";
-import FoodCounterDeleteAt from "./components/pages/food-counter/delete-at";
 import BookingList from "./components/pages/booking";
 import Profile from "./components/pages/auth/profile";
 import { useJwt } from "react-jwt";
@@ -37,6 +32,11 @@ import GenreDeleteAt from "./components/pages/genre/delete-at";
 import ShopList from "./components/pages/booth/index";
 import ShopDeleteAt from "./components/pages/booth/delete-at";
 import ShopEdit from "./components/pages/booth/edit";
+import ListProductOfShop from "./components/pages/booth/product";
+import ProductDeleteAt from "./components/pages/booth/product/delete-at";
+import ProductCreate from "./components/pages/booth/product/create";
+import ListProduct from "./components/pages/booth/product/all-product";
+import ProductEdit from "./components/pages/booth/product/edit";
 
 function App() {
     const ProtectedRoute = ({ element }) => {
@@ -69,18 +69,16 @@ function App() {
                 <Route path="/" element={<ProtectedRoute element={<Dashboard />} />} />
                 {/* End Dashboard */}
 
-                {/* Start Booth */}
+                {/* Start Shop And Product*/}
                 <Route path="/shop-list" element={<ProtectedRoute element={<ShopList />} />} />
                 <Route path="/shop-edit/:slug" element={<ProtectedRoute element={<ShopEdit />} />} />
                 <Route path="/shop-delete-at" element={<ProtectedRoute element={<ShopDeleteAt />} />} />
-                {/* End Booth */}
-
-                {/* Start Food Counter */}
-                <Route path="/food-counter-list" element={<ProtectedRoute element={<FoodCounterList />} />} />
-                <Route path="/food-counter-create" element={<ProtectedRoute element={<FoodCounterCreate />} />} />
-                <Route path="/food-counter-edit" element={<ProtectedRoute element={<FoodCounterEdit />} />} />
-                <Route path="/food-counter-delete-at" element={<ProtectedRoute element={<FoodCounterDeleteAt />} />} />
-                {/* End Food Counter */}
+                <Route path="/product-list" element={<ProtectedRoute element={<ListProduct />} />} />
+                <Route path="/product-list/:slug" element={<ProtectedRoute element={<ListProductOfShop />} />} />
+                <Route path="/product-edit/:slug" element={<ProtectedRoute element={<ProductEdit />} />} />
+                <Route path="/product-create" element={<ProtectedRoute element={<ProductCreate />} />} />
+                <Route path="/product-delete-at" element={<ProtectedRoute element={<ProductDeleteAt />} />} />
+                {/* End Shop And Product*/}
 
                 {/* Start Movie */}
                 <Route path="/movie-list" element={<ProtectedRoute element={<MovieList />} />} />

@@ -16,7 +16,7 @@ function Layout({ children }) {
             <div className="content-body">
                 <div className="container-fluid">
                     <div>{children}</div>
-                    <Footer />
+                    {/* <Footer /> */}
                 </div>
             </div>
         </div>

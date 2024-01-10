@@ -23,6 +23,16 @@ const url = {
         DELETE: "/shop/delete",
         RESTORE: "/shop/restore/{}",
     },
+    PRODUCT: {
+        LIST: "/product/get-all",
+        LISTBYSHOP: "/product/get-by-shop/{}",
+        DETAIL: "/product/detail/{}",
+        CREATE: "/product/create",
+        UPDATE: "/product/edit",
+        TRASH: "/product/trash-can",
+        DELETE: "/product/delete",
+        RESTORE: "/product/restore/{}",
+    },
     PROMOTION: {
         LIST: "/promotion/get-all",
         DETAIL: "/promotion/get-by-id/{}",
