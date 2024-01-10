@@ -12089,6 +12089,7 @@ label {
     text-decoration: none;
     padding: 2.563rem;
     font-weight: 700;
+    overflow: hidden;
 }
 @media only screen and (max-width: 87.5rem) {
     .nav-header .brand-logo {
