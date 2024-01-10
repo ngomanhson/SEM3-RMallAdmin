@@ -37,6 +37,8 @@ import ProductDeleteAt from "./components/pages/booth/product/delete-at";
 import ProductCreate from "./components/pages/booth/product/create";
 import ListProduct from "./components/pages/booth/product/all-product";
 import ProductEdit from "./components/pages/booth/product/edit";
+import MallDashboard from "./components/pages/dashboard/staffmall";
+import CinemaDashboard from "./components/pages/dashboard/staffcinema";
 
 function App() {
     const ProtectedRoute = ({ element }) => {
@@ -67,6 +69,8 @@ function App() {
             <Routes>
                 {/* Start Dashboard */}
                 <Route path="/" element={<ProtectedRoute element={<Dashboard />} />} />
+                <Route path="/shopping-center-manager-staff-dashboard" element={<ProtectedRoute element={<MallDashboard />} />} />
+                <Route path="/movie-theater-manager-staff-dashboard" element={<ProtectedRoute element={<CinemaDashboard />} />} />
                 {/* End Dashboard */}
 
                 {/* Start Shop And Product*/}

@@ -74,14 +74,22 @@ function Login() {
                     const decodedToken = getDecodedToken();
                     const accountRole = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
 
-                    if (accountRole === "Super Admin" || accountRole === "Staff") {
-                        navigate("/");
-                    } else {
-                        removeAccessToken();
+                    if (accountRole === "User") {
                         setFormErrors({
                             email: "Invalid email or password.",
                             password: "Invalid email or password.",
                         });
+                    } else {
+                        let redirectUrl = "/";
+                        if (accountRole === "Super Admin") {
+                            redirectUrl = "/";
+                        } else if (accountRole === "Shopping Center Manager Staff") {
+                            redirectUrl = "/shopping-center-manager-staff-dashboard";
+                        } else if (accountRole === "Movie Theater Manager Staff") {
+                            redirectUrl = "/movie-theater-manager-staff-dashboard";
+                        }
+
+                        navigate(redirectUrl);
                     }
                 } else {
                     setFormErrors({
