@@ -24451,7 +24451,7 @@ input[type="radio"] {
 
 .form-control.is-invalid {
     border-color: #f72b50 !important;
-    border-right: 0rem !important;
+    /* border-right: 0rem !important; */
 }
 .form-control.is-invalid:focus {
     box-shadow: none;
@@ -35140,4 +35140,5 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .border-avatar {
     border: 5px solid rgba(255, 255, 255, 0.2);
 }
+
 /*# sourceMappingURL=style.css.map */

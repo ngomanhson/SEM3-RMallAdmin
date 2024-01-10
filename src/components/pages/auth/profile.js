@@ -3,14 +3,30 @@ import Breadcrumb from "../../layouts/breadcrumb";
 import { Helmet } from "react-helmet";
 import Loading from "../../layouts/loading";
 import { useEffect, useState } from "react";
-import { getAccessToken } from "../../../utils/auth";
+import { getAccessToken, removeAccessToken } from "../../../utils/auth";
 import api from "../../services/api";
 import url from "../../services/url";
 import Swal from "sweetalert2";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 function Profile() {
     const [loading, setLoading] = useState(false);
     const [info, setInfo] = useState("");
+
+    const navigate = useNavigate();
+
+    const [formData, setFormData] = useState({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+    });
+
+    const [formErrors, setFormErrors] = useState({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+    });
 
     const [isEditButtonVisible, setEditButtonVisible] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
@@ -130,6 +146,106 @@ function Profile() {
         } catch (error) {}
     };
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+        setFormErrors({ ...formErrors, [name]: "" });
+    };
+
+    const validateForm = () => {
+        let valid = true;
+        const newErrors = {};
+
+        if (!formData.currentPassword) {
+            newErrors.currentPassword = "Please enter your password.";
+            valid = false;
+        } else if (formData.currentPassword.length < 6) {
+            newErrors.currentPassword = "Password must be at least 6 characters.";
+            valid = false;
+        } else if (formData.currentPassword.length > 50) {
+            newErrors.currentPassword = "Password must be less than 50 characters.";
+            valid = false;
+        }
+
+        if (!formData.newPassword) {
+            newErrors.newPassword = "Please enter a new password.";
+            valid = false;
+        } else if (formData.newPassword.length < 6) {
+            newErrors.newPassword = "New password must be at least 6 characters.";
+            valid = false;
+        } else if (formData.newPassword.length > 50) {
+            newErrors.newPassword = "New password must be less than 50 characters.";
+            valid = false;
+        }
+
+        if (!formData.confirmPassword) {
+            newErrors.confirmPassword = "Please confirm your password.";
+            valid = false;
+        } else if (formData.confirmPassword !== formData.newPassword) {
+            newErrors.confirmPassword = "Passwords do not match.";
+            valid = false;
+        }
+
+        setFormErrors(newErrors);
+        return valid;
+    };
+
+    const handleChangePassword = async (e) => {
+        e.preventDefault();
+
+        if (validateForm()) {
+            const userToken = getAccessToken();
+
+            if (userToken) {
+                const isConfirmed = await Swal.fire({
+                    title: "Are you sure?",
+                    text: "you want to change your password?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "I'm sure",
+                });
+                if (isConfirmed.isConfirmed) {
+                    try {
+                        const config = {
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${userToken}`,
+                            },
+                        };
+
+                        const requestData = {
+                            currentPassword: formData.currentPassword,
+                            newPassword: formData.newPassword,
+                            confirmPassword: formData.confirmPassword,
+                        };
+
+                        const passwordResponse = await api.post(url.AUTH.CHANGE_PASSWORD, requestData, config);
+
+                        if (passwordResponse.data.success) {
+                            removeAccessToken();
+
+                            navigate("/login");
+                        }
+                    } catch (error) {
+                        toast.error("Error! An error occurred. Please try again later!", {
+                            position: "top-right",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "colored",
+                        });
+                    }
+                }
+            } else {
+            }
+        }
+    };
+
     return (
         <>
             <Helmet>
@@ -222,7 +338,7 @@ function Profile() {
                                                 onChange={(e) => setEditedInfo({ ...editedInfo, birthday: e.target.value })}
                                             />
                                         ) : (
-                                            info.birthday && format(new Date(info.birthday), "dd/MM/yyyy")
+                                            (info.birthday && format(new Date(info.birthday), "dd/MM/yyyy")) || "Unavailable"
                                         )}
                                     </p>
                                 </div>
@@ -237,7 +353,7 @@ function Profile() {
                                                 onChange={(e) => setEditedInfo({ ...editedInfo, phone: e.target.value })}
                                             />
                                         ) : (
-                                            info.phone
+                                            info.phone || "Unavailable"
                                         )}
                                     </p>
                                 </div>
@@ -257,26 +373,100 @@ function Profile() {
                     <div className="col-xl-4">
                         <div className="card h-auto">
                             <div className="card-body text-center ai-icon text-primary p-5">
-                                <svg
-                                    id="rocket-icon"
-                                    className="my-2"
-                                    viewBox="0 0 24 24"
-                                    width="80"
-                                    height="80"
-                                    stroke="currentColor"
-                                    strokeWidth="1"
-                                    fill="none"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                >
-                                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                                <svg viewBox="0 0 24 24" fill="none" width={"100px"} xmlns="http://www.w3.org/2000/svg">
+                                    <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+                                    <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
+                                    <g id="SVGRepo_iconCarrier">
+                                        <path
+                                            d="M20.91 11.12C20.91 16.01 17.36 20.59 12.51 21.93C12.18 22.02 11.82 22.02 11.49 21.93C6.63996 20.59 3.08997 16.01 3.08997 11.12V6.72997C3.08997 5.90997 3.70998 4.97998 4.47998 4.66998L10.05 2.39001C11.3 1.88001 12.71 1.88001 13.96 2.39001L19.53 4.66998C20.29 4.97998 20.92 5.90997 20.92 6.72997L20.91 11.12Z"
+                                            stroke="#53cafd"
+                                            strokeWidth="1.5"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        ></path>
+                                        <path
+                                            d="M12 12.5C13.1046 12.5 14 11.6046 14 10.5C14 9.39543 13.1046 8.5 12 8.5C10.8954 8.5 10 9.39543 10 10.5C10 11.6046 10.8954 12.5 12 12.5Z"
+                                            stroke="#53cafd"
+                                            strokeWidth="1.5"
+                                            strokeMiterlimit="10"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        ></path>
+                                        <path d="M12 12.5V15.5" stroke="#53cafd" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"></path>{" "}
+                                    </g>
                                 </svg>
-                                <h4 className="my-2">You don’t have badges yet</h4>
-                                <button className="btn my-2 btn-primary btn-lg px-4">
-                                    <i className="fa fa-usd"></i> Earn Budges
+                                <h4 className="my-2">You want to change your password?</h4>
+                                <button className="btn my-2 btn-primary btn-lg px-4" data-bs-toggle="modal" data-bs-target="#changePassword">
+                                    <i className="fa fa-usd"></i> Change Password
                                 </button>
+                                <div className="modal fade" id="changePassword">
+                                    <div className="modal-dialog modal-dialog-centered" role="document">
+                                        <div className="modal-content">
+                                            <div className="modal-header">
+                                                <h5 className="modal-title">Change Password</h5>
+                                                <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div className="modal-body text-start">
+                                                <form className="comment-form" onSubmit={handleChangePassword}>
+                                                    <div className="row">
+                                                        <div className="mb-3">
+                                                            <label className="font-w600 form-label">
+                                                                Current Password <span className="required">*</span>
+                                                            </label>
+                                                            <input
+                                                                type="password"
+                                                                className={`form-control ${formErrors.confirmPassword ? "is-invalid" : ""}`}
+                                                                name="currentPassword"
+                                                                placeholder="********"
+                                                                value={formData.currentPassword}
+                                                                onChange={handleChange}
+                                                            />
+
+                                                            {formErrors.currentPassword && <p className="invalid-feedback">{formErrors.currentPassword}</p>}
+                                                        </div>
+
+                                                        <div className="mb-3">
+                                                            <label className="font-w600 form-label">
+                                                                New Password <span className="required">*</span>
+                                                            </label>
+                                                            <input
+                                                                type="password"
+                                                                className={`form-control ${formErrors.newPassword ? "is-invalid" : ""}`}
+                                                                name="newPassword"
+                                                                placeholder="********"
+                                                                value={formData.newPassword}
+                                                                onChange={handleChange}
+                                                            />
+
+                                                            {formErrors.newPassword && <p className="invalid-feedback">{formErrors.newPassword}</p>}
+                                                        </div>
+
+                                                        <div className="mb-3">
+                                                            <label className="font-w600 form-label">
+                                                                Confirm Password <span className="required">*</span>
+                                                            </label>
+                                                            <input
+                                                                type="password"
+                                                                className={`form-control ${formErrors.confirmPassword ? "is-invalid" : ""}`}
+                                                                placeholder="********"
+                                                                id="confirmPassword"
+                                                                name="confirmPassword"
+                                                                value={formData.confirmPassword}
+                                                                onChange={handleChange}
+                                                            />
+
+                                                            {formErrors.confirmPassword && <p className="invalid-feedback">{formErrors.confirmPassword}</p>}
+                                                        </div>
+
+                                                        <div className="col-lg-12 mt-3">
+                                                            <input type="submit" value="Change Password" className="submit btn btn-primary" style={{ width: "100%" }} />
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
