@@ -81,6 +81,8 @@ const url = {
         FORGOT_PASSWORD: "/auth/forgot-password",
         PROFILE: "/auth/profile",
         UPDATE_PROFILE: "/auth/update-profile",
+        CHANGE_PASSWORD: "/auth/change-password",
+        RESET_PASSWORD: "auth/reset-password",
     },
 };
 export default url;

@@ -39,6 +39,7 @@ import ListProduct from "./components/pages/booth/product/all-product";
 import ProductEdit from "./components/pages/booth/product/edit";
 import MallDashboard from "./components/pages/dashboard/staffmall";
 import CinemaDashboard from "./components/pages/dashboard/staffcinema";
+import ResetPassword from "./components/pages/auth/reset-password";
 
 function App() {
     const ProtectedRoute = ({ element }) => {
@@ -131,6 +132,7 @@ function App() {
                 {/* Start Auth */}
                 <Route path="/login" element={<ProtectedLoginRoute element={<Login />} />} />
                 <Route path="/forgot-password" element={<ProtectedLoginRoute element={<ForgotPassword />} />} />
+                <Route path="/reset-password/:resetToken" element={<ProtectedLoginRoute element={<ResetPassword />} />} />
                 <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
 
                 {/* End Auth */}
