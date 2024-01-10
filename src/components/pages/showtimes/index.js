@@ -1,6 +1,6 @@
 import Layout from "../../layouts/index";
 import Breadcrumb from "../../layouts/breadcrumb";
-import { Link, NavLink, useParams } from "react-router-dom";
+import { Link, NavLink, useLocation, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import api from "../../services/api";
 import url from "../../services/url";
@@ -25,6 +25,10 @@ function ShowTimes() {
 
     const { id } = useParams();
     const [currentRoomId, setCurrentRoomId] = useState(id);
+    const location = useLocation();
+    const isActive = (path) => {
+        return location.pathname === path;
+    };
     const [events, setEvents] = useState([]);
     const eventColors = ["#53CAFD", "#FFAA2B", "#1EAE7A", "#B9A8FF"];
     const [isSelecting, setIsSelecting] = useState(false);
@@ -274,7 +278,7 @@ function ShowTimes() {
                                     <div className="nav flex-column nav-pills mb-3">
                                         {rooms.map((item, index) => (
                                             <NavLink key={index} to={`/show-times/${item.id}`}>
-                                                <a className={`nav-link ${item.id === currentRoomId ? "active show" : ""}`} onClick={() => setCurrentRoomId(item.id)}>
+                                                <a className={`nav-link ${isActive(`/show-times/${item.id}`) ? "active show" : ""}`} onClick={() => setCurrentRoomId(item.id)}>
                                                     {item.name}
                                                 </a>
                                             </NavLink>
