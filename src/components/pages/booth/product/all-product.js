@@ -1,16 +1,15 @@
-import Layout from "../../layouts/index";
-import Breadcrumb from "../../layouts/breadcrumb";
-import { Link, NavLink } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import api from "../../services/api";
-import url from "../../services/url";
+import Layout from "../../../layouts";
+import Breadcrumb from "../../../layouts/breadcrumb";
 import { useEffect, useState } from "react";
-import { format } from "date-fns";
-import Swal from "sweetalert2";
+import url from "../../../services/url";
+import api from "../../../services/api";
 import { toast } from "react-toastify";
-import Loading from "../../layouts/loading";
+import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
+import Loading from "../../../layouts/loading";
+import Swal from "sweetalert2";
 
-function ShopList() {
+function ListProduct() {
     const [loading, setLoading] = useState(false);
     useEffect(() => {
         setLoading(true);
@@ -19,20 +18,20 @@ function ShopList() {
         }, 2000);
     }, []);
 
-    const [shops, setShops] = useState([]);
+    const [products, setProducts] = useState([]);
     const [isDeleteVisible, setDeleteVisible] = useState(false);
     const [tbodyCheckboxes, setTbodyCheckboxes] = useState([]);
     const [selectAll, setSelectAll] = useState(false);
 
-    //hiển thị danh sách shop
+    //hiển thị danh sách product
     useEffect(() => {
-        const loadShops = async () => {
+        const loadProducts = async () => {
             try {
-                const response = await api.get(url.SHOP.LIST);
-                setShops(response.data);
+                const response = await api.get(url.PRODUCT.LIST);
+                setProducts(response.data);
             } catch (error) {}
         };
-        loadShops();
+        loadProducts();
     }, []);
 
     //xử lý check tất cả và hiển thị thùng rác
@@ -57,20 +56,20 @@ function ShopList() {
         setDeleteVisible(isDeleteVisible);
     };
 
-    //xử lý xoá shop
-    const handleDeleteShop = async () => {
-        const selectedShopIds = [];
+    //xử lý xoá product
+    const handleDeleteProduct = async () => {
+        const selectedProductIds = [];
 
-        // lấy id của các shop đã được chọn
-        shops.forEach((item, index) => {
+        // lấy id của các product đã được chọn
+        products.forEach((item, index) => {
             if (selectAll || tbodyCheckboxes[index]) {
-                selectedShopIds.push(item.id);
+                selectedProductIds.push(item.id);
             }
         });
 
         const isConfirmed = await Swal.fire({
             title: "Are you sure?",
-            text: "You want to delete selected shops?",
+            text: "You want to delete selected products?",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -79,13 +78,13 @@ function ShopList() {
         });
         if (isConfirmed.isConfirmed) {
             try {
-                const deleteResponse = await api.delete(url.SHOP.DELETE, {
-                    data: selectedShopIds,
+                const deleteResponse = await api.delete(url.PRODUCT.DELETE, {
+                    data: selectedProductIds,
                 });
 
                 if (deleteResponse.status === 200) {
-                    setShops((prevShops) => prevShops.filter((shop) => !selectedShopIds.includes(shop.id)));
-                    toast.success("Delete Shop Successfully.", {
+                    setProducts((prevProducts) => prevProducts.filter((product) => !selectedProductIds.includes(product.id)));
+                    toast.success("Delete Product Successfully.", {
                         position: toast.POSITION.TOP_RIGHT,
                         autoClose: 3000,
                     });
@@ -93,38 +92,18 @@ function ShopList() {
                 } else {
                 }
             } catch (error) {
-                toast.error("Cannot Delete Shop!", {
+                toast.error("Cannot Delete Product!", {
                     position: toast.POSITION.TOP_RIGHT,
                     autoClose: 3000,
                 });
-                console.error("Failed to delete shop:", error);
+                console.error("Failed to delete product:", error);
             }
         }
     };
 
-    //search, filter
-    const [searchTitle, setSearchTitle] = useState("");
-    const [searchCategory, setSearchCategory] = useState("");
-    const [searchFloor, setSearchFloor] = useState("");
-    const handleSearchTitleChange = (e) => {
-        setSearchTitle(e.target.value);
-    };
-    const handleSearchCategoryChange = (e) => {
-        setSearchCategory(e.target.value);
-    };
-    const handleSearchFloorChange = (e) => {
-        setSearchFloor(e.target.value);
-    };
-    const filteredShops = shops.filter((item) => {
-        const titleMatch = item.name.toLowerCase().includes(searchTitle.toLowerCase());
-        const categoryMatch = item.categoryName.toLowerCase().includes(searchCategory.toLowerCase());
-        const floorMatch = item.floorName.toLowerCase().includes(searchFloor.toLowerCase());
-        return titleMatch && categoryMatch && floorMatch;
-    });
-
     //paginate
     const [currentPage, setCurrentPage] = useState(1);
-    const shopsPerPage = 10;
+    const productsPerPage = 10;
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
@@ -134,43 +113,30 @@ function ShopList() {
     const handleNextPage = () => {
         setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
     };
-    const totalPages = Math.ceil(filteredShops.length / shopsPerPage);
-    const indexOfLastShop = currentPage * shopsPerPage;
-    const indexOfFirstShop = indexOfLastShop - shopsPerPage;
-    const currentShops = filteredShops.slice(indexOfFirstShop, indexOfLastShop);
-
+    const totalPages = Math.ceil(products.length / productsPerPage);
+    const indexOfLastProduct = currentPage * productsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
     return (
         <>
             <Helmet>
-                <title>Shop List | R Mall</title>
+                <title>Product List | R Mall</title>
             </Helmet>
             {loading ? <Loading /> : ""}
             <Layout>
-                <Breadcrumb title="Shop List" />
-
-                <div className="row page-titles">
-                    <div className="col-lg-4">
-                        <input type="text" className="form-control input-rounded" placeholder="Search name shop . . ." value={searchTitle} onChange={handleSearchTitleChange} />
-                    </div>
-                    <div className="col-lg-4">
-                        <input type="text" className="form-control input-rounded" placeholder="Search category shop . . ." value={searchCategory} onChange={handleSearchCategoryChange} />
-                    </div>
-                    <div className="col-lg-4">
-                        <input type="text" className="form-control input-rounded" placeholder="Search floor . . ." value={searchFloor} onChange={handleSearchFloorChange} />
-                    </div>
-                </div>
+                <Breadcrumb title="Product List" />
 
                 <div className="card-header">
-                    <div className="col-lg-7"></div>
+                    <div className="col-lg-6"></div>
                     <div className="col-lg-1 text-end">
-                        <NavLink onClick={handleDeleteShop}>
+                        <NavLink onClick={handleDeleteProduct}>
                             <button type="button" className={`btn btn-danger ${isDeleteVisible ? "" : "d-none"}`}>
                                 <i className="fa fa-trash"></i>
                             </button>
                         </NavLink>
                     </div>
                     <div className="col-lg-2 text-end">
-                        <NavLink to="/shop-delete-at">
+                        <NavLink to="/product-delete-at">
                             <button type="button" className="btn btn-rounded btn-warning">
                                 <span className="btn-icon-start text-warning">
                                     <i className="fa fa-trash"></i>
@@ -179,13 +145,13 @@ function ShopList() {
                             </button>
                         </NavLink>
                     </div>
-                    <div className="col-lg-2 text-end">
-                        <NavLink to="/product-list">
-                            <button type="button" className="btn btn-rounded btn-primary">
-                                <span className="btn-icon-start text-primary">
-                                    <i className="mdi mdi-file-document-box font-18 align-middle"></i>
+                    <div className="col-lg-3 text-end">
+                        <NavLink to="/product-create">
+                            <button type="button" className="btn btn-rounded btn-info">
+                                <span className="btn-icon-start text-info">
+                                    <i className="fa fa-plus color-info"></i>
                                 </span>
-                                Product List
+                                Create New Product
                             </button>
                         </NavLink>
                     </div>
@@ -213,19 +179,16 @@ function ShopList() {
                                         <strong>Thumbnail</strong>
                                     </th>
                                     <th>
+                                        <strong>Product Name</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Price</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Description</strong>
+                                    </th>{" "}
+                                    <th>
                                         <strong>Shop Name</strong>
-                                    </th>
-                                    <th>
-                                        <strong>Contact</strong>
-                                    </th>
-                                    <th>
-                                        <strong>Business Hours</strong>
-                                    </th>
-                                    <th>
-                                        <strong>Floor</strong>
-                                    </th>
-                                    <th>
-                                        <strong>Category</strong>
                                     </th>
                                     <th>
                                         <strong>Action</strong>
@@ -233,33 +196,24 @@ function ShopList() {
                                 </tr>
                             </thead>
                             <tbody id="orders">
-                                {currentShops.map((item, index) => {
+                                {currentProducts.map((item, index) => {
                                     return (
                                         <tr>
                                             <td>
                                                 <div className="form-check custom-checkbox checkbox-primary">
                                                     <input type="checkbox" className="form-check-input" onChange={() => handleTbodyCheckboxChange(index)} checked={tbodyCheckboxes[index]} />
-                                                </div>{" "}
+                                                </div>
                                             </td>
                                             <td>
-                                                <img src={item.imagePath} className="rounded-lg me-2 movie-thumb" alt="" />
+                                                <img src={item.image} className="rounded-lg me-2 movie-thumb" alt="" />
                                             </td>
-                                            <td>
-                                                <h6 className="font-w500 fs-16 mb-0">{item.name}</h6>
-                                                <span className="fs-14 font-w400">
-                                                    <a>{item.address}</a>
-                                                </span>
-                                            </td>
-                                            <td>{item.contactInfo}</td>
-                                            <td>{item.hoursOfOperation}</td>
-                                            <td>{item.floorName}</td>
-                                            <td>{item.categoryName}</td>
+                                            <td>{item.name}</td>
+                                            <td>{item.price}</td>
+                                            <td>{item.description}</td>
+                                            <td>{item.shopId}</td>
                                             <td>
                                                 <div className="d-flex">
-                                                    <NavLink to={`/product-list/${item.slug}`} className="btn btn-success shadow btn-xs sharp me-1">
-                                                        <i className="fa fa-eye"></i>
-                                                    </NavLink>
-                                                    <Link to={`/shop-edit/${item.slug}`} className="btn btn-primary shadow btn-xs sharp me-1">
+                                                    <Link to={`/product-edit/${item.slug}`} className="btn btn-primary shadow btn-xs sharp me-1">
                                                         <i className="fas fa-pencil-alt"></i>
                                                     </Link>
                                                 </div>
@@ -271,6 +225,7 @@ function ShopList() {
                         </table>
                     </div>
                 </div>
+
                 <div className="card-footer">
                     <div className="row">
                         <div className="col-lg-5"></div>
@@ -305,4 +260,4 @@ function ShopList() {
     );
 }
 
-export default ShopList;
+export default ListProduct;
