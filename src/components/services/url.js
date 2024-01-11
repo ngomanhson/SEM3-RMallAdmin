@@ -29,7 +29,7 @@ const url = {
     PRODUCT: {
         LIST: "/product/get-all",
         LISTBYSHOP: "/product/get-by-shop/{}",
-        DETAIL: "/product/detail/{}",
+        DETAIL: "/product/get-by-id/{}",
         CREATE: "/product/create",
         UPDATE: "/product/edit",
         TRASH: "/product/trash-can",
@@ -61,7 +61,7 @@ const url = {
         CREATE: "/food/create",
         UPDATE: "/food/edit",
         TRASH: "/food/trash-can",
-        DELETE: "/food/delete/{}",
+        DELETE: "/food/delete",
         RESTORE: "/food/restore/{}",
     },
     ROOM: {
@@ -69,6 +69,7 @@ const url = {
     },
     LANGUAGE: {
         LIST: "/language/get-all",
+        GETBYMOVIE: "/language/get-by-movie/{}",
     },
     CATEGORY: {
         LIST: "/category/get-all",

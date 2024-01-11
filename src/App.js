@@ -82,7 +82,7 @@ function App() {
                 <Route path="/shop-delete-at" element={<ProtectedRoute element={<ShopDeleteAt />} />} />
                 <Route path="/product-list" element={<ProtectedRoute element={<ListProduct />} />} />
                 <Route path="/product-list/:slug" element={<ProtectedRoute element={<ListProductOfShop />} />} />
-                <Route path="/product-edit/:slug" element={<ProtectedRoute element={<ProductEdit />} />} />
+                <Route path="/product-edit/:id" element={<ProtectedRoute element={<ProductEdit />} />} />
                 <Route path="/product-create" element={<ProtectedRoute element={<ProductCreate />} />} />
                 <Route path="/product-delete-at" element={<ProtectedRoute element={<ProductDeleteAt />} />} />
                 {/* End Shop And Product*/}

@@ -193,7 +193,7 @@ function ListProductOfShop() {
                                             <td>{item.description}</td>
                                             <td>
                                                 <div className="d-flex">
-                                                    <Link to={`/product-edit/${item.slug}`} className="btn btn-primary shadow btn-xs sharp me-1">
+                                                    <Link to={`/product-edit/${item.id}`} className="btn btn-primary shadow btn-xs sharp me-1">
                                                         <i className="fas fa-pencil-alt"></i>
                                                     </Link>
                                                 </div>

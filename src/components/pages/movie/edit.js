@@ -22,64 +22,11 @@ function MovieEdit() {
 
     const { id } = useParams();
     const [movieData, setMovieData] = useState({});
+    const [movieImgePreview, setMovieImagePreview] = useState("");
+    const [coverImgePreview, setCoverImagePreview] = useState("");
     const [errors, setErrors] = useState({});
     const [nameExistsError, setNameExistsError] = useState("");
-    const [languages, setLanguages] = useState([]);
-    const [genres, setGenres] = useState([]);
     const navigate = useNavigate();
-
-    //css background Select React
-    const customStyles = {
-        control: (provided, state) => ({
-            ...provided,
-            backgroundColor: "#5336BC",
-        }),
-        option: (provided, state) => ({
-            ...provided,
-            // backgroundColor: "#5336BC",
-            color: "#333333",
-        }),
-    };
-    //hiển thị select langueage
-    // useEffect(() => {
-    //     const fetchLanguages = async () => {
-    //         try {
-    //             const response = await api.get(url.LANGUAGE.LIST);
-    //             const languageData = response.data.map((language) => ({
-    //                 value: language.id,
-    //                 label: language.name,
-    //             }));
-    //             setLanguages(languageData);
-    //         } catch (error) {}
-    //     };
-    //     fetchLanguages();
-    // }, []);
-    // //hien thi select genre
-    // useEffect(() => {
-    //     const fetchGenres = async () => {
-    //         try {
-    //             const response = await api.get(url.GENRE.LIST);
-    //             const genreData = response.data.map((genre) => ({
-    //                 value: genre.id,
-    //                 label: genre.name,
-    //             }));
-    //             setGenres(genreData);
-    //         } catch (error) {}
-    //     };
-    //     fetchGenres();
-    // }, []);
-
-    //options của rangting
-    const optionsRating = [
-        { value: 1, label: "1" },
-        { value: 2, label: "2" },
-        { value: 3, label: "3" },
-        { value: 4, label: "4" },
-        { value: 5, label: "5" },
-    ];
-    const handleChangeRating = (selectedOption) => {
-        setMovieData({ ...movieData, ratings: selectedOption.value });
-    };
 
     //hiển thị video trailer
     const [videoUrl, setVideoUrl] = useState("");
@@ -119,27 +66,15 @@ function MovieEdit() {
             valid = false;
         } else {
             const durationValue = parseFloat(movieData.duration);
-            if (isNaN(durationValue) || durationValue < 1 || durationValue > 5) {
-                newErrors.duration = "Please enter a valid duration between 1 and 5 hours";
+            if (isNaN(durationValue) || durationValue < 60 || durationValue > 200) {
+                newErrors.duration = "Please enter a valid duration between 60 and 200 Minute";
                 valid = false;
             }
-        }
-        if (movieData.ratings === "") {
-            newErrors.ratings = "Please choose ratings";
-            valid = false;
         }
         if (movieData.release_date === "") {
             newErrors.release_date = "Please enter release_date";
             valid = false;
         }
-        if (movieData.genreIds === "") {
-            newErrors.genreIds = "Please choose genre";
-            valid = false;
-        }
-        // if (movieData.languageIds === "") {
-        //     newErrors.languageIds = "Please choose language";
-        //     valid = false;
-        // }
         setErrors(newErrors);
         return valid;
     };
@@ -198,29 +133,6 @@ function MovieEdit() {
             }
         }
     };
-
-    //xử lý tải file ảnh
-    const handleMovieImageChange = (e) => {
-        const { files } = e.target;
-        setMovieData({
-            ...movieData,
-            movie_image: files.length > 0 ? URL.createObjectURL(files[0]) : null,
-        });
-    };
-    const handleFileMovieChange = (e, fieldName) => {
-        const { files } = e.target;
-        setMovieData({
-            ...movieData,
-            [fieldName]: fieldName === "movie_image" ? (files.length > 0 ? files[0] : null) : null,
-        });
-    };
-    // const handleFileCoverChange = (e, fieldName) => {
-    //     const { files } = e.target;
-    //     setMovieData({
-    //         ...movieData,
-    //         [fieldName]: fieldName === "cover_image" ? (files.length > 0 ? files[0] : null) : null,
-    //     });
-    // };
     return (
         <>
             <Helmet>
@@ -318,63 +230,6 @@ function MovieEdit() {
                                         <div className="col-lg-6 mb-2">
                                             <div className="mb-3">
                                                 <label className="text-label form-label">
-                                                    Ratings <span className="text-danger">*</span>
-                                                </label>
-                                                <Select
-                                                    value={optionsRating.find((option) => option.value === parseInt(movieData.ratings, 10))}
-                                                    styles={customStyles}
-                                                    onChange={handleChangeRating}
-                                                    options={optionsRating}
-                                                />
-                                                {errors.ratings && <div className="text-danger">{errors.ratings}</div>}
-                                            </div>
-                                        </div>
-
-                                        {/* <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Languages <span className="text-danger">*</span>
-                                                </label>
-                                                <Select
-                                                    name="languageIds"
-                                                    value={languages.filter((option) => movieData.languageIds.includes(option.value))}
-                                                    isMulti
-                                                    closeMenuOnSelect={false}
-                                                    styles={customStyles}
-                                                    onChange={(selectedOption) => {
-                                                        setMovieData({ ...movieData, languageIds: selectedOption.map((option) => option.value) });
-                                                    }}
-                                                    options={languages}
-                                                    placeholder="Select Languages"
-                                                />
-                                                {errors.languageIds && <div className="text-danger">{errors.languageIds}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Movie Genre <span className="text-danger">*</span>
-                                                </label>
-                                                <Select
-                                                    name="genreIds"
-                                                    value={genres.filter((option) => movieData.genreIds.includes(option.value))}
-                                                    isMulti
-                                                    closeMenuOnSelect={false}
-                                                    styles={customStyles}
-                                                    onChange={(selectedOption) => {
-                                                        setMovieData({ ...movieData, genreIds: selectedOption.map((option) => option.value) });
-                                                    }}
-                                                    options={genres}
-                                                    placeholder="Select Genres"
-                                                />
-                                                {errors.genreIds && <div className="text-danger">{errors.genreIds}</div>}
-                                            </div>
-                                        </div> */}
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
                                                     Release date <span className="text-danger">*</span>
                                                 </label>
                                                 <input
@@ -417,20 +272,58 @@ function MovieEdit() {
                                                 <label className="text-label form-label">
                                                     Movie photos <span className="text-danger">*</span>
                                                 </label>
-                                                <input type="file" onChange={handleMovieImageChange} className="form-control" accept=".jpg, .png, .etc" />
+                                                <input
+                                                    type="file"
+                                                    onChange={(e) => {
+                                                        const file = e.target.files[0];
+                                                        if (file && /\.(jpg|png|jpeg)$/.test(file.name)) {
+                                                            // Update image preview state
+                                                            setMovieImagePreview(URL.createObjectURL(file));
+
+                                                            // Tiếp tục xử lý
+                                                            setMovieData({
+                                                                ...movieData,
+                                                                movie_image: file,
+                                                            });
+                                                        } else {
+                                                            console.error("Unsupported file format or no file selected");
+                                                        }
+                                                    }}
+                                                    className="form-control"
+                                                    accept=".jpg, .png, .jpeg"
+                                                />
                                                 {errors.movie_image && <div className="text-danger">{errors.movie_image}</div>}
                                             </div>
                                         </div>
 
-                                        {/* <div className="col-lg-6 mb-2">
+                                        <div className="col-lg-6 mb-2">
                                             <div className="mb-3">
                                                 <label className="text-label form-label">
                                                     Movie cover photo <span className="text-danger">*</span>
                                                 </label>
-                                                <input type="file" name="cover_image" onChange={handleChange} className="form-control" accept=".jpg, .png, .etc" />
+                                                <input
+                                                    type="file"
+                                                    onChange={(e) => {
+                                                        const file = e.target.files[0];
+                                                        if (file && /\.(jpg|png|jpeg)$/.test(file.name)) {
+                                                            // Update image preview state
+                                                            setCoverImagePreview(URL.createObjectURL(file));
+
+                                                            // Tiếp tục xử lý
+                                                            setMovieData({
+                                                                ...movieData,
+                                                                cover_image: file,
+                                                            });
+                                                        } else {
+                                                            console.error("Unsupported file format or no file selected");
+                                                        }
+                                                    }}
+                                                    className="form-control"
+                                                    accept=".jpg, .png, .jpeg"
+                                                />
                                                 {errors.cover_image && <div className="text-danger">{errors.cover_image}</div>}
                                             </div>
-                                        </div> */}
+                                        </div>
 
                                         <div className="col-lg-6 mb-2">
                                             <div className="mb-3">
@@ -451,16 +344,28 @@ function MovieEdit() {
                                         <div className="col-lg-2 mb-2">
                                             <div className="mb-3">
                                                 <label className="text-label form-label">Preview movie photos</label>
-                                                {movieData.movie_image && <img src={movieData.movie_image} alt="Movie Preview" style={{ width: "100%", height: "200px", objectFit: "cover" }} />}
+                                                <img
+                                                    id="imgPreview"
+                                                    src={movieImgePreview || movieData.movie_image}
+                                                    alt="Product Preview"
+                                                    style={{ width: "100%", height: "200px", objectFit: "cover" }}
+                                                    onError={(e) => console.error("Image Preview Error:", e)}
+                                                />{" "}
                                             </div>
                                         </div>
 
-                                        {/* <div className="col-lg-2 mb-2">
+                                        <div className="col-lg-2 mb-2">
                                             <div className="mb-3">
                                                 <label className="text-label form-label">Preview movie cover photo</label>
-                                                {movieData.cover_image && <img src={movieData.cover_image} alt="Cover Preview" style={{ width: "100%", height: "200px", objectFit: "cover" }} />}
+                                                <img
+                                                    id="imgPreview"
+                                                    src={coverImgePreview || movieData.cover_image}
+                                                    alt="Product Preview"
+                                                    style={{ width: "100%", height: "200px", objectFit: "cover" }}
+                                                    onError={(e) => console.error("Image Preview Error:", e)}
+                                                />{" "}
                                             </div>
-                                        </div> */}
+                                        </div>
 
                                         <div className="col-lg-2 mb-2">
                                             <div className="mb-3">
