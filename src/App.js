@@ -41,7 +41,7 @@ import MallDashboard from "./components/pages/dashboard/staffmall";
 import CinemaDashboard from "./components/pages/dashboard/staffcinema";
 import ResetPassword from "./components/pages/auth/reset-password";
 import ShopCreate from "./components/pages/booth/create";
-
+import BookingDetail from "./components/pages/booking/detail";
 function App() {
     const ProtectedRoute = ({ element }) => {
         const token = getAccessToken();
@@ -115,6 +115,7 @@ function App() {
 
                 {/* Start Booking */}
                 <Route path="/booking-list" element={<ProtectedRoute element={<BookingList />} />} />
+                <Route path="/booking-detail/:bookingCode" element={<ProtectedRoute element={<BookingDetail />} />} />
                 {/* End Booking */}
 
                 {/* Start Promotion */}
