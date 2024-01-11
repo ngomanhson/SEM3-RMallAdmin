@@ -161,7 +161,7 @@ function ShopList() {
                 </div>
 
                 <div className="card-header">
-                    <div className="col-lg-7"></div>
+                    <div className="col-lg-5"></div>
                     <div className="col-lg-1 text-end">
                         <NavLink onClick={handleDeleteShop}>
                             <button type="button" className={`btn btn-danger ${isDeleteVisible ? "" : "d-none"}`}>
@@ -186,6 +186,16 @@ function ShopList() {
                                     <i className="mdi mdi-file-document-box font-18 align-middle"></i>
                                 </span>
                                 Product List
+                            </button>
+                        </NavLink>
+                    </div>
+                    <div className="col-lg-2 text-end">
+                        <NavLink to="/shop-create">
+                            <button type="button" className="btn btn-rounded btn-info">
+                                <span className="btn-icon-start text-info">
+                                    <i className="fa fa-plus color-info"></i>
+                                </span>
+                                Create Shop
                             </button>
                         </NavLink>
                     </div>
