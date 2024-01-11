@@ -9,7 +9,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Loading from "../../layouts/loading";
 import { Editor } from "@tinymce/tinymce-react";
 
-function ShopEdit() {
+function ShopCreate() {
     const useDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches; //css cho Editor
 
     const [loading, setLoading] = useState(false);
@@ -20,11 +20,18 @@ function ShopEdit() {
         }, 2000);
     }, []);
 
-    const { slug } = useParams();
-    const [shopData, setShopData] = useState({});
+    const [formShop, setFormShop] = useState({
+        name: "",
+        description: "",
+        imagePath: null,
+        contactInfo: "",
+        hoursOfOperation: "",
+        address: "",
+        floorId: "",
+        categoryId: "",
+    });
     const [categories, setCategories] = useState([]);
     const [floors, setFloors] = useState([]);
-    const [imagePreview, setImagePreview] = useState("");
     const [errors, setErrors] = useState({});
     const [nameExistsError, setNameExistsError] = useState("");
     const navigate = useNavigate();
@@ -33,21 +40,21 @@ function ShopEdit() {
     const validateForm = () => {
         let valid = true;
         const newErrors = {};
-        if (shopData.name === "") {
+        if (formShop.name === "") {
             newErrors.name = "Please enter name shop";
             valid = false;
-        } else if (shopData.name.length < 3) {
+        } else if (formShop.name.length < 3) {
             newErrors.name = "Enter at least 3 characters";
             valid = false;
-        } else if (shopData.name.length > 255) {
+        } else if (formShop.name.length > 255) {
             newErrors.name = "Enter up to 255 characters";
             valid = false;
         }
-        if (shopData.floorId === "") {
+        if (formShop.floorId === "") {
             newErrors.floorId = "Please choose floor";
             valid = false;
         }
-        if (shopData.categoryId === "") {
+        if (formShop.categoryId === "") {
             newErrors.categoryId = "Please choose category";
             valid = false;
         }
@@ -55,17 +62,6 @@ function ShopEdit() {
         setErrors(newErrors);
         return valid;
     };
-
-    //hien thi thong tin shop
-    useEffect(() => {
-        api.get(`${url.SHOP.DETAIL.replace("{}", slug)}`)
-            .then((response) => {
-                setShopData(response.data);
-            })
-            .catch((error) => {
-                // console.error("Error fetching promotion details:", error);
-            });
-    }, [slug]);
 
     //hiển thị select categories
     useEffect(() => {
@@ -93,19 +89,19 @@ function ShopEdit() {
         fetchFloors();
     }, []);
 
-    //xử lý update shop
+    //xử lý create shop
     const handleSubmit = async (e) => {
         e.preventDefault();
         const isFormValid = validateForm();
 
         if (isFormValid) {
             try {
-                const response = await api.put(url.SHOP.UPDATE, shopData, {
+                const response = await api.post(url.SHOP.CREATE, formShop, {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
-                if (response.status === 200) {
+                if (response.status === 201) {
                     // console.log(response.data);
-                    toast.success("Update Shop Successffuly.", {
+                    toast.success("Create Shop Successffuly.", {
                         position: toast.POSITION.TOP_RIGHT,
                         autoClose: 3000,
                     });
@@ -122,30 +118,52 @@ function ShopEdit() {
                         autoClose: 3000,
                     });
                 } else {
-                    toast.error("Unable to update shop, please try again", {
+                    toast.error("Unable to create shop, please try again", {
                         position: toast.POSITION.TOP_RIGHT,
                         autoClose: 3000,
                     });
                 }
-                // console.error("Error creating test:", error);
-                // console.error("Response data:", error.response.data);
+                console.error("Error creating test:", error);
+                console.error("Response data:", error.response.data);
             }
         }
+    };
+
+    //xử lý tải file ảnh
+    const handleFileShopChange = (e, fieldName) => {
+        const { files } = e.target;
+        const selectedImage = files.length > 0 ? URL.createObjectURL(files[0]) : null;
+
+        setFormShop({
+            ...formShop,
+            [fieldName]: fieldName === "imagePath" ? (files.length > 0 ? files[0] : null) : null,
+            image_preview: selectedImage,
+        });
+    };
+    const handleChange = (e) => {
+        const { name } = e.target;
+        if (name === "imagePath") {
+            handleFileShopChange(e, name);
+        } else {
+            const { value } = e.target;
+            setFormShop({ ...formShop, [name]: value });
+        }
+        setNameExistsError("");
     };
 
     return (
         <>
             <Helmet>
-                <title>Shop Edit | R Mall</title>
+                <title>Shop Create | R Mall</title>
             </Helmet>
             {loading ? <Loading /> : ""}
             <Layout>
-                <Breadcrumb title="Shop Edit" />
+                <Breadcrumb title="Shop Create" />
                 <div className="row">
                     <div className="col-xl-12 col-xxl-12">
                         <div className="card">
                             <div className="card-header">
-                                <h4 className="card-title">Shop Edit</h4>
+                                <h4 className="card-title">Shop Create</h4>
                             </div>
                             <div className="card-body">
                                 <form onSubmit={handleSubmit}>
@@ -155,18 +173,7 @@ function ShopEdit() {
                                                 <label className="text-label form-label">
                                                     Shop Name <span className="text-danger">*</span>
                                                 </label>
-                                                <input
-                                                    type="text"
-                                                    value={shopData.name}
-                                                    onChange={(e) =>
-                                                        setShopData({
-                                                            ...shopData,
-                                                            name: e.target.value,
-                                                        })
-                                                    }
-                                                    className="form-control"
-                                                    autoFocus
-                                                />
+                                                <input type="text" name="name" onChange={handleChange} className="form-control" placeholder="Please enter name shop" autoFocus />
                                                 {errors.name && <div className="text-danger">{errors.name}</div>}
                                                 {nameExistsError && <div className="text-danger">{nameExistsError}</div>}
                                             </div>
@@ -175,41 +182,21 @@ function ShopEdit() {
                                         <div className="col-lg-6 mb-2">
                                             <div className="mb-3">
                                                 <label className="text-label form-label">Contact Info (Number Phone)</label>
-                                                <input
-                                                    type="text"
-                                                    value={shopData.contactInfo}
-                                                    onChange={(e) =>
-                                                        setShopData({
-                                                            ...shopData,
-                                                            contactInfo: e.target.value,
-                                                        })
-                                                    }
-                                                    className="form-control"
-                                                />
+                                                <input type="text" name="contactInfo" onChange={handleChange} className="form-control" placeholder="Please enter contact" />
                                             </div>
                                         </div>
 
                                         <div className="col-lg-6 mb-2">
                                             <div className="mb-3">
                                                 <label className="text-label form-label">Hours of operation</label>
-                                                <input
-                                                    type="text"
-                                                    value={shopData.hoursOfOperation}
-                                                    onChange={(e) =>
-                                                        setShopData({
-                                                            ...shopData,
-                                                            hoursOfOperation: e.target.value,
-                                                        })
-                                                    }
-                                                    className="form-control"
-                                                />
+                                                <input type="text" name="hoursOfOperation" onChange={handleChange} className="form-control" placeholder="Please enter hours of operation" />
                                             </div>
                                         </div>
 
                                         <div className="col-lg-6 mb-2">
                                             <div className="mb-3">
                                                 <label className="text-label form-label">Address (Displayed on 3d map)</label>
-                                                <input type="text" value={shopData.address} className="form-control" disabled />
+                                                <input type="text" name="address" onChange={handleChange} className="form-control" placeholder="Please enter address" />
                                             </div>
                                         </div>
 
@@ -218,17 +205,8 @@ function ShopEdit() {
                                                 <label className="text-label form-label">
                                                     Category <span className="text-danger">*</span>
                                                 </label>
-                                                <select
-                                                    className="form-control select"
-                                                    value={shopData.categoryId}
-                                                    onChange={(e) =>
-                                                        setShopData({
-                                                            ...shopData,
-                                                            categoryId: e.target.value,
-                                                            categoryName: e.target.options[e.target.selectedIndex].text,
-                                                        })
-                                                    }
-                                                >
+                                                <select className="form-control select" name="categoryId" onChange={handleChange}>
+                                                    <option value="">Please select category</option>
                                                     {categories.map((categoryItem) => (
                                                         <option key={categoryItem.id} value={categoryItem.id}>
                                                             {categoryItem.name}
@@ -244,17 +222,8 @@ function ShopEdit() {
                                                 <label className="text-label form-label">
                                                     Floor <span className="text-danger">*</span>
                                                 </label>
-                                                <select
-                                                    className="form-control select"
-                                                    value={shopData.floorId}
-                                                    onChange={(e) =>
-                                                        setShopData({
-                                                            ...shopData,
-                                                            floorId: e.target.value,
-                                                            floorName: e.target.options[e.target.selectedIndex].text,
-                                                        })
-                                                    }
-                                                >
+                                                <select className="form-control select" name="floorId" onChange={handleChange}>
+                                                    <option value="">Please select floor</option>
                                                     {floors.map((floorItem) => (
                                                         <option key={floorItem.id} value={floorItem.id}>
                                                             {floorItem.floorNumber}
@@ -268,39 +237,14 @@ function ShopEdit() {
                                         <div className="col-lg-6 mb-2">
                                             <div className="mb-3">
                                                 <label className="text-label form-label">Thumbnail</label>
-                                                <input
-                                                    type="file"
-                                                    onChange={(e) => {
-                                                        const file = e.target.files[0];
-                                                        if (file && /\.(jpg|png|jpeg)$/.test(file.name)) {
-                                                            // Update image preview state
-                                                            setImagePreview(URL.createObjectURL(file));
-
-                                                            // Tiếp tục xử lý
-                                                            setShopData({
-                                                                ...shopData,
-                                                                imagePath: file,
-                                                            });
-                                                        } else {
-                                                            console.error("Unsupported file format or no file selected");
-                                                        }
-                                                    }}
-                                                    className="form-control"
-                                                    accept=".jpg, .png, .jpeg"
-                                                />
+                                                <input type="file" name="imagePath" onChange={handleChange} className="form-control" accept=".jpg, .png, .etc" />
                                             </div>
                                         </div>
 
                                         <div className="col-lg-6 mb-2">
                                             <div className="mb-3">
                                                 <label className="text-label form-label">Preview shop photos</label>
-                                                <img
-                                                    id="imgPreview"
-                                                    src={imagePreview || shopData.imagePath}
-                                                    alt="Shop Preview"
-                                                    style={{ width: "100%", height: "300px", objectFit: "cover" }}
-                                                    onError={(e) => console.error("Image Preview Error:", e)}
-                                                />
+                                                {formShop.image_preview && <img src={formShop.image_preview} alt="Product Preview" style={{ width: "100%", height: "300px", objectFit: "cover" }} />}
                                             </div>
                                         </div>
 
@@ -308,9 +252,9 @@ function ShopEdit() {
                                             <div className="mb-3">
                                                 <label className="text-label form-label">Description</label>
                                                 <Editor
-                                                    value={shopData.description}
+                                                    value={formShop.description}
                                                     onEditorChange={(content, editor) => {
-                                                        setShopData({ ...shopData, description: content });
+                                                        setFormShop({ ...formShop, description: content });
                                                     }}
                                                     apiKey="7l8llyf250xx4h04715gr0uazaz78gbb3jghl18ukqb3pjc0"
                                                     init={{
@@ -327,10 +271,9 @@ function ShopEdit() {
                                                 />
                                             </div>
                                         </div>
-
                                         <div className="text-end">
                                             <button type="submit" className="btn btn-default">
-                                                Update
+                                                Create
                                             </button>
                                         </div>
                                     </div>
@@ -344,4 +287,4 @@ function ShopEdit() {
     );
 }
 
-export default ShopEdit;
+export default ShopCreate;

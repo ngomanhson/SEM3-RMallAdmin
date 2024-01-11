@@ -172,7 +172,7 @@ function ProductCreate() {
                                                     Shop Name <span className="text-danger">*</span>
                                                 </label>
                                                 <select className="form-control select" name="shopId" onChange={handleChange}>
-                                                    <option value="">Please select class</option>
+                                                    <option value="">Please select shop</option>
                                                     {shops.map((shopItem) => (
                                                         <option key={shopItem.id} value={shopItem.id}>
                                                             {shopItem.name}
