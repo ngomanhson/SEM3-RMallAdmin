@@ -69,12 +69,12 @@ function Login() {
                 if (loginRequest.status === 200) {
                     const token = loginRequest.data.data;
                     setAccessToken(token);
-
                     // Check user permissions
                     const decodedToken = getDecodedToken();
                     const accountRole = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
 
                     if (accountRole === "User") {
+                        removeAccessToken();
                         setFormErrors({
                             email: "Invalid email or password.",
                             password: "Invalid email or password.",

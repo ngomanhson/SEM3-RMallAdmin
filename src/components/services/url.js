@@ -84,5 +84,10 @@ const url = {
         CHANGE_PASSWORD: "/auth/change-password",
         RESET_PASSWORD: "auth/reset-password",
     },
+    BOOKING: {
+        LIST: "/order",
+        DETAIL: "order/get-by-id",
+        USE_TICKET: "/order/use-tickets",
+    },
 };
 export default url;
