@@ -19,6 +19,7 @@ function FoodEdit() {
 
     const { id } = useParams();
     const [foodData, setFoodData] = useState({});
+    const [imagePreview, setImagePreview] = useState("");
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
@@ -100,22 +101,6 @@ function FoodEdit() {
         }
     };
 
-    //xử lý tải file ảnh
-    const handleFoodImageChange = (e) => {
-        const { files } = e.target;
-        setFoodData({
-            ...foodData,
-            image: files.length > 0 ? URL.createObjectURL(files[0]) : null,
-        });
-    };
-    const handleFileFoodChange = (e, fieldName) => {
-        const { files } = e.target;
-        setFoodData({
-            ...foodData,
-            [fieldName]: fieldName === "image" ? (files.length > 0 ? files[0] : null) : null,
-        });
-    };
-
     return (
         <>
             <Helmet>
@@ -179,7 +164,26 @@ function FoodEdit() {
                                                 <label className="text-label form-label">
                                                     Thumbnail <span className="text-danger">*</span>
                                                 </label>
-                                                <input type="file" onChange={handleFoodImageChange} className="form-control" accept=".jpg, .png, .etc" />
+                                                <input
+                                                    type="file"
+                                                    onChange={(e) => {
+                                                        const file = e.target.files[0];
+                                                        if (file && /\.(jpg|png|jpeg)$/.test(file.name)) {
+                                                            // Update image preview state
+                                                            setImagePreview(URL.createObjectURL(file));
+
+                                                            // Tiếp tục xử lý
+                                                            setFoodData({
+                                                                ...foodData,
+                                                                image: file,
+                                                            });
+                                                        } else {
+                                                            console.error("Unsupported file format or no file selected");
+                                                        }
+                                                    }}
+                                                    className="form-control"
+                                                    accept=".jpg, .png, .jpeg"
+                                                />
                                                 {errors.image && <div className="text-danger">{errors.image}</div>}
                                             </div>
                                         </div>
@@ -227,7 +231,13 @@ function FoodEdit() {
                                         <div className="col-lg-6 mb-2">
                                             <div className="mb-3">
                                                 <label className="text-label form-label">Preview food photos</label>
-                                                {foodData.image && <img src={foodData.image} alt="Food Preview" style={{ width: "100%", height: "300px", objectFit: "cover" }} />}
+                                                <img
+                                                    id="imgPreview"
+                                                    src={imagePreview || foodData.image}
+                                                    alt="Shop Preview"
+                                                    style={{ width: "100%", height: "300px", objectFit: "cover" }}
+                                                    onError={(e) => console.error("Image Preview Error:", e)}
+                                                />{" "}
                                             </div>
                                         </div>
 

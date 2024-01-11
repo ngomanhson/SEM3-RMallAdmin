@@ -18,7 +18,6 @@ function MovieCreate() {
         describe: "",
         director: "",
         duration: "",
-        ratings: "",
         trailer: "",
         release_date: "",
         genreIds: [],
@@ -72,14 +71,6 @@ function MovieCreate() {
         };
         fetchGenres();
     }, []);
-    //options của Rangting
-    const optionsRanting = [
-        { value: 1, label: "1" },
-        { value: 2, label: "2" },
-        { value: 3, label: "3" },
-        { value: 4, label: "4" },
-        { value: 5, label: "5" },
-    ];
 
     //hiển thị video trailer
     const [videoUrl, setVideoUrl] = useState("");
@@ -123,10 +114,6 @@ function MovieCreate() {
                 newErrors.duration = "Please enter a valid duration between 60 and 200 Minute";
                 valid = false;
             }
-        }
-        if (formMovie.ratings === "") {
-            newErrors.ratings = "Please choose ratings";
-            valid = false;
         }
         if (formMovie.release_date === "") {
             newErrors.release_date = "Please enter release date";
@@ -290,24 +277,6 @@ function MovieCreate() {
                                                     placeholder="Select Languages"
                                                 />
                                                 {errors.languageIds && <div className="text-danger">{errors.languageIds}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Ratings <span className="text-danger">*</span>
-                                                </label>
-                                                <Select
-                                                    name="ratings"
-                                                    value={optionsRanting.find((option) => option.value === formMovie.ratings)}
-                                                    styles={customStyles}
-                                                    onChange={(selectedOption) => {
-                                                        setFormMovie({ ...formMovie, ratings: selectedOption.value });
-                                                    }}
-                                                    options={optionsRanting}
-                                                />
-                                                {errors.ratings && <div className="text-danger">{errors.ratings}</div>}
                                             </div>
                                         </div>
 

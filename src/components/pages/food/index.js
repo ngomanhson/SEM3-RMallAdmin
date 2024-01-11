@@ -19,6 +19,31 @@ function FoodList() {
     }, []);
 
     const [foods, setFoods] = useState([]);
+    const [isDeleteVisible, setDeleteVisible] = useState(false);
+    const [tbodyCheckboxes, setTbodyCheckboxes] = useState([]);
+    const [selectAll, setSelectAll] = useState(false);
+
+    //xử lý check tất cả và hiển thị thùng rác
+    const handleSelectAll = () => {
+        setSelectAll(!selectAll);
+        const checkboxes = document.querySelectorAll('#orders input[type="checkbox"]');
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = !selectAll;
+        });
+        setDeleteVisible(!selectAll);
+    };
+    const handleCheckboxChange = () => {
+        const checkboxes = document.querySelectorAll('#orders input[type="checkbox"]');
+        const selectedCheckboxes = Array.from(checkboxes).filter((checkbox) => checkbox.checked);
+        setDeleteVisible(selectedCheckboxes.length > 0);
+    };
+    const handleTbodyCheckboxChange = (index) => {
+        const updatedTbodyCheckboxes = [...tbodyCheckboxes];
+        updatedTbodyCheckboxes[index] = !updatedTbodyCheckboxes[index];
+        setTbodyCheckboxes(updatedTbodyCheckboxes);
+        const isDeleteVisible = selectAll || updatedTbodyCheckboxes.some((checkbox) => checkbox);
+        setDeleteVisible(isDeleteVisible);
+    };
 
     //hiển thị danh sách food
     useEffect(() => {
@@ -32,7 +57,16 @@ function FoodList() {
     }, []);
 
     //xử lý xoá food
-    const handleDeleteFood = async (id) => {
+    const handleDeleteFood = async () => {
+        const selectedFoodIds = [];
+
+        // lấy id của các food đã được chọn
+        foods.forEach((item, index) => {
+            if (selectAll || tbodyCheckboxes[index]) {
+                selectedFoodIds.push(item.id);
+            }
+        });
+
         const isConfirmed = await Swal.fire({
             title: "Are you sure?",
             text: "You want to delete food?",
@@ -44,9 +78,11 @@ function FoodList() {
         });
         if (isConfirmed.isConfirmed) {
             try {
-                const deleteResponse = await api.delete(`${url.FOOD.DELETE.replace("{}", id)}`);
+                const deleteResponse = await api.delete(url.FOOD.DELETE, {
+                    data: selectedFoodIds,
+                });
                 if (deleteResponse.status === 200) {
-                    setFoods((prevFoods) => prevFoods.filter((food) => food.id !== id));
+                    setFoods((prevFoods) => prevFoods.filter((food) => !selectedFoodIds.includes(food.id)));
                     toast.success("Delete Food Successfully.", {
                         position: toast.POSITION.TOP_RIGHT,
                         autoClose: 3000,
@@ -100,8 +136,15 @@ function FoodList() {
                 <Breadcrumb title="Food List" />
 
                 <div className="row page-titles">
-                    <div className="col-lg-6">
+                    <div className="col-lg-5">
                         <input type="text" className="form-control input-rounded" placeholder="Search name food . . ." value={searchName} onChange={handleSearchNameChange} />
+                    </div>
+                    <div className="col-lg-1 text-end">
+                        <NavLink onClick={handleDeleteFood}>
+                            <button type="button" className={`btn btn-danger ${isDeleteVisible ? "" : "d-none"}`}>
+                                <i className="fa fa-trash"></i>
+                            </button>
+                        </NavLink>
                     </div>
                     <div className="col-lg-3 text-center">
                         <NavLink to="/food-delete-at">
@@ -113,7 +156,7 @@ function FoodList() {
                             </button>
                         </NavLink>
                     </div>
-                    <div className="col-lg-3 text-center">
+                    <div className="col-lg-3">
                         <NavLink to="/food-create">
                             <button type="button" className="btn btn-rounded btn-info">
                                 <span className="btn-icon-start text-info">
@@ -131,7 +174,17 @@ function FoodList() {
                             <thead>
                                 <tr>
                                     <th>
-                                        <strong>No.</strong>
+                                        <div className="form-check custom-checkbox">
+                                            <input
+                                                type="checkbox"
+                                                className="form-check-input"
+                                                onChange={() => {
+                                                    handleSelectAll();
+                                                    handleCheckboxChange();
+                                                }}
+                                                checked={selectAll}
+                                            />
+                                        </div>
                                     </th>
                                     <th>
                                         <strong>Thumbnail</strong>
@@ -153,12 +206,14 @@ function FoodList() {
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="orders">
                                 {currentFoods.map((item, index) => {
                                     return (
                                         <tr>
                                             <td>
-                                                <strong>{index + 1}</strong>
+                                                <div className="form-check custom-checkbox checkbox-primary">
+                                                    <input type="checkbox" className="form-check-input" onChange={() => handleTbodyCheckboxChange(index)} checked={tbodyCheckboxes[index]} />
+                                                </div>{" "}
                                             </td>
                                             <td>
                                                 <img src={item.image} className="rounded-lg me-2 movie-thumb" alt="" />
@@ -169,15 +224,9 @@ function FoodList() {
                                             <td>{item.quantity}</td>
                                             <td>
                                                 <div className="d-flex">
-                                                    <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
-                                                        <i className="fa fa-eye"></i>
-                                                    </a>
                                                     <Link to={`/food-edit/${item.id}`} className="btn btn-primary shadow btn-xs sharp me-1">
                                                         <i className="fas fa-pencil-alt"></i>
                                                     </Link>
-                                                    <NavLink onClick={() => handleDeleteFood(item.id)} className="btn btn-danger shadow btn-xs sharp">
-                                                        <i className="fa fa-trash"></i>
-                                                    </NavLink>
                                                 </div>
                                             </td>
                                         </tr>

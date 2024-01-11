@@ -34,9 +34,10 @@ function ShowTimes() {
     const [isSelecting, setIsSelecting] = useState(false);
     const [selectedTime, setSelectedTime] = useState("");
     const [movies, setMovies] = useState([]);
+    const [selectedMovieId, setSelectedMovieId] = useState("");
+    const [languages, setLanguages] = useState([]);
     const [rooms, setRooms] = useState([]);
     const [formShow, setFormShow] = useState({
-        showCode: "",
         movieId: "",
         roomId: id,
         startDate: "",
@@ -108,28 +109,34 @@ function ShowTimes() {
         };
         fetchMovies();
     }, []);
+    //hiển thị select language
+    useEffect(() => {
+        const fetchLanguages = async () => {
+            try {
+                if (selectedMovieId) {
+                    const response = await api.get(`${url.LANGUAGE.GETBYMOVIE.replace("{}", selectedMovieId)}`);
+                    setLanguages(response.data);
+                }
+            } catch (error) {}
+        };
+
+        if (!selectedMovieId) {
+            setLanguages([]);
+        }
+        fetchLanguages();
+    }, [selectedMovieId]);
 
     //validate
     const [errors, setErrors] = useState({});
     const validateForm = () => {
         let valid = true;
         const newErrors = {};
-        if (formShow.showCode === "") {
-            newErrors.showCode = "Please enter show code";
-            valid = false;
-        } else if (formShow.showCode.length < 3) {
-            newErrors.showCode = "Enter at least 3 characters";
-            valid = false;
-        } else if (formShow.showCode.length > 255) {
-            newErrors.showCode = "Enter up to 255 characters";
-            valid = false;
-        }
         if (formShow.movieId === "") {
             newErrors.movieId = "Please choose movie";
             valid = false;
         }
         if (formShow.language === "") {
-            newErrors.language = "Please enter language";
+            newErrors.language = "Please choose language";
             valid = false;
         }
         if (formShow.seatPricings[0].price === 0) {
@@ -202,6 +209,14 @@ function ShowTimes() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormShow({ ...formShow, [name]: value });
+
+        if (name === "movieId") {
+            setSelectedMovieId(value);
+            setFormShow((prevFormShow) => ({
+                ...prevFormShow,
+                language: "",
+            }));
+        }
     };
     //chọn giá vé normal thì giá vip và couple tự đổi
     const handleNormalSeatPriceChange = (e) => {
@@ -330,13 +345,6 @@ function ShowTimes() {
                                     <div className="row">
                                         <div className="col-md-6">
                                             <div className="mb-3">
-                                                <label className="text-label form-label">Show Code</label>
-                                                <input className="form-control" placeholder="Enter show code" type="text" name="showCode" onChange={handleChange} />
-                                                {errors.showCode && <div className="text-danger">{errors.showCode}</div>}
-                                            </div>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <div className="mb-3">
                                                 <label className="text-label form-label">Choose Movie</label>
                                                 <select className="form-control" name="movieId" value={formShow.movieId} onChange={handleChange}>
                                                     <option value="">Please select movie</option>
@@ -352,7 +360,14 @@ function ShowTimes() {
                                         <div className="col-md-6">
                                             <div className="mb-3">
                                                 <label className="text-label form-label">Language</label>
-                                                <input className="form-control" placeholder="Enter language" type="text" name="language" onChange={handleChange} />
+                                                <select className="form-control select" name="language" value={formShow.language} onChange={handleChange}>
+                                                    <option value="">Please select language</option>
+                                                    {languages.map((languageItem) => (
+                                                        <option key={languageItem.id} value={languageItem.name}>
+                                                            {languageItem.name}
+                                                        </option>
+                                                    ))}
+                                                </select>
                                                 {errors.language && <div className="text-danger">{errors.language}</div>}
                                             </div>
                                         </div>

@@ -17,7 +17,7 @@ function ProductEdit() {
         }, 2000);
     }, []);
 
-    const { slug } = useParams();
+    const { id } = useParams();
     const [productData, setProductData] = useState({});
     const [shops, setShops] = useState([]);
     const [imagePreview, setImagePreview] = useState("");
@@ -49,14 +49,14 @@ function ProductEdit() {
 
     //hien thi thong tin product
     useEffect(() => {
-        api.get(`${url.PRODUCT.DETAIL.replace("{}", slug)}`)
+        api.get(`${url.PRODUCT.DETAIL.replace("{}", id)}`)
             .then((response) => {
                 setProductData(response.data);
             })
             .catch((error) => {
                 // console.error("Error fetching promotion details:", error);
             });
-    }, [slug]);
+    }, [id]);
 
     //hiển thị select shops
     useEffect(() => {
@@ -160,9 +160,9 @@ function ProductEdit() {
 
                                         <div className="col-lg-6 mb-2">
                                             <div className="mb-3">
-                                                <label className="text-label form-label">Price</label>
+                                                <label className="text-label form-label">Price ($)</label>
                                                 <input
-                                                    type="text"
+                                                    type="number"
                                                     value={productData.price}
                                                     onChange={(e) =>
                                                         setProductData({
