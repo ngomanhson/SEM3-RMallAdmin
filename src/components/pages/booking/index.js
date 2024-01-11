@@ -6,12 +6,18 @@ import { useCallback } from "react";
 import api from "../../services/api";
 import url from "../../services/url";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Loading from "../../layouts/loading";
+import { QrReader } from "react-qr-reader";
 
 function BookingList() {
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [bookings, setBookings] = useState([]);
+    const [scannerOn, setScannerOn] = useState(false);
+
+    const [data, setData] = useState("No result");
+
     const loadBooking = useCallback(async () => {
         try {
             const bookingResponse = await api.get(url.BOOKING.LIST);
@@ -26,6 +32,30 @@ function BookingList() {
             setLoading(false);
         }, 2000);
     }, [loadBooking]);
+
+    const startScanner = () => {
+        setScannerOn(true);
+    };
+
+    const stopScanner = () => {
+        setScannerOn(false);
+    };
+
+    const handleScan = (result, error) => {
+        if (!!result) {
+            setData(result.text);
+            stopScanner();
+            navigateToLink(result.text);
+        }
+
+        if (!!error) {
+            console.info(error);
+        }
+    };
+
+    const navigateToLink = (qrCodeData) => {
+        navigate(`/booking-detail/${qrCodeData}`);
+    };
 
     return (
         <>
@@ -43,11 +73,11 @@ function BookingList() {
                             <div className="card-header">
                                 <div className="col-lg-7"></div>
                                 <div className="col-lg-2 text-end">
-                                    <button type="button" className="btn btn-rounded btn-primary">
+                                    <button type="button" className="btn btn-rounded btn-primary" data-bs-toggle="modal" data-bs-target="#scanner" onClick={startScanner}>
                                         <span className="btn-icon-start text-primary">
                                             <i className="mdi mdi-qrcode-scan font-18 align-middle"></i>
                                         </span>
-                                        Scan QR Code
+                                        Start Scanner
                                     </button>
                                 </div>
                             </div>
@@ -127,6 +157,20 @@ function BookingList() {
                                             })}
                                         </tbody>
                                     </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="modal fade" id="scanner" onClick={stopScanner}>
+                            <div className="modal-dialog modal-dialog-centered" role="document">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h5 className="modal-title">Scanner QR Code</h5>
+                                        <button type="button" className="btn-close" data-bs-dismiss="modal" onClick={stopScanner}></button>
+                                    </div>
+                                    <div className="modal-body">
+                                        {scannerOn && <QrReader onResult={handleScan} />}
+                                        <p className="text-center">{data}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
