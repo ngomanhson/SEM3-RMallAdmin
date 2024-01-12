@@ -101,6 +101,23 @@ function MovieList() {
         }
     };
 
+    //paginate
+    const [currentPage, setCurrentPage] = useState(1);
+    const moviesPerPage = 10;
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+    const handlePrevPage = () => {
+        setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    };
+    const handleNextPage = () => {
+        setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+    };
+    const totalPages = Math.ceil(movies.length / moviesPerPage);
+    const indexOfLastMovie = currentPage * moviesPerPage;
+    const indexOfFirstMovie = indexOfLastMovie - moviesPerPage;
+    const currentMovies = movies.slice(indexOfFirstMovie, indexOfLastMovie);
+
     //search, filter
     const [searchTitle, setSearchTitle] = useState("");
     const [searchDirector, setSearchDirector] = useState("");
@@ -114,30 +131,12 @@ function MovieList() {
     const handleReleaseDateChange = (e) => {
         setReleaseDate(e.target.value);
     };
-    const filteredMovies = movies.filter((item) => {
+    const filteredMovies = currentMovies.filter((item) => {
         const titleMatch = item.title.toLowerCase().includes(searchTitle.toLowerCase());
         const directorMatch = item.director.toLowerCase().includes(searchDirector.toLowerCase());
         const releaseDateMatch = releaseDate ? new Date(item.release_date) >= new Date(releaseDate) : true;
         return titleMatch && directorMatch && releaseDateMatch;
     });
-
-    //paginate
-    const [currentPage, setCurrentPage] = useState(1);
-    const moviesPerPage = 10;
-    const handlePageChange = (page) => {
-        setCurrentPage(page);
-    };
-    const handlePrevPage = () => {
-        setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-    };
-    const handleNextPage = () => {
-        setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
-    };
-    const totalPages = Math.ceil(filteredMovies.length / moviesPerPage);
-    const indexOfLastMovie = currentPage * moviesPerPage;
-    const indexOfFirstMovie = indexOfLastMovie - moviesPerPage;
-    const currentMovies = filteredMovies.slice(indexOfFirstMovie, indexOfLastMovie);
-
     return (
         <>
             <Helmet>
@@ -232,7 +231,7 @@ function MovieList() {
                                 </tr>
                             </thead>
                             <tbody id="orders">
-                                {currentMovies.map((item, index) => {
+                                {filteredMovies.map((item, index) => {
                                     return (
                                         <tr>
                                             <td>

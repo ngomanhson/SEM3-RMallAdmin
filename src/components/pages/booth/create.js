@@ -50,6 +50,10 @@ function ShopCreate() {
             newErrors.name = "Enter up to 255 characters";
             valid = false;
         }
+        if (formShop.imagePath === null) {
+            newErrors.imagePath = "Please choose shop photo";
+            valid = false;
+        }
         if (formShop.floorId === "") {
             newErrors.floorId = "Please choose floor";
             valid = false;
@@ -238,6 +242,7 @@ function ShopCreate() {
                                             <div className="mb-3">
                                                 <label className="text-label form-label">Thumbnail</label>
                                                 <input type="file" name="imagePath" onChange={handleChange} className="form-control" accept=".jpg, .png, .etc" />
+                                                {errors.imagePath && <div className="text-danger">{errors.imagePath}</div>}
                                             </div>
                                         </div>
 

@@ -99,16 +99,6 @@ function GenreList() {
         }
     };
 
-    //search, filter
-    const [searchName, setSearchName] = useState("");
-    const handleSearchNameChange = (e) => {
-        setSearchName(e.target.value);
-    };
-    const filteredGenres = genres.filter((item) => {
-        const nameMatch = item.name.toLowerCase().includes(searchName.toLowerCase());
-        return nameMatch;
-    });
-
     //paginate
     const [currentPage, setCurrentPage] = useState(1);
     const genresPerPage = 10;
@@ -121,10 +111,20 @@ function GenreList() {
     const handleNextPage = () => {
         setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
     };
-    const totalPages = Math.ceil(filteredGenres.length / genresPerPage);
+    const totalPages = Math.ceil(genres.length / genresPerPage);
     const indexOfLastGenre = currentPage * genresPerPage;
     const indexOfFirstGenre = indexOfLastGenre - genresPerPage;
-    const currentGenres = filteredGenres.slice(indexOfFirstGenre, indexOfLastGenre);
+    const currentGenres = genres.slice(indexOfFirstGenre, indexOfLastGenre);
+
+    //search, filter
+    const [searchName, setSearchName] = useState("");
+    const handleSearchNameChange = (e) => {
+        setSearchName(e.target.value);
+    };
+    const filteredGenres = currentGenres.filter((item) => {
+        const nameMatch = item.name.toLowerCase().includes(searchName.toLowerCase());
+        return nameMatch;
+    });
 
     return (
         <>
@@ -198,7 +198,7 @@ function GenreList() {
                                 </tr>
                             </thead>
                             <tbody id="orders">
-                                {currentGenres.map((item, index) => {
+                                {filteredGenres.map((item, index) => {
                                     return (
                                         <tr>
                                             <td>

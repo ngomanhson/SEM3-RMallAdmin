@@ -99,16 +99,6 @@ function FoodList() {
         }
     };
 
-    //search, filter
-    const [searchName, setSearchName] = useState("");
-    const handleSearchNameChange = (e) => {
-        setSearchName(e.target.value);
-    };
-    const filteredFoods = foods.filter((item) => {
-        const nameMatch = item.name.toLowerCase().includes(searchName.toLowerCase());
-        return nameMatch;
-    });
-
     //paginate
     const [currentPage, setCurrentPage] = useState(1);
     const foodsPerPage = 10;
@@ -121,10 +111,20 @@ function FoodList() {
     const handleNextPage = () => {
         setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
     };
-    const totalPages = Math.ceil(filteredFoods.length / foodsPerPage);
+    const totalPages = Math.ceil(foods.length / foodsPerPage);
     const indexOfLastFood = currentPage * foodsPerPage;
     const indexOfFirstFood = indexOfLastFood - foodsPerPage;
-    const currentFoods = filteredFoods.slice(indexOfFirstFood, indexOfLastFood);
+    const currentFoods = foods.slice(indexOfFirstFood, indexOfLastFood);
+
+    //search, filter
+    const [searchName, setSearchName] = useState("");
+    const handleSearchNameChange = (e) => {
+        setSearchName(e.target.value);
+    };
+    const filteredFoods = currentFoods.filter((item) => {
+        const nameMatch = item.name.toLowerCase().includes(searchName.toLowerCase());
+        return nameMatch;
+    });
 
     return (
         <>
@@ -207,7 +207,7 @@ function FoodList() {
                                 </tr>
                             </thead>
                             <tbody id="orders">
-                                {currentFoods.map((item, index) => {
+                                {filteredFoods.map((item, index) => {
                                     return (
                                         <tr>
                                             <td>

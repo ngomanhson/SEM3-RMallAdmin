@@ -100,6 +100,23 @@ function PromotionList() {
         }
     };
 
+    //paginate
+    const [currentPage, setCurrentPage] = useState(1);
+    const promotionsPerPage = 10;
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+    const handlePrevPage = () => {
+        setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    };
+    const handleNextPage = () => {
+        setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+    };
+    const totalPages = Math.ceil(promotions.length / promotionsPerPage);
+    const indexOfLastPromotion = currentPage * promotionsPerPage;
+    const indexOfFirstPromotion = indexOfLastPromotion - promotionsPerPage;
+    const currentPromotions = promotions.slice(indexOfFirstPromotion, indexOfLastPromotion);
+
     //search, filter
     const [searchName, setSearchName] = useState("");
     const [startDate, setStartDate] = useState("");
@@ -113,29 +130,12 @@ function PromotionList() {
     const handleEndDateChange = (e) => {
         setEndDate(e.target.value);
     };
-    const filteredPromotions = promotions.filter((item) => {
+    const filteredPromotions = currentPromotions.filter((item) => {
         const nameMatch = item.name.toLowerCase().includes(searchName.toLowerCase());
         const startDateMatch = startDate ? new Date(item.startDate) >= new Date(startDate) : true;
         const endDateMatch = endDate ? new Date(item.endDate) <= new Date(endDate) : true;
         return nameMatch && startDateMatch && endDateMatch;
     });
-
-    //paginate
-    const [currentPage, setCurrentPage] = useState(1);
-    const promotionsPerPage = 10;
-    const handlePageChange = (page) => {
-        setCurrentPage(page);
-    };
-    const handlePrevPage = () => {
-        setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-    };
-    const handleNextPage = () => {
-        setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
-    };
-    const totalPages = Math.ceil(filteredPromotions.length / promotionsPerPage);
-    const indexOfLastPromotion = currentPage * promotionsPerPage;
-    const indexOfFirstPromotion = indexOfLastPromotion - promotionsPerPage;
-    const currentPromotions = filteredPromotions.slice(indexOfFirstPromotion, indexOfLastPromotion);
 
     return (
         <>
@@ -221,7 +221,7 @@ function PromotionList() {
                                             </tr>
                                         </thead>
                                         <tbody id="orders">
-                                            {currentPromotions.map((item, index) => {
+                                            {filteredPromotions.map((item, index) => {
                                                 return (
                                                     <tr className="btn-reveal-trigger">
                                                         <td className="py-2">
