@@ -57,6 +57,32 @@ function BookingList() {
         navigate(`/booking-detail/${qrCodeData}`);
     };
 
+    //paginate
+    const [currentPage, setCurrentPage] = useState(1);
+    const bookingsPerPage = 10;
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+    const handlePrevPage = () => {
+        setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    };
+    const handleNextPage = () => {
+        setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+    };
+    const totalPages = Math.ceil(bookings.length / bookingsPerPage);
+    const indexOfLastBooking = currentPage * bookingsPerPage;
+    const indexOfFirstBooking = indexOfLastBooking - bookingsPerPage;
+    const currentCodes = bookings.slice(indexOfFirstBooking, indexOfLastBooking);
+
+    //search, filter
+    const [searchCode, setSearchCode] = useState("");
+    const handleSearchCodeChange = (e) => {
+        setSearchCode(e.target.value);
+    };
+    const filteredCodes = currentCodes.filter((item) => {
+        const codeMatch = item.orderCode.toLowerCase().includes(searchCode.toLowerCase());
+        return codeMatch;
+    });
     return (
         <>
             <Helmet>
@@ -71,7 +97,10 @@ function BookingList() {
                     <div className="col-lg-12">
                         <div className="card">
                             <div className="card-header">
-                                <div className="col-lg-7"></div>
+                                <div className="col-lg-4">
+                                    <input type="text" className="form-control input-rounded" placeholder="Search code . . ." value={searchCode} onChange={handleSearchCodeChange} />
+                                </div>
+                                <div className="col-lg-6"></div>
                                 <div className="col-lg-2 text-end">
                                     <button type="button" className="btn btn-rounded btn-primary" data-bs-toggle="modal" data-bs-target="#scanner" onClick={startScanner}>
                                         <span className="btn-icon-start text-primary">
@@ -87,10 +116,7 @@ function BookingList() {
                                         <thead>
                                             <tr>
                                                 <th className="align-middle">
-                                                    <div className="form-check custom-checkbox">
-                                                        <input type="checkbox" className="form-check-input" id="checkAll" />
-                                                        <label className="form-check-label" for="checkAll"></label>
-                                                    </div>
+                                                    <strong>No.</strong>
                                                 </th>
                                                 <th className="align-middle">
                                                     <strong>Booking</strong>
@@ -116,14 +142,11 @@ function BookingList() {
                                             </tr>
                                         </thead>
                                         <tbody id="orders">
-                                            {bookings.map((item, index) => {
+                                            {filteredCodes.map((item, index) => {
                                                 return (
                                                     <tr className="btn-reveal-trigger" key={index}>
                                                         <td className="py-2">
-                                                            <div className="form-check custom-checkbox checkbox-success">
-                                                                <input type="checkbox" className="form-check-input" id="checkbox" />
-                                                                <label className="form-check-label" htmlFor="checkbox"></label>
-                                                            </div>
+                                                            <strong> {index + 1}</strong>
                                                         </td>
                                                         <td className="py-2">
                                                             <Link to="">
@@ -157,6 +180,35 @@ function BookingList() {
                                             })}
                                         </tbody>
                                     </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="card-footer">
+                            <div className="row">
+                                <div className="col-lg-5"></div>
+                                <div className="col-lg-4"></div>
+                                <div className="col-lg-3 text-end">
+                                    <nav>
+                                        <ul className="pagination pagination-gutter pagination-primary no-bg">
+                                            <li className={`page-item page-indicator ${currentPage === 1 ? "disabled" : ""}`}>
+                                                <a className="page-link" href="javascript:void(0)" onClick={handlePrevPage}>
+                                                    <i className="la la-angle-left"></i>
+                                                </a>
+                                            </li>
+                                            {Array.from({ length: totalPages }).map((_, index) => (
+                                                <li key={index} className={`page-item ${currentPage === index + 1 ? "active" : ""}`}>
+                                                    <a className="page-link" href="javascript:void(0)" onClick={() => handlePageChange(index + 1)}>
+                                                        {index + 1}
+                                                    </a>
+                                                </li>
+                                            ))}
+                                            <li className={`page-item page-indicator ${currentPage === totalPages ? "disabled" : ""}`}>
+                                                <a className="page-link" href="javascript:void(0)" onClick={handleNextPage}>
+                                                    <i className="la la-angle-right"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
                                 </div>
                             </div>
                         </div>

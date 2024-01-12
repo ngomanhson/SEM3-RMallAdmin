@@ -102,6 +102,23 @@ function ShopList() {
         }
     };
 
+    //paginate
+    const [currentPage, setCurrentPage] = useState(1);
+    const shopsPerPage = 10;
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+    const handlePrevPage = () => {
+        setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    };
+    const handleNextPage = () => {
+        setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+    };
+    const totalPages = Math.ceil(shops.length / shopsPerPage);
+    const indexOfLastShop = currentPage * shopsPerPage;
+    const indexOfFirstShop = indexOfLastShop - shopsPerPage;
+    const currentShops = shops.slice(indexOfFirstShop, indexOfLastShop);
+
     //search, filter
     const [searchTitle, setSearchTitle] = useState("");
     const [searchCategory, setSearchCategory] = useState("");
@@ -115,29 +132,12 @@ function ShopList() {
     const handleSearchFloorChange = (e) => {
         setSearchFloor(e.target.value);
     };
-    const filteredShops = shops.filter((item) => {
+    const filteredShops = currentShops.filter((item) => {
         const titleMatch = item.name.toLowerCase().includes(searchTitle.toLowerCase());
         const categoryMatch = item.categoryName.toLowerCase().includes(searchCategory.toLowerCase());
         const floorMatch = item.floorName.toLowerCase().includes(searchFloor.toLowerCase());
         return titleMatch && categoryMatch && floorMatch;
     });
-
-    //paginate
-    const [currentPage, setCurrentPage] = useState(1);
-    const shopsPerPage = 10;
-    const handlePageChange = (page) => {
-        setCurrentPage(page);
-    };
-    const handlePrevPage = () => {
-        setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-    };
-    const handleNextPage = () => {
-        setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
-    };
-    const totalPages = Math.ceil(filteredShops.length / shopsPerPage);
-    const indexOfLastShop = currentPage * shopsPerPage;
-    const indexOfFirstShop = indexOfLastShop - shopsPerPage;
-    const currentShops = filteredShops.slice(indexOfFirstShop, indexOfLastShop);
 
     return (
         <>
@@ -243,7 +243,7 @@ function ShopList() {
                                 </tr>
                             </thead>
                             <tbody id="orders">
-                                {currentShops.map((item, index) => {
+                                {filteredShops.map((item, index) => {
                                     return (
                                         <tr>
                                             <td>

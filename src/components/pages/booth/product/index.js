@@ -20,9 +20,21 @@ function ListProductOfShop() {
 
     const { slug } = useParams();
     const [products, setProducts] = useState([]);
+    const [shopDetail, setShopDetail] = useState([]);
     const [isDeleteVisible, setDeleteVisible] = useState(false);
     const [tbodyCheckboxes, setTbodyCheckboxes] = useState([]);
     const [selectAll, setSelectAll] = useState(false);
+
+    //hien thi thong tin chi tiet shop
+    useEffect(() => {
+        api.get(`${url.SHOP.DETAIL.replace("{}", slug)}`)
+            .then((response) => {
+                setShopDetail(response.data);
+            })
+            .catch((error) => {
+                // console.error("Error fetching promotion details:", error);
+            });
+    }, [slug]);
 
     //hien thi thong tin product theo shop
     useEffect(() => {
@@ -110,6 +122,59 @@ function ListProductOfShop() {
             <Layout>
                 <Breadcrumb title="List Product Of Shop" />
 
+                <div className="row">
+                    <div className="col-xl-4">
+                        <div className="row">
+                            <div className="col-xl-12">
+                                <div className="card">
+                                    <div className="card-body">
+                                        <div className="profile-blog">
+                                            <h4 className="d-inline">Information shop :</h4>
+                                            <img src={shopDetail.imagePath} alt="" className="img-fluid mt-4 mb-4 w-100" />
+                                            <h4 className="d-inline">Name shop :</h4>
+                                            <p className="mb-0">
+                                                {shopDetail.name} ({shopDetail.address})
+                                            </p>
+
+                                            <div style={{ paddingTop: "20px" }}>
+                                                <h4 className="d-inline">Contact Info :</h4>
+                                                <p className="mb-0">{shopDetail.contactInfo}</p>
+                                            </div>
+
+                                            <div style={{ paddingTop: "20px" }}>
+                                                <h4 className="d-inline">Hours Of Operation :</h4>
+                                                <p className="mb-0">{shopDetail.hoursOfOperation}</p>
+                                            </div>
+
+                                            <div style={{ paddingTop: "20px" }}>
+                                                <h4 className="d-inline">Category :</h4>
+                                                <p className="mb-0">{shopDetail.categoryName}</p>
+                                            </div>
+
+                                            <div style={{ paddingTop: "20px" }}>
+                                                <h4 className="d-inline">Floor :</h4>
+                                                <p className="mb-0">{shopDetail.floorName}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-xl-8">
+                        <div className="card">
+                            <div className="card-body">
+                                <h4 className="d-inline">Description shop :</h4>
+                                <div
+                                    className="post-details"
+                                    dangerouslySetInnerHTML={{
+                                        __html: shopDetail.description,
+                                    }}
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div className="card-header">
                     <div className="col-lg-6"></div>
                     <div className="col-lg-1 text-end">
