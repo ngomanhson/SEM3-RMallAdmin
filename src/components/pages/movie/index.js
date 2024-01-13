@@ -22,6 +22,7 @@ function MovieList() {
     const [movies, setMovies] = useState([]);
     const [isDeleteVisible, setDeleteVisible] = useState(false);
     const [tbodyCheckboxes, setTbodyCheckboxes] = useState([]);
+    const [selectedDate, setSelectedDate] = useState(null);
     const [selectAll, setSelectAll] = useState(false);
 
     //hiển thị danh sách movie
@@ -29,11 +30,14 @@ function MovieList() {
         const loadMovies = async () => {
             try {
                 const response = await api.get(url.MOVIE.LIST);
-                setMovies(response.data);
+                const filteredBookings = selectedDate
+                    ? response.data.filter((item) => format(new Date(item.release_date), "yyyy-MM-dd") === format(new Date(selectedDate), "yyyy-MM-dd"))
+                    : response.data;
+                setMovies(filteredBookings);
             } catch (error) {}
         };
         loadMovies();
-    }, []);
+    }, [selectedDate]);
 
     //xử lý check tất cả và hiển thị thùng rác
     const handleSelectAll = () => {
@@ -121,21 +125,16 @@ function MovieList() {
     //search, filter
     const [searchTitle, setSearchTitle] = useState("");
     const [searchDirector, setSearchDirector] = useState("");
-    const [releaseDate, setReleaseDate] = useState("");
     const handleSearchTitleChange = (e) => {
         setSearchTitle(e.target.value);
     };
     const handleSearchDirectorChange = (e) => {
         setSearchDirector(e.target.value);
     };
-    const handleReleaseDateChange = (e) => {
-        setReleaseDate(e.target.value);
-    };
     const filteredMovies = currentMovies.filter((item) => {
         const titleMatch = item.title.toLowerCase().includes(searchTitle.toLowerCase());
         const directorMatch = item.director.toLowerCase().includes(searchDirector.toLowerCase());
-        const releaseDateMatch = releaseDate ? new Date(item.release_date) >= new Date(releaseDate) : true;
-        return titleMatch && directorMatch && releaseDateMatch;
+        return titleMatch && directorMatch;
     });
     return (
         <>
@@ -154,7 +153,7 @@ function MovieList() {
                         <input type="text" className="form-control input-rounded" placeholder="Search director movie . . ." value={searchDirector} onChange={handleSearchDirectorChange} />
                     </div>
                     <div className="col-lg-4">
-                        <input type="date" className="form-control input-rounded" value={releaseDate} onChange={handleReleaseDateChange} />
+                        <input type="date" className="form-control input-rounded" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} />
                     </div>
                 </div>
 

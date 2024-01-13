@@ -9,29 +9,36 @@ import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Loading from "../../layouts/loading";
 import { QrReader } from "react-qr-reader";
+import { format } from "date-fns";
 
 function BookingList() {
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
-    const [bookings, setBookings] = useState([]);
-    const [scannerOn, setScannerOn] = useState(false);
-
-    const [data, setData] = useState("No result");
-
-    const loadBooking = useCallback(async () => {
-        try {
-            const bookingResponse = await api.get(url.BOOKING.LIST);
-            setBookings(bookingResponse.data);
-        } catch (error) {}
-    }, []);
-
     useEffect(() => {
         setLoading(true);
-        loadBooking();
         setTimeout(() => {
             setLoading(false);
         }, 2000);
-    }, [loadBooking]);
+    }, []);
+
+    const [loading, setLoading] = useState(false);
+    const [bookings, setBookings] = useState([]);
+    const [scannerOn, setScannerOn] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(null);
+
+    const [data, setData] = useState("No result");
+
+    useEffect(() => {
+        const loadBooking = async () => {
+            try {
+                const bookingResponse = await api.get(url.BOOKING.LIST);
+                const filteredBookings = selectedDate
+                    ? bookingResponse.data.filter((item) => format(new Date(item.createdAt), "yyyy-MM-dd") === format(new Date(selectedDate), "yyyy-MM-dd"))
+                    : bookingResponse.data;
+                setBookings(filteredBookings);
+            } catch (error) {}
+        };
+        loadBooking();
+    }, [selectedDate]);
 
     const startScanner = () => {
         setScannerOn(true);
@@ -96,11 +103,15 @@ function BookingList() {
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="card">
-                            <div className="card-header">
+                            <div className="card-header row">
                                 <div className="col-lg-4">
                                     <input type="text" className="form-control input-rounded" placeholder="Search code . . ." value={searchCode} onChange={handleSearchCodeChange} />
                                 </div>
-                                <div className="col-lg-6"></div>
+                                <div className="col-lg-4">
+                                    <input type="date" className="form-control input-rounded" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} />
+                                </div>
+
+                                <div className="col-lg-2"></div>
                                 <div className="col-lg-2 text-end">
                                     <button type="button" className="btn btn-rounded btn-primary" data-bs-toggle="modal" data-bs-target="#scanner" onClick={startScanner}>
                                         <span className="btn-icon-start text-primary">
@@ -133,9 +144,9 @@ function BookingList() {
                                                 <th className="align-middle">
                                                     <strong>Final Total</strong>
                                                 </th>
-                                                {/* <th className="align-middle">
-                                                    <strong>Status</strong>
-                                                </th> */}
+                                                <th className="align-middle">
+                                                    <strong>Booking Date</strong>
+                                                </th>
                                                 <th className="align-middle text-end">
                                                     <strong>Actions</strong>
                                                 </th>
@@ -153,23 +164,13 @@ function BookingList() {
                                                                 <strong>#{item.orderCode}</strong>
                                                             </Link>
                                                             <br />
-                                                            <Link to="">by Ngo Manh Son</Link>
+                                                            <Link to="">by {item.userName}</Link>
                                                         </td>
                                                         <td className="py-2">{item.movieTitle}</td>
                                                         <td className="py-2">{item.showId}</td>
                                                         <td className="py-2">{item.paymentMethod}</td>
                                                         <td className="py-2">${item.finalTotal}</td>
-                                                        {/* <td className="py-2">
-                                                            {item.isPaid === 0 ? (
-                                                                <span class="badge badge-secondary text-white">
-                                                                    Haven't gotten a ticket yet<span class="ms-1 fa fa-ban"></span>
-                                                                </span>
-                                                            ) : (
-                                                                <span className="badge badge-success">
-                                                                    Got the ticket<span className="ms-1 fa fa-check"></span>
-                                                                </span>
-                                                            )}
-                                                        </td> */}
+                                                        <td className="py-2">{format(new Date(item.createdAt), "yyyy-MM-dd HH:mm")}</td>
                                                         <td className="py-2 text-end">
                                                             <Link to={`/booking-detail/${item.orderCode}`} className="btn btn-primary shadow btn-xs sharp me-1">
                                                                 <i className="fa fa-eye"></i>
