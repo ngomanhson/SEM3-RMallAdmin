@@ -42,6 +42,7 @@ import CinemaDashboard from "./components/pages/dashboard/staffcinema";
 import ResetPassword from "./components/pages/auth/reset-password";
 import ShopCreate from "./components/pages/booth/create";
 import BookingDetail from "./components/pages/booking/detail";
+import ShowList from "./components/pages/showtimes/show-list";
 function App() {
     const ProtectedRoute = ({ element }) => {
         const token = getAccessToken();
@@ -93,6 +94,10 @@ function App() {
                 <Route path="/movie-edit/:id" element={<ProtectedRoute element={<MovieEdit />} />} />
                 <Route path="/movie-delete-at" element={<ProtectedRoute element={<MovieDeleteAt />} />} />
                 {/* End Movie */}
+
+                {/* Start Show */}
+                <Route path="/show-list" element={<ProtectedRoute element={<ShowList />} />} />
+                {/* End Show */}
 
                 {/* Start Room and Show Time */}
                 <Route path="/room" element={<ProtectedRoute element={<Room />} />} />
