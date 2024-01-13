@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import api from "../../services/api";
 import url from "../../services/url";
 import { Link, NavLink } from "react-router-dom";
+import Chart from "react-apexcharts";
 
 function Dashboard() {
     const [loading, setLoading] = useState(false);
@@ -14,6 +15,146 @@ function Dashboard() {
             setLoading(false);
         }, 2000);
     }, []);
+
+    //base biểu đồ doanh thu theo tuần
+    const ChartRevenueWeekly = {
+        options: {
+            dataLabels: {
+                enabled: false,
+            },
+            stroke: {
+                curve: "smooth",
+            },
+            animations: {
+                enabled: true,
+                easing: "easeinout",
+                speed: 800,
+                animateGradually: {
+                    enabled: true,
+                    delay: 150,
+                },
+                dynamicAnimation: {
+                    enabled: true,
+                    speed: 350,
+                },
+            },
+        },
+        series: [
+            {
+                name: "Total proceeds",
+                data: [],
+            },
+        ],
+        xaxis: {
+            categories: [],
+        },
+    };
+
+    //base biểu đồ doanh thu theo tháng
+    const ChartRevenueMonthly = {
+        options: {
+            dataLabels: {
+                enabled: false,
+            },
+            stroke: {
+                curve: "smooth",
+            },
+            animations: {
+                enabled: true,
+                easing: "easeinout",
+                speed: 800,
+                animateGradually: {
+                    enabled: true,
+                    delay: 150,
+                },
+                dynamicAnimation: {
+                    enabled: true,
+                    speed: 350,
+                },
+            },
+        },
+        series: [
+            {
+                name: "Total proceeds",
+                data: [],
+            },
+        ],
+        xaxis: {
+            categories: [],
+        },
+    };
+
+    //base biểu đồ doanh thu theo năm
+    const ChartRevenueYearly = {
+        options: {
+            dataLabels: {
+                enabled: false,
+            },
+            stroke: {
+                curve: "smooth",
+            },
+            animations: {
+                enabled: true,
+                easing: "easeinout",
+                speed: 800,
+                animateGradually: {
+                    enabled: true,
+                    delay: 150,
+                },
+                dynamicAnimation: {
+                    enabled: true,
+                    speed: 350,
+                },
+            },
+        },
+        series: [
+            {
+                name: "Total proceeds",
+                data: [],
+            },
+        ],
+        xaxis: {
+            categories: [],
+        },
+    };
+
+    //base biểu đồ doanh thu, đơn đặt theo show
+    const ChartRevenueShow = {
+        options: {
+            dataLabels: {
+                enabled: false,
+            },
+            stroke: {
+                curve: "smooth",
+            },
+            animations: {
+                enabled: true,
+                easing: "easeinout",
+                speed: 800,
+                animateGradually: {
+                    enabled: true,
+                    delay: 150,
+                },
+                dynamicAnimation: {
+                    enabled: true,
+                    speed: 350,
+                },
+            },
+        },
+        series: [
+            {
+                name: "Tickets sold",
+                data: [],
+            },
+            {
+                name: "Total proceeds",
+                data: [],
+            },
+        ],
+        xaxis: {
+            categories: [],
+        },
+    };
 
     const [totalShops, setTotalShops] = useState([]);
     const [totalMovies, setTotalMovies] = useState([]);
@@ -27,6 +168,21 @@ function Dashboard() {
     const [topMovieSelling, setTopMovieSelling] = useState([]);
     const [topShopTraffic, setTopShopTraffic] = useState([]);
     const [orderOverview, setOrderOverview] = useState([]);
+    const [chartWeeklyOptions, setChartWeeklyOptions] = useState(ChartRevenueWeekly.options);
+    const [chartWeeklySeries, setChartWeeklySeries] = useState(ChartRevenueWeekly.series);
+    const [chartMonthlyOptions, setChartMonthlyOptions] = useState(ChartRevenueMonthly.options);
+    const [chartMonthlySeries, setChartMonthlySeries] = useState(ChartRevenueMonthly.series);
+    //chuyển đổi các tháng từ 1 thành Jan
+    const getMonthName = (monthNumber) => {
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        return monthNames[monthNumber - 1];
+    };
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); //chọn năm của biểu đồ 12 tháng
+    const [availableYears, setAvailableYears] = useState([]);
+    const [chartYearlyOptions, setChartYearlyOptions] = useState(ChartRevenueYearly.options);
+    const [chartYearlySeries, setChartYearlySeries] = useState(ChartRevenueYearly.series);
+    const [chartShowOptions, setChartShowOptions] = useState(ChartRevenueShow.options);
+    const [chartShowSeries, setChartShowSeries] = useState(ChartRevenueShow.series);
 
     //hiển thị total shop
     useEffect(() => {
@@ -159,6 +315,165 @@ function Dashboard() {
         };
         loadOrderOrverview();
     }, []);
+
+    //biểu đồ doanh thu theo tuần
+    const processDataForChartWeekly = (data) => {
+        const categories = data.map((entry) => {
+            const date = new Date(entry.date);
+            const formattedDate = `${date.getDate()}/${date.getMonth() + 1}`;
+            return formattedDate;
+        });
+        const seriesData = data.map((entry) => entry.totalSales);
+        return {
+            categories,
+            seriesData,
+        };
+    };
+    useEffect(() => {
+        const loadWeeklyRevenue = async () => {
+            try {
+                const response = await api.get(url.DASHBOARD.CHARTWEEKLY);
+                const processedData = processDataForChartWeekly(response.data);
+
+                setChartWeeklyOptions({
+                    ...ChartRevenueWeekly.options,
+                    xaxis: {
+                        categories: processedData.categories,
+                    },
+                });
+
+                setChartWeeklySeries([
+                    {
+                        name: "Total proceeds",
+                        data: processedData.seriesData,
+                    },
+                ]);
+            } catch (error) {}
+        };
+        loadWeeklyRevenue();
+    }, []);
+
+    //biểu đồ doanh thu theo 12 tháng của năm người dùng chọn
+    const processDataForChartMonthly = (data) => {
+        const categories = data.map((entry) => getMonthName(entry.month));
+        const seriesData = data.map((entry) => entry.totalSales);
+        return {
+            categories,
+            seriesData,
+        };
+    };
+    useEffect(() => {
+        const loadMonthlyRevenue = async () => {
+            try {
+                const response = await api.get(url.DASHBOARD.CHARTMONTHLY.replace("{}", selectedYear));
+                const processedData = processDataForChartMonthly(response.data);
+
+                setChartMonthlyOptions({
+                    ...ChartRevenueMonthly.options,
+                    xaxis: {
+                        categories: processedData.categories,
+                    },
+                });
+
+                setChartMonthlySeries([
+                    {
+                        name: "Total proceeds",
+                        data: processedData.seriesData,
+                    },
+                ]);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        loadMonthlyRevenue();
+    }, [selectedYear]);
+    useEffect(() => {
+        const loadAvailableYears = () => {
+            const currentYear = new Date().getFullYear();
+            const availableYears = Array.from({ length: 11 }, (_, index) => currentYear - 5 + index);
+            setAvailableYears(availableYears);
+        };
+        loadAvailableYears();
+    }, []);
+
+    //biểu đồ doanh thu theo năm
+    const processDataForChartYearly = (data) => {
+        const categories = data.map((entry) => entry.year);
+        const seriesData = data.map((entry) => entry.totalSales);
+        return {
+            categories,
+            seriesData,
+        };
+    };
+    useEffect(() => {
+        const loadYearlyRevenue = async () => {
+            try {
+                const response = await api.get(url.DASHBOARD.CHARTYEARLY);
+                const processedData = processDataForChartYearly(response.data);
+
+                setChartYearlyOptions({
+                    ...ChartRevenueYearly.options,
+                    xaxis: {
+                        categories: processedData.categories,
+                    },
+                });
+
+                setChartYearlySeries([
+                    {
+                        name: "Total proceeds",
+                        data: processedData.seriesData,
+                    },
+                ]);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        loadYearlyRevenue();
+    }, []);
+
+    //biểu đồ doanh thu theo show
+    const processDataForChart = (data) => {
+        const categories = data.map((entry) => {
+            const date = new Date(entry.date);
+            const formattedDate = `${date.getDate()}/${date.getMonth() + 1}`;
+            return formattedDate;
+        });
+        const seriesData1 = data.map((entry) => entry.totalTicketsSold);
+        const seriesData2 = data.map((entry) => entry.totalRevenue);
+        return {
+            categories,
+            seriesData1,
+            seriesData2,
+        };
+    };
+    useEffect(() => {
+        const loadShowRevenue = async () => {
+            try {
+                const response = await api.get(url.DASHBOARD.CHARTPERFORMANCE);
+                const processedData = processDataForChart(response.data);
+
+                setChartShowOptions({
+                    ...ChartRevenueShow.options,
+                    xaxis: {
+                        categories: processedData.categories,
+                    },
+                });
+
+                setChartShowSeries([
+                    {
+                        name: "Tickets sold",
+                        data: processedData.seriesData1,
+                    },
+                    {
+                        name: "Total proceeds",
+                        data: processedData.seriesData2,
+                    },
+                ]);
+            } catch (error) {}
+        };
+        loadShowRevenue();
+    }, []);
+
     return (
         <>
             <Helmet>
@@ -312,61 +627,79 @@ function Dashboard() {
                     <div className="col-xl-12">
                         <div className="row">
                             <div className="col-xl-6 col-lg-6 col-md-6">
-                                <div className="card pia-chart">
-                                    <div className="card-header border-0 pb-0 flex-wrap">
-                                        <div>
-                                            <h5 className="fs-18 font-w600">Biểu đồ 1</h5>
+                                <div className="card user-data-table">
+                                    <div className="card-header pb-0 d-block d-sm-flex border-0">
+                                        <div className="me-3">
+                                            <h4 className="card-title mb-2">Revenue chart</h4>
+                                            <span className="fs-12">Chart of cinema revenue</span>
                                         </div>
-                                        <div className="dropdown">
-                                            <a href="javascript:void(0);" className="btn-link btn sharp tp-btn-light btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M8.33319 9.99985C8.33319 10.9203 9.07938 11.6665 9.99986 11.6665C10.9203 11.6665 11.6665 10.9203 11.6665 9.99986C11.6665 9.07938 10.9203 8.33319 9.99986 8.33319C9.07938 8.33319 8.33319 9.07938 8.33319 9.99985Z"
-                                                        fill="#B9A8FF"
-                                                    />
-                                                    <path
-                                                        d="M8.33319 3.33329C8.33319 4.25376 9.07938 4.99995 9.99986 4.99995C10.9203 4.99995 11.6665 4.25376 11.6665 3.33329C11.6665 2.41282 10.9203 1.66663 9.99986 1.66663C9.07938 1.66663 8.33319 2.41282 8.33319 3.33329Z"
-                                                        fill="#B9A8FF"
-                                                    />
-                                                    <path
-                                                        d="M8.33319 16.6667C8.33319 17.5871 9.07938 18.3333 9.99986 18.3333C10.9203 18.3333 11.6665 17.5871 11.6665 16.6667C11.6665 15.7462 10.9203 15 9.99986 15C9.07938 15 8.33319 15.7462 8.33319 16.6667Z"
-                                                        fill="#B9A8FF"
-                                                    />
-                                                </svg>
-                                            </a>
-                                            <div className="dropdown-menu dropdown-menu-end">
-                                                <a className="dropdown-item" href="javascript:void(0);">
-                                                    Delete
-                                                </a>
-                                                <a className="dropdown-item" href="javascript:void(0);">
-                                                    Edit
-                                                </a>
+                                        <div className="card-tabs mt-3 mt-sm-0">
+                                            <ul className="nav nav-tabs" role="tablist">
+                                                <li className="nav-item">
+                                                    <a className="nav-link underline active" data-bs-toggle="tab" href="#weekly" role="tab">
+                                                        Weekly
+                                                    </a>
+                                                </li>
+                                                <li className="nav-item">
+                                                    <a className="nav-link underline" data-bs-toggle="tab" href="#monthly" role="tab">
+                                                        Monthly
+                                                    </a>
+                                                </li>
+                                                <li className="nav-item">
+                                                    <a className="nav-link underline" data-bs-toggle="tab" href="#yearly" role="tab">
+                                                        Yearly
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div className="card-body tab-content p-0">
+                                        <div className="tab-pane fade active show" id="weekly" role="tabpanel">
+                                            <div className="card-body custome-tooltip">
+                                                <div style={{ height: "100%", width: "100%" }}>
+                                                    <Chart options={chartWeeklyOptions} series={chartWeeklySeries} type="area" />
+                                                </div>
+
+                                                <div className="d-flex align-items-center justify-content-center">
+                                                    <span style={{ fontSize: "18px", fontWeight: "600", color: "white" }}>Revenue in the last 7 days</span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className="card-body d-flex align-items-center justify-content-center custome-tooltip">
-                                        <div id="pieChart1"></div>
-                                    </div>
-                                    <div className="card-footer border-0">
-                                        <div className="d-flex justify-content-center flex-wrap color-tag">
-                                            <span className="application d-flex align-items-center px-2">
-                                                <svg className="me-1" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 13">
-                                                    <rect width="13" height="13" rx="6.5" fill="#DD3CFF"></rect>
-                                                </svg>
-                                                Pink
-                                            </span>
-                                            <span className="application d-flex align-items-center px-2">
-                                                <svg className="me-1" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 13">
-                                                    <rect width="13" height="13" rx="6.5" fill="#FFE27A"></rect>
-                                                </svg>
-                                                Yellow
-                                            </span>
-                                            <span className="application d-flex align-items-center px-2">
-                                                <svg className="me-1" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 13">
-                                                    <rect width="13" height="13" rx="6.5" fill="#53CAFD"></rect>
-                                                </svg>
-                                                Blue
-                                            </span>
+
+                                        <div className="tab-pane fade " id="monthly" role="tabpanel">
+                                            <div className="card-body custome-tooltip">
+                                                <div style={{ height: "100%", width: "100%" }}>
+                                                    <Chart options={chartMonthlyOptions} series={chartMonthlySeries} type="area" />
+                                                </div>
+
+                                                <div className="d-flex align-items-center justify-content-center">
+                                                    <span
+                                                        className="fc-icon fc-icon-chevron-left"
+                                                        onClick={() => setSelectedYear(selectedYear - 1)}
+                                                        disabled={selectedYear <= availableYears[0]}
+                                                        style={{ fontSize: "30px", marginRight: "30px", cursor: "pointer", fontWeight: "600", color: "white" }}
+                                                    ></span>
+                                                    <span style={{ fontSize: "20px", fontWeight: "600", color: "white" }}>{selectedYear}</span>
+                                                    <span
+                                                        className="fc-icon fc-icon-chevron-right"
+                                                        onClick={() => setSelectedYear(selectedYear + 1)}
+                                                        disabled={selectedYear >= availableYears[availableYears.length - 1]}
+                                                        style={{ fontSize: "30px", marginLeft: "30px", cursor: "pointer", fontWeight: "600", color: "white" }}
+                                                    ></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="tab-pane fade " id="yearly" role="tabpanel">
+                                            <div className="card-body custome-tooltip">
+                                                <div style={{ height: "100%", width: "100%" }}>
+                                                    <Chart options={chartYearlyOptions} series={chartYearlySeries} type="bar" />
+                                                </div>
+
+                                                <div className="d-flex align-items-center justify-content-center">
+                                                    <span style={{ fontSize: "18px", fontWeight: "600", color: "white" }}>Revenue in the most recent 5 years</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -375,15 +708,14 @@ function Dashboard() {
                             <div className="col-xl-6 col-lg-6 col-md-6">
                                 <div className="card student-chart">
                                     <div className="card-header border-0 pb-0">
-                                        <h4>Biểu đồ 2</h4>
+                                        <div className="me-3">
+                                            <h4 className="card-title mb-2">Revenue chart</h4>
+                                            <span className="fs-12">Chart of cinema revenue</span>
+                                        </div>
                                     </div>
-                                    <div className="card-body pt-0 custome-tooltip">
-                                        <canvas id="activeUser"></canvas>
-                                        <div className="d-flex justify-content-between align-items-center flex-wrap std-info d-none">
-                                            <h4 className="fs-18 font-w600 mb-0">12.345</h4>
-                                            <span>
-                                                <small className="text-secondary">5.4% </small>than last year
-                                            </span>
+                                    <div className="card-body custome-tooltip">
+                                        <div style={{ height: "100%", width: "100%" }}>
+                                            <Chart options={chartShowOptions} series={chartShowSeries} type="area" />
                                         </div>
                                     </div>
                                 </div>
@@ -397,7 +729,7 @@ function Dashboard() {
                                                 <div className="card-header border-0 pb-0">
                                                     <div>
                                                         <h4 className="fs-18 font-w600">Order overview</h4>
-                                                        <span className="fs-14">The total amount collected up to today, to this month and the amount to be achieved by day, month</span>
+                                                        <span className="fs-14">Revenue needs to be achieved daily and monthly</span>
                                                     </div>
                                                 </div>
                                                 <div className="card-body">
