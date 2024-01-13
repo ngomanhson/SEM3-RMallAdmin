@@ -144,7 +144,7 @@ function PromotionList() {
             </Helmet>
             {loading ? <Loading /> : ""}
             <Layout>
-                <Breadcrumb title="Promotion Create" />
+                <Breadcrumb title="Promotion List" />
 
                 <div className="row page-titles">
                     <div className="col-lg-4">

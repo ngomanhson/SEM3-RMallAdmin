@@ -3,6 +3,20 @@ const url = {
     MENU: {
         LIST: "/menu",
     },
+    DASHBOARD: {
+        TOTAL_SHOP: "/dashboard/total-shop",
+        TOTAL_MOVIE: "/dashboard/total-movie",
+        TOTAL_SHOW_TODAY: "/dashboard/total-show-today",
+        LIST_SHOW_TODAY: "/dashboard/list-show-today",
+        TOTAL_ORDER_TODAY: "/dashboard/total-order-today",
+        LIST_ORDER_TODAY: "/dashboard/list-order-today",
+        TOTAL_CUSANDSTA: "/dashboard/total-cusAndSta",
+        TOTAL_SHOW: "/dashboard/shows-nowAndUpcoming",
+        TOTAL_REVENUE: "/dashboard/revenue",
+        TOPMOVIESELLING: "/dashboard/movie/top-10-selling",
+        TOPSHOPTRAFFIC: "/dashboard/shop/top-10-with-traffic",
+        ORDEROVERVIEW: "/dashboard/order-overview",
+    },
     MOVIE: {
         LIST: "/movie",
         DETAIL: "/movie/{}",
@@ -15,6 +29,7 @@ const url = {
     SHOW: {
         LIST: "/show",
         CREATE: "/show",
+        DELETE: "/show/delete",
         GETBYROOM: "/show/get-by-room/{}",
     },
     SHOP: {

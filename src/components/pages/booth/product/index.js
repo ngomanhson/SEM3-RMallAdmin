@@ -130,7 +130,7 @@ function ListProductOfShop() {
                                     <div className="card-body">
                                         <div className="profile-blog">
                                             <h4 className="d-inline">Information shop :</h4>
-                                            <img src={shopDetail.imagePath} alt="" className="img-fluid mt-4 mb-4 w-100" />
+                                            <img src={shopDetail.imagePath} alt="image image" className="img-fluid mt-4 mb-4 w-100" />
                                             <h4 className="d-inline">Name shop :</h4>
                                             <p className="mb-0">
                                                 {shopDetail.name} ({shopDetail.address})
