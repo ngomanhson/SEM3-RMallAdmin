@@ -92,6 +92,9 @@ const url = {
     FLOOR: {
         LIST: "/floor/get-all",
     },
+    FEEDBACK: {
+        LIST: "/feedback/get-all",
+    },
     AUTH: {
         LOGIN: "/auth/login",
         FORGOT_PASSWORD: "/auth/forgot-password",

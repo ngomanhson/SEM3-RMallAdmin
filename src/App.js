@@ -4,9 +4,6 @@ import Login from "./components/pages/auth/login";
 import ForgotPassword from "./components/pages/auth/forgot-password";
 import NotFound from "./components/pages/other/not-found";
 import CustomerList from "./components/pages/customer";
-import CustomerEdit from "./components/pages/customer/edit";
-import CustomerCreate from "./components/pages/customer/create";
-import CustomerDeleteAt from "./components/pages/customer/delete-at";
 import MovieList from "./components/pages/movie";
 import MovieCreate from "./components/pages/movie/create";
 import MovieEdit from "./components/pages/movie/edit";
@@ -132,9 +129,6 @@ function App() {
 
                 {/* Start Customer */}
                 <Route path="/customer-list" element={<ProtectedRoute element={<CustomerList />} />} />
-                <Route path="/customer-create" element={<ProtectedRoute element={<CustomerCreate />} />} />
-                <Route path="/customer-edit" element={<ProtectedRoute element={<CustomerEdit />} />} />
-                <Route path="/customer-delete-at" element={<ProtectedRoute element={<CustomerDeleteAt />} />} />
                 {/* End Customer */}
 
                 {/* Start Auth */}
