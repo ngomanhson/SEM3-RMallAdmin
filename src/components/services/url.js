@@ -33,7 +33,7 @@ const url = {
     SHOW: {
         LIST: "/show",
         CREATE: "/show",
-        DELETE: "/show/delete",
+        DELETE: "/show/{}",
         GETBYROOM: "/show/get-by-room/{}",
     },
     GALLERY: {

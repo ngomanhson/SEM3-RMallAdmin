@@ -79,7 +79,7 @@ function ShowList() {
         });
         if (isConfirmed.isConfirmed) {
             try {
-                const deleteResponse = await api.delete(`${url.SHOW.DELETE}?id=${id}`);
+                const deleteResponse = await api.delete(`${url.SHOW.DELETE.replace("{}", id)}`);
                 if (deleteResponse.status === 200) {
                     setShows((prevShows) => prevShows.filter((show) => show.id !== id));
                     toast.success("Delete Show Successfully.", {
@@ -90,11 +90,19 @@ function ShowList() {
                 } else {
                 }
             } catch (error) {
-                toast.error("Failed to delete show!", {
-                    position: toast.POSITION.TOP_RIGHT,
-                    autoClose: 3000,
-                });
-                console.error("Failed to delete show:", error);
+                if (error.response.status === 400 && error.response.data.message === "Show cannot be deleted") {
+                    toast.error("Tickets have been purchased for this show schedule, the show cannot be deleted", {
+                        position: toast.POSITION.TOP_RIGHT,
+                        autoClose: 3000,
+                    });
+                } else {
+                    toast.error("Unable to delete show, please try again", {
+                        position: toast.POSITION.TOP_RIGHT,
+                        autoClose: 3000,
+                    });
+                }
+                // console.error("Error creating test:", error);
+                // console.error("Response data:", error.response.data);
             }
         }
     };
@@ -191,6 +199,7 @@ function ShowList() {
                                                     <span>Room</span>
                                                     <span>Start Date</span>
                                                     <span>Language</span>
+                                                    <span>Action</span>
                                                     <span class="accordion-header-indicator"></span>
                                                 </div>
                                             </div>
@@ -214,6 +223,9 @@ function ShowList() {
                                                                     {item.language}
                                                                 </NavLink>
                                                                 <span class="accordion-header-indicator"></span>
+                                                                <NavLink onClick={() => handleDeleteShow(item.id)} className="btn btn-danger" style={{ zIndex: "99" }}>
+                                                                    <i className="fa fa-trash"></i>
+                                                                </NavLink>
                                                             </div>
                                                             <div id={accordionTargetId} class="collapse accordion_body" data-bs-parent="#accordion-one">
                                                                 <SeatPricing seatPricings={item.seatPricings || []} />
