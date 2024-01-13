@@ -32,6 +32,15 @@ const url = {
         DELETE: "/show/delete",
         GETBYROOM: "/show/get-by-room/{}",
     },
+    GALLERY: {
+        LIST: "/gallery/get-all",
+        DETAIL: "/gallery/get-by-id/{}",
+        CREATE: "/gallery/create",
+        UPDATE: "/gallery/edit",
+        TRASH: "/gallery/trash-can",
+        DELETE: "/gallery/delete",
+        RESTORE: "/gallery/restore/{}",
+    },
     SHOP: {
         LIST: "/shop/get-all",
         DETAIL: "/shop/detail/{}",

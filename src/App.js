@@ -40,6 +40,10 @@ import ResetPassword from "./components/pages/auth/reset-password";
 import ShopCreate from "./components/pages/booth/create";
 import BookingDetail from "./components/pages/booking/detail";
 import ShowList from "./components/pages/showtimes/show-list";
+import GalleryList from "./components/pages/gallery";
+import GalleryCreate from "./components/pages/gallery/create";
+import GalleryEdit from "./components/pages/gallery/edit";
+import GalleryDeleteAt from "./components/pages/gallery/delete-at";
 function App() {
     const ProtectedRoute = ({ element }) => {
         const token = getAccessToken();
@@ -84,6 +88,13 @@ function App() {
                 <Route path="/product-create" element={<ProtectedRoute element={<ProductCreate />} />} />
                 <Route path="/product-delete-at" element={<ProtectedRoute element={<ProductDeleteAt />} />} />
                 {/* End Shop And Product*/}
+
+                {/* Start Gallery */}
+                <Route path="/gallery-list" element={<ProtectedRoute element={<GalleryList />} />} />
+                <Route path="/gallery-create" element={<ProtectedRoute element={<GalleryCreate />} />} />
+                <Route path="/gallery-edit/:id" element={<ProtectedRoute element={<GalleryEdit />} />} />
+                <Route path="/gallery-delete-at" element={<ProtectedRoute element={<GalleryDeleteAt />} />} />
+                {/* End Genre */}
 
                 {/* Start Movie */}
                 <Route path="/movie-list" element={<ProtectedRoute element={<MovieList />} />} />
