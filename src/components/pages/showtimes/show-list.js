@@ -216,12 +216,10 @@ function ShowList() {
                                                                         </h6>
                                                                     </div>
                                                                 </div>
-                                                                <span>{item.movieName}</span>
+                                                                <span>{item.movieName.length > 15 ? `${item.movieName.slice(0, 15)}...` : item.movieName}</span>
                                                                 <span>{item.roomName}</span>
                                                                 <span>{format(new Date(item.startDate), "yyyy-MM-dd HH:mm")}</span>
-                                                                <NavLink class="btn btn-warning" to="">
-                                                                    {item.language}
-                                                                </NavLink>
+                                                                <NavLink to="">{item.language}</NavLink>
                                                                 <span class="accordion-header-indicator"></span>
                                                                 <NavLink onClick={() => handleDeleteShow(item.id)} className="btn btn-danger" style={{ zIndex: "99" }}>
                                                                     <i className="fa fa-trash"></i>
