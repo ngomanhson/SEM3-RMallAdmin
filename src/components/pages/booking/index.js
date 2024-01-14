@@ -111,8 +111,8 @@ function BookingList() {
                                     <input type="date" className="form-control input-rounded" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} />
                                 </div>
 
-                                <div className="col-lg-2"></div>
-                                <div className="col-lg-2 text-end">
+                                {/* <div className="col-lg-2"></div> */}
+                                <div className="col-lg-4 text-end">
                                     <button type="button" className="btn btn-rounded btn-primary" data-bs-toggle="modal" data-bs-target="#scanner" onClick={startScanner}>
                                         <span className="btn-icon-start text-primary">
                                             <i className="mdi mdi-qrcode-scan font-18 align-middle"></i>

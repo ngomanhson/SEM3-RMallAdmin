@@ -6,6 +6,7 @@ import api from "../../services/api";
 import url from "../../services/url";
 import { Link, NavLink } from "react-router-dom";
 import Chart from "react-apexcharts";
+import { format } from "date-fns";
 
 function Dashboard() {
     const [loading, setLoading] = useState(false);
@@ -227,6 +228,24 @@ function Dashboard() {
         };
         loadListShowToday();
     }, []);
+
+    //hiển thị chi tiết ghế cho list show today
+    const SeatPricing = ({ seatPricings }) => (
+        <div className="payment-details accordion-body-text">
+            <div className="me-3 mb-3">
+                <p className="fs-12 mb-2">Type Seat</p>
+                <span className="font-w500">Price</span>
+            </div>
+            {seatPricings.map((priceseat) => (
+                <div className="me-3 mb-3" key={priceseat.id}>
+                    <p className="fs-12 mb-2">
+                        Seat Type {priceseat.seatTypeId} ({priceseat.seatTypeName})
+                    </p>
+                    <span className="font-w500">{priceseat.price}$</span>
+                </div>
+            ))}
+        </div>
+    );
 
     //hiển thị total order today
     useEffect(() => {
@@ -661,7 +680,7 @@ function Dashboard() {
                                                 </div>
 
                                                 <div className="d-flex align-items-center justify-content-center">
-                                                    <span style={{ fontSize: "18px", fontWeight: "600", color: "white" }}>Revenue in the last 7 days</span>
+                                                    <span style={{ fontSize: "18px", fontWeight: "600", color: "white" }}>Revenue chart this week</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -709,8 +728,8 @@ function Dashboard() {
                                 <div className="card student-chart">
                                     <div className="card-header border-0 pb-0">
                                         <div className="me-3">
-                                            <h4 className="card-title mb-2">Revenue chart</h4>
-                                            <span className="fs-12">Chart of cinema revenue</span>
+                                            <h4 className="card-title mb-2">Performance chart</h4>
+                                            <span className="fs-12">Chart of revenue and number of tickets sold by showtime</span>
                                         </div>
                                     </div>
                                     <div className="card-body custome-tooltip">
@@ -724,7 +743,7 @@ function Dashboard() {
                             <div className="col-xl-12">
                                 <div className="card mb-2">
                                     <div className="row gx-0">
-                                        <div className="col-xl-8 col-sm-6">
+                                        <div className="col-xl-7 col-sm-6">
                                             <div className="card progressbar bg-transparent mb-0">
                                                 <div className="card-header border-0 pb-0">
                                                     <div>
@@ -766,28 +785,48 @@ function Dashboard() {
                                             </div>
                                         </div>
 
-                                        <div className="col-xl-4 col-sm-6">
+                                        <div className="col-xl-5 col-sm-6">
                                             <div className="card tags bg-transparent">
                                                 <div className="card-header border-0">
                                                     <div>
                                                         <h4 className="font-w600 fs-18">Others</h4>
-                                                        <span>Some information about showtimes and ticket orders</span>
+                                                        <span>Some information about total showtimes and ticket orders</span>
                                                     </div>
                                                 </div>
                                                 <div className="card-body py-1">
-                                                    <div>
-                                                        <Link to="" className="tag">
-                                                            {totalShowToday.totalShowToday} Showtimes today
-                                                        </Link>
-                                                        <Link to="" className="tag">
-                                                            {totalOrderToday.totalShowToday} Orders today
-                                                        </Link>
-                                                        <Link to="" className="tag">
-                                                            #projectmanagement
-                                                        </Link>
-                                                        <Link to="" className="tag">
-                                                            16+
-                                                        </Link>
+                                                    <div className="row d-flex">
+                                                        <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                                                            <span data-bs-toggle="modal" data-bs-target=".modal-show" style={{ cursor: "pointer" }}>
+                                                                <div className="card mt-1 mt-md-3">
+                                                                    <div className="card-body p-3">
+                                                                        <div className="align-items-center h-100 d-flex flex-wrap">
+                                                                            <div className=" ">
+                                                                                <h4 className="fs-18 font-w600 mb-1 text-break">
+                                                                                    Show Today: <span className="text-primary">{totalShowToday.totalShowToday}</span>
+                                                                                </h4>
+                                                                                <span className="fs-14"> (Click to view)</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </span>
+                                                        </div>
+                                                        <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                                                            <span data-bs-toggle="modal" data-bs-target=".modal-order" style={{ cursor: "pointer" }}>
+                                                                <div className="card mt-1 mt-md-3">
+                                                                    <div className="card-body p-3">
+                                                                        <div className="align-items-center h-100 d-flex flex-wrap">
+                                                                            <div className=" ">
+                                                                                <h4 className="fs-18 font-w600 mb-1 text-break">
+                                                                                    Order Today: <span className="text-primary">{totalOrderToday.totalShowToday}</span>
+                                                                                </h4>
+                                                                                <span className="fs-14">(Click to view)</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -891,6 +930,148 @@ function Dashboard() {
                                                     })}
                                                 </tbody>
                                             </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* modal list show today */}
+                            <div class="modal fade modal-show" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">List Show Today</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="card user-data-table">
+                                                <div class="card-body tab-content p-0">
+                                                    <div class="tab-pane fade active show" id="monthly" role="tabpanel">
+                                                        <div id="accordion-one" class="accordion style-1">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="card">
+                                                                        <div class="accordion-header my-2">
+                                                                            <div class="d-flex align-items-center">
+                                                                                <div class="user-info">
+                                                                                    <h6 class="fs-16 font-w500 mb-0">
+                                                                                        <a href="javascript:void(0)">Show Code</a>
+                                                                                    </h6>
+                                                                                </div>
+                                                                            </div>
+                                                                            <span>Movie</span>
+                                                                            <span>Room</span>
+                                                                            <span>Start Date</span>
+                                                                            <span>Language</span>
+                                                                            <span class="accordion-header-indicator"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="accordion-item bg-transparent mb-0">
+                                                                        {listShowToday.map((item, index) => {
+                                                                            const accordionTargetId = `linkopenaccordion_${index}`;
+                                                                            return (
+                                                                                <>
+                                                                                    <div class="accordion-header collapsed my-2" data-bs-toggle="collapse" data-bs-target={`#${accordionTargetId}`}>
+                                                                                        <div class="d-flex align-items-center">
+                                                                                            <div class="user-info">
+                                                                                                <h6 class="fs-16 font-w500 mb-0">
+                                                                                                    <a href="javascript:void(0)">{item.showCode}</a>
+                                                                                                </h6>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <span>{item.movieName.length > 10 ? `${item.movieName.slice(0, 10)}...` : item.movieName}</span>
+                                                                                        <span>{item.roomName}</span>
+                                                                                        <span>{format(new Date(item.startDate), "yyyy-MM-dd HH:mm")}</span>
+                                                                                        <NavLink to="">{item.language}</NavLink>
+                                                                                        <span class="accordion-header-indicator"></span>
+                                                                                    </div>
+                                                                                    <div id={accordionTargetId} class="collapse accordion_body" data-bs-parent="#accordion-one">
+                                                                                        <SeatPricing seatPricings={item.seatPricings || []} />
+                                                                                    </div>
+                                                                                </>
+                                                                            );
+                                                                        })}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger light btn-sm" data-bs-dismiss="modal">
+                                                Close
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* modal list order today */}
+                            <div class="modal fade modal-order" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">List Order Today</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div className="table-responsive">
+                                                <table className="table table-sm mb-0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th className="align-middle">
+                                                                <strong>Booking</strong>
+                                                            </th>
+                                                            <th className="align-middle pe-7">
+                                                                <strong>Movie</strong>
+                                                            </th>
+                                                            <th className="align-middle pe-7">
+                                                                <strong>Show</strong>
+                                                            </th>
+                                                            <th className="align-middle">
+                                                                <strong>Payment</strong>
+                                                            </th>
+                                                            <th className="align-middle">
+                                                                <strong>Final Total</strong>
+                                                            </th>
+                                                            <th className="align-middle">
+                                                                <strong>Booking Date</strong>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="orders">
+                                                        {listOrderToday.map((item, index) => {
+                                                            return (
+                                                                <tr className="btn-reveal-trigger" key={index}>
+                                                                    <td className="py-2">
+                                                                        <Link to="">
+                                                                            <strong>#{item.orderCode}</strong>
+                                                                        </Link>
+                                                                        <br />
+                                                                        <Link to="">by {item.userName}</Link>
+                                                                    </td>
+                                                                    <td className="py-2">{item.movieTitle.length > 15 ? `${item.movieTitle.slice(0, 15)}...` : item.movieTitle}</td>
+                                                                    <td className="py-2">{item.showId}</td>
+                                                                    <td className="py-2">{item.paymentMethod}</td>
+                                                                    <td className="py-2">${item.finalTotal}</td>
+                                                                    <td className="py-2">{format(new Date(item.createdAt), "yyyy-MM-dd HH:mm")}</td>
+                                                                </tr>
+                                                            );
+                                                        })}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger light btn-sm" data-bs-dismiss="modal">
+                                                Close
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
