@@ -30,6 +30,7 @@ function ShopList() {
             try {
                 const response = await api.get(url.SHOP.LIST);
                 setShops(response.data);
+                setTbodyCheckboxes(Array.from({ length: response.data.length }).fill(false));
             } catch (error) {}
         };
         loadShops();
@@ -37,7 +38,9 @@ function ShopList() {
 
     //xử lý check tất cả và hiển thị thùng rác
     const handleSelectAll = () => {
+        const updatedCheckboxes = !selectAll ? Array.from({ length: shops.length }).fill(true) : Array.from({ length: shops.length }).fill(false);
         setSelectAll(!selectAll);
+        setTbodyCheckboxes(updatedCheckboxes);
         const checkboxes = document.querySelectorAll('#orders input[type="checkbox"]');
         checkboxes.forEach((checkbox) => {
             checkbox.checked = !selectAll;
@@ -85,10 +88,12 @@ function ShopList() {
 
                 if (deleteResponse.status === 200) {
                     setShops((prevShops) => prevShops.filter((shop) => !selectedShopIds.includes(shop.id)));
+                    setTbodyCheckboxes((prevCheckboxes) => prevCheckboxes.filter((_, index) => !selectedShopIds.includes(shops[index].id)));
                     toast.success("Delete Shop Successfully.", {
                         position: toast.POSITION.TOP_RIGHT,
                         autoClose: 3000,
                     });
+                    setDeleteVisible(false);
                     // console.log("data:", deleteResponse.data);
                 } else {
                 }

@@ -29,6 +29,7 @@ function ListProduct() {
             try {
                 const response = await api.get(url.PRODUCT.LIST);
                 setProducts(response.data);
+                setTbodyCheckboxes(Array.from({ length: response.data.length }).fill(false));
             } catch (error) {}
         };
         loadProducts();
@@ -36,7 +37,9 @@ function ListProduct() {
 
     //xử lý check tất cả và hiển thị thùng rác
     const handleSelectAll = () => {
+        const updatedCheckboxes = !selectAll ? Array.from({ length: products.length }).fill(true) : Array.from({ length: products.length }).fill(false);
         setSelectAll(!selectAll);
+        setTbodyCheckboxes(updatedCheckboxes);
         const checkboxes = document.querySelectorAll('#orders input[type="checkbox"]');
         checkboxes.forEach((checkbox) => {
             checkbox.checked = !selectAll;
@@ -84,10 +87,12 @@ function ListProduct() {
 
                 if (deleteResponse.status === 200) {
                     setProducts((prevProducts) => prevProducts.filter((product) => !selectedProductIds.includes(product.id)));
+                    setTbodyCheckboxes((prevCheckboxes) => prevCheckboxes.filter((_, index) => !selectedProductIds.includes(products[index].id)));
                     toast.success("Delete Product Successfully.", {
                         position: toast.POSITION.TOP_RIGHT,
                         autoClose: 3000,
                     });
+                    setDeleteVisible(false);
                     // console.log("data:", deleteResponse.data);
                 } else {
                 }
@@ -210,7 +215,7 @@ function ListProduct() {
                                             <td>{item.name}</td>
                                             <td>{item.price}</td>
                                             <td>{item.description}</td>
-                                            <td>{item.shopId}</td>
+                                            <td>{item.shopName}</td>
                                             <td>
                                                 <div className="d-flex">
                                                     <Link to={`/product-edit/${item.id}`} className="btn btn-primary shadow btn-xs sharp me-1">

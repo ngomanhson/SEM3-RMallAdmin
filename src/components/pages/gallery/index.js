@@ -25,6 +25,8 @@ function GalleryList() {
 
     //xử lý check tất cả và hiển thị thùng rác
     const handleSelectAll = () => {
+        const updatedCheckboxes = !selectAll ? Array.from({ length: gallerys.length }).fill(true) : Array.from({ length: gallerys.length }).fill(false);
+        setTbodyCheckboxes(updatedCheckboxes);
         setSelectAll(!selectAll);
         const checkboxes = document.querySelectorAll('#orders input[type="checkbox"]');
         checkboxes.forEach((checkbox) => {
@@ -51,6 +53,7 @@ function GalleryList() {
             try {
                 const response = await api.get(url.GALLERY.LIST);
                 setGallerys(response.data);
+                setTbodyCheckboxes(Array.from({ length: response.data.length }).fill(false));
             } catch (error) {}
         };
         loadGallerys();
@@ -83,6 +86,8 @@ function GalleryList() {
                 });
                 if (deleteResponse.status === 200) {
                     setGallerys((prevGallerys) => prevGallerys.filter((gallery) => !selectedGalleryIds.includes(gallery.id)));
+                    setTbodyCheckboxes((prevCheckboxes) => prevCheckboxes.filter((_, index) => !selectedGalleryIds.includes(gallerys[index].id)));
+                    setDeleteVisible(false);
                     toast.success("Delete Gallery Successfully.", {
                         position: toast.POSITION.TOP_RIGHT,
                         autoClose: 3000,

@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { removeAccessToken } from "../../utils/auth";
 import api from "../services/api";
 import url from "../services/url";
 
 function Sidebar() {
+    const navigate = useNavigate();
     const location = useLocation();
     const isActive = (path) => {
         // Kiểm tra xem đường dẫn hiện tại có trùng với path hay không
@@ -30,6 +32,11 @@ function Sidebar() {
         fetchMenu();
     }, []);
 
+    const handleLogout = () => {
+        removeAccessToken();
+        navigate("/login");
+    };
+
     return (
         <div className="dlabnav">
             <div className="dlabnav-scroll">
@@ -49,7 +56,7 @@ function Sidebar() {
                         </li>
                     ))}
                     <li>
-                        <a href="javascript:void()" className="has-arrow" aria-expanded="false">
+                        <Link to="/login" onClick={handleLogout} className="has-arrow" aria-expanded="false">
                             <div className="menu-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="21" width="21" viewBox="0 0 512 512" transform="rotate(180)">
                                     <path
@@ -60,7 +67,7 @@ function Sidebar() {
                             </div>
 
                             <span className="nav-text">Logout</span>
-                        </a>
+                        </Link>
                     </li>
                 </ul>
 
