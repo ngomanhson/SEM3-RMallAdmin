@@ -25,6 +25,8 @@ function FoodList() {
 
     //xử lý check tất cả và hiển thị thùng rác
     const handleSelectAll = () => {
+        const updatedCheckboxes = !selectAll ? Array.from({ length: foods.length }).fill(true) : Array.from({ length: foods.length }).fill(false);
+        setTbodyCheckboxes(updatedCheckboxes);
         setSelectAll(!selectAll);
         const checkboxes = document.querySelectorAll('#orders input[type="checkbox"]');
         checkboxes.forEach((checkbox) => {
@@ -51,6 +53,7 @@ function FoodList() {
             try {
                 const response = await api.get(url.FOOD.LIST);
                 setFoods(response.data);
+                setTbodyCheckboxes(Array.from({ length: response.data.length }).fill(false));
             } catch (error) {}
         };
         loadFoods();
@@ -83,6 +86,8 @@ function FoodList() {
                 });
                 if (deleteResponse.status === 200) {
                     setFoods((prevFoods) => prevFoods.filter((food) => !selectedFoodIds.includes(food.id)));
+                    setTbodyCheckboxes((prevCheckboxes) => prevCheckboxes.filter((_, index) => !selectedFoodIds.includes(foods[index].id)));
+                    setDeleteVisible(false);
                     toast.success("Delete Food Successfully.", {
                         position: toast.POSITION.TOP_RIGHT,
                         autoClose: 3000,

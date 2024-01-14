@@ -41,6 +41,7 @@ function ListProductOfShop() {
         api.get(`${url.PRODUCT.LISTBYSHOP.replace("{}", slug)}`)
             .then((response) => {
                 setProducts(response.data);
+                setTbodyCheckboxes(Array.from({ length: response.data.length }).fill(false));
             })
             .catch((error) => {
                 // console.error("Error fetching promotion details:", error);
@@ -49,7 +50,9 @@ function ListProductOfShop() {
 
     //xử lý check tất cả và hiển thị thùng rác
     const handleSelectAll = () => {
+        const updatedCheckboxes = !selectAll ? Array.from({ length: products.length }).fill(true) : Array.from({ length: products.length }).fill(false);
         setSelectAll(!selectAll);
+        setTbodyCheckboxes(updatedCheckboxes);
         const checkboxes = document.querySelectorAll('#orders input[type="checkbox"]');
         checkboxes.forEach((checkbox) => {
             checkbox.checked = !selectAll;
@@ -97,10 +100,12 @@ function ListProductOfShop() {
 
                 if (deleteResponse.status === 200) {
                     setProducts((prevProducts) => prevProducts.filter((product) => !selectedProductIds.includes(product.id)));
+                    setTbodyCheckboxes((prevCheckboxes) => prevCheckboxes.filter((_, index) => !selectedProductIds.includes(products[index].id)));
                     toast.success("Delete Product Successfully.", {
                         position: toast.POSITION.TOP_RIGHT,
                         autoClose: 3000,
                     });
+                    setDeleteVisible(false);
                     // console.log("data:", deleteResponse.data);
                 } else {
                 }

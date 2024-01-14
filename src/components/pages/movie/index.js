@@ -34,6 +34,7 @@ function MovieList() {
                     ? response.data.filter((item) => format(new Date(item.release_date), "yyyy-MM-dd") === format(new Date(selectedDate), "yyyy-MM-dd"))
                     : response.data;
                 setMovies(filteredBookings);
+                setTbodyCheckboxes(Array.from({ length: response.data.length }).fill(false));
             } catch (error) {}
         };
         loadMovies();
@@ -41,6 +42,8 @@ function MovieList() {
 
     //xử lý check tất cả và hiển thị thùng rác
     const handleSelectAll = () => {
+        const updatedCheckboxes = !selectAll ? Array.from({ length: movies.length }).fill(true) : Array.from({ length: movies.length }).fill(false);
+        setTbodyCheckboxes(updatedCheckboxes);
         setSelectAll(!selectAll);
         const checkboxes = document.querySelectorAll('#orders input[type="checkbox"]');
         checkboxes.forEach((checkbox) => {
@@ -88,6 +91,8 @@ function MovieList() {
                 });
                 if (deleteResponse.status === 200) {
                     setMovies((prevMovies) => prevMovies.filter((movie) => !selectedMovieIds.includes(movie.id)));
+                    setTbodyCheckboxes((prevCheckboxes) => prevCheckboxes.filter((_, index) => !selectedMovieIds.includes(movies[index].id)));
+                    setDeleteVisible(false);
                     toast.success("Delete Movie Successfully.", {
                         position: toast.POSITION.TOP_RIGHT,
                         autoClose: 3000,

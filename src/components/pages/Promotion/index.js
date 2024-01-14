@@ -29,6 +29,7 @@ function PromotionList() {
             try {
                 const response = await api.get(url.PROMOTION.LIST);
                 setPromotions(response.data);
+                setTbodyCheckboxes(Array.from({ length: response.data.length }).fill(false));
             } catch (error) {}
         };
         loadPromotions();
@@ -36,6 +37,8 @@ function PromotionList() {
 
     //xử lý check tất cả và hiển thị thùng rác
     const handleSelectAll = () => {
+        const updatedCheckboxes = !selectAll ? Array.from({ length: promotions.length }).fill(true) : Array.from({ length: promotions.length }).fill(false);
+        setTbodyCheckboxes(updatedCheckboxes);
         setSelectAll(!selectAll);
         const checkboxes = document.querySelectorAll('#orders input[type="checkbox"]');
         checkboxes.forEach((checkbox) => {
@@ -83,6 +86,8 @@ function PromotionList() {
                 });
                 if (deleteResponse.status === 200) {
                     setPromotions((prevPromotions) => prevPromotions.filter((promotion) => !selectedPromotionIds.includes(promotion.id)));
+                    setTbodyCheckboxes((prevCheckboxes) => prevCheckboxes.filter((_, index) => !selectedPromotionIds.includes(promotions[index].id)));
+                    setDeleteVisible(false);
                     toast.success("Delete Promotions Successfully.", {
                         position: toast.POSITION.TOP_RIGHT,
                         autoClose: 3000,

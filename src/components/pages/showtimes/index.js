@@ -37,6 +37,17 @@ function ShowTimes() {
     const [selectedMovieId, setSelectedMovieId] = useState("");
     const [languages, setLanguages] = useState([]);
     const [rooms, setRooms] = useState([]);
+    const initialFormShow = {
+        movieId: "",
+        roomId: id,
+        startDate: "",
+        language: "",
+        seatPricings: [
+            { seatTypeId: 1, price: 0 },
+            { seatTypeId: 2, price: 0 },
+            { seatTypeId: 3, price: 0 },
+        ],
+    };
     const [formShow, setFormShow] = useState({
         movieId: "",
         roomId: id,
@@ -55,6 +66,7 @@ function ShowTimes() {
         const localStartDate = moment(startDate).format();
         setFormShow((prevFormShow) => ({
             ...prevFormShow,
+            roomId: currentRoomId,
             startDate: localStartDate,
         }));
         setSelectedTime(
@@ -90,6 +102,7 @@ function ShowTimes() {
         const $ = window.$;
         $("#add-movie").modal("hide");
         setIsSelecting(false);
+        setFormShow(initialFormShow);
     };
 
     //chỉ select được từ thời điểm hiện tại trở đi trên mục FullCalendar
@@ -163,7 +176,7 @@ function ShowTimes() {
                     const $ = window.$;
                     $("#add-movie").modal("hide"); //đóng modal
                     setIsSelecting(false);
-
+                    handleCloseModal();
                     //hiển thị lịch chiếu vừa thêm trên FullCalendar
                     const newShow = response.data;
                     const movie = durationMovie.find((m) => m.id === newShow.movieId);

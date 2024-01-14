@@ -1043,6 +1043,9 @@ function Dashboard() {
                                                             <th className="align-middle">
                                                                 <strong>Booking Date</strong>
                                                             </th>
+                                                            <th className="align-middle text-end">
+                                                                <strong>Actions</strong>
+                                                            </th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="orders">
@@ -1061,6 +1064,11 @@ function Dashboard() {
                                                                     <td className="py-2">{item.paymentMethod}</td>
                                                                     <td className="py-2">${item.finalTotal}</td>
                                                                     <td className="py-2">{format(new Date(item.createdAt), "yyyy-MM-dd HH:mm")}</td>
+                                                                    <td className="py-2 text-end">
+                                                                        <Link to={`/booking-detail/${item.orderCode}`} className="btn btn-primary shadow btn-xs sharp me-1">
+                                                                            <i className="fa fa-eye"></i>
+                                                                        </Link>
+                                                                    </td>
                                                                 </tr>
                                                             );
                                                         })}
