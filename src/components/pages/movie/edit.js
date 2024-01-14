@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import { format } from "date-fns";
 import Loading from "../../layouts/loading";
+import NotFound from "../../pages/other/not-found";
 
 function MovieEdit() {
     const [loading, setLoading] = useState(false);
@@ -20,6 +21,8 @@ function MovieEdit() {
         }, 2000);
     }, []);
 
+    const [userRole, setUserRole] = useState(null);
+    const [error, setError] = useState(null);
     const { id } = useParams();
     const [movieData, setMovieData] = useState({});
     const [movieImgePreview, setMovieImagePreview] = useState("");
@@ -81,6 +84,8 @@ function MovieEdit() {
 
     //hien thi thong tin movie
     useEffect(() => {
+        const userToken = localStorage.getItem("access_token");
+        api.defaults.headers.common["Authorization"] = `Bearer ${userToken}`;
         api.get(`${url.MOVIE.DETAIL.replace("{}", id)}`)
             .then((response) => {
                 const initialMovieData = {
@@ -100,6 +105,8 @@ function MovieEdit() {
         e.preventDefault();
         const isFormValid = validateForm();
         if (isFormValid) {
+            const userToken = localStorage.getItem("access_token");
+            api.defaults.headers.common["Authorization"] = `Bearer ${userToken}`;
             try {
                 const response = await api.put(url.MOVIE.UPDATE, movieData, {
                     headers: { "Content-Type": "multipart/form-data" },
@@ -133,259 +140,285 @@ function MovieEdit() {
             }
         }
     };
+
+    // kiểm tra role
+    useEffect(() => {
+        const fetchUserRole = async () => {
+            const token = localStorage.getItem("access_token");
+            try {
+                const decodedToken = JSON.parse(atob(token.split(".")[1]));
+                const userRole = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+                setUserRole(userRole);
+
+                if (userRole === "User" || userRole === "Shopping Center Manager Staff") {
+                    setError(true);
+                }
+            } catch (error) {
+                console.error("Error loading user role:", error);
+            }
+        };
+
+        fetchUserRole();
+    }, []);
     return (
         <>
-            <Helmet>
-                <title>Movie Edit | R Mall</title>
-            </Helmet>
-            {loading ? <Loading /> : ""}
-            <Layout>
-                <Breadcrumb title="Movie Edit" />
-                <div className="row">
-                    <div className="col-xl-12 col-xxl-12">
-                        <div className="card">
-                            <div className="card-header">
-                                <h4 className="card-title">Movie Edit</h4>
-                            </div>
-                            <div className="card-body">
-                                <form onSubmit={handleSubmit}>
-                                    <div className="row">
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Movie Name <span className="text-danger">*</span>
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={movieData.title}
-                                                    onChange={(e) =>
-                                                        setMovieData({
-                                                            ...movieData,
-                                                            title: e.target.value,
-                                                        })
-                                                    }
-                                                    className="form-control"
-                                                />
-                                                {errors.title && <div className="text-danger">{errors.title}</div>}
-                                                {nameExistsError && <div className="text-danger">{nameExistsError}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">Description</label>
-                                                <textarea
-                                                    value={movieData.describe}
-                                                    onChange={(e) =>
-                                                        setMovieData({
-                                                            ...movieData,
-                                                            describe: e.target.value,
-                                                        })
-                                                    }
-                                                    className="form-control"
-                                                ></textarea>
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Actor <span className="text-danger">*</span>
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={movieData.actor}
-                                                    onChange={(e) =>
-                                                        setMovieData({
-                                                            ...movieData,
-                                                            actor: e.target.value,
-                                                        })
-                                                    }
-                                                    className="form-control"
-                                                />
-                                                {errors.actor && <div className="text-danger">{errors.actor}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Director <span className="text-danger">*</span>
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={movieData.director}
-                                                    onChange={(e) =>
-                                                        setMovieData({
-                                                            ...movieData,
-                                                            director: e.target.value,
-                                                        })
-                                                    }
-                                                    className="form-control"
-                                                />
-                                                {errors.director && <div className="text-danger">{errors.director}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Release date <span className="text-danger">*</span>
-                                                </label>
-                                                <input
-                                                    type="date"
-                                                    value={movieData.release_date}
-                                                    onChange={(e) =>
-                                                        setMovieData({
-                                                            ...movieData,
-                                                            release_date: e.target.value,
-                                                        })
-                                                    }
-                                                    className="form-control"
-                                                />
-                                                {errors.release_date && <div className="text-danger">{errors.release_date}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Movie duration (Hours) <span className="text-danger">*</span>
-                                                </label>
-                                                <input
-                                                    type="number"
-                                                    value={movieData.duration}
-                                                    onChange={(e) =>
-                                                        setMovieData({
-                                                            ...movieData,
-                                                            duration: e.target.value,
-                                                        })
-                                                    }
-                                                    className="form-control"
-                                                />
-                                                {errors.duration && <div className="text-danger">{errors.duration}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Movie photos <span className="text-danger">*</span>
-                                                </label>
-                                                <input
-                                                    type="file"
-                                                    onChange={(e) => {
-                                                        const file = e.target.files[0];
-                                                        if (file && /\.(jpg|png|jpeg)$/.test(file.name)) {
-                                                            // Update image preview state
-                                                            setMovieImagePreview(URL.createObjectURL(file));
-
-                                                            // Tiếp tục xử lý
-                                                            setMovieData({
-                                                                ...movieData,
-                                                                movie_image: file,
-                                                            });
-                                                        } else {
-                                                            console.error("Unsupported file format or no file selected");
-                                                        }
-                                                    }}
-                                                    className="form-control"
-                                                    accept=".jpg, .png, .jpeg"
-                                                />
-                                                {errors.movie_image && <div className="text-danger">{errors.movie_image}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Movie cover photo <span className="text-danger">*</span>
-                                                </label>
-                                                <input
-                                                    type="file"
-                                                    onChange={(e) => {
-                                                        const file = e.target.files[0];
-                                                        if (file && /\.(jpg|png|jpeg)$/.test(file.name)) {
-                                                            // Update image preview state
-                                                            setCoverImagePreview(URL.createObjectURL(file));
-
-                                                            // Tiếp tục xử lý
-                                                            setMovieData({
-                                                                ...movieData,
-                                                                cover_image: file,
-                                                            });
-                                                        } else {
-                                                            console.error("Unsupported file format or no file selected");
-                                                        }
-                                                    }}
-                                                    className="form-control"
-                                                    accept=".jpg, .png, .jpeg"
-                                                />
-                                                {errors.cover_image && <div className="text-danger">{errors.cover_image}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">Video Trailer</label>
-                                                <input
-                                                    type="text"
-                                                    name="trailer"
-                                                    className="form-control"
-                                                    value={movieData.trailer}
-                                                    onChange={(e) => {
-                                                        setVideoUrl(e.target.value);
-                                                        setMovieData({ ...movieData, trailer: e.target.value });
-                                                    }}
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-2 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">Preview movie photos</label>
-                                                <img
-                                                    id="imgPreview"
-                                                    src={movieImgePreview || movieData.movie_image}
-                                                    alt="Product Preview"
-                                                    style={{ width: "100%", height: "200px", objectFit: "cover" }}
-                                                    onError={(e) => console.error("Image Preview Error:", e)}
-                                                />{" "}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-2 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">Preview movie cover photo</label>
-                                                <img
-                                                    id="imgPreview"
-                                                    src={coverImgePreview || movieData.cover_image}
-                                                    alt="Product Preview"
-                                                    style={{ width: "100%", height: "200px", objectFit: "cover" }}
-                                                    onError={(e) => console.error("Image Preview Error:", e)}
-                                                />{" "}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-2 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">Preview Trailer</label>
-                                                {movieData.trailer && <ReactPlayer url={movieData.trailer} width="100%" height="200px" controls />}
-                                            </div>
-                                        </div>
-
-                                        <div className="text-end">
-                                            <button type="submit" className="btn btn-default">
-                                                Update Movie
-                                            </button>
-                                        </div>
+            {error ? (
+                <NotFound />
+            ) : (
+                <>
+                    <Helmet>
+                        <title>Movie Edit | R Mall</title>
+                    </Helmet>
+                    {loading ? <Loading /> : ""}
+                    <Layout>
+                        <Breadcrumb title="Movie Edit" />
+                        <div className="row">
+                            <div className="col-xl-12 col-xxl-12">
+                                <div className="card">
+                                    <div className="card-header">
+                                        <h4 className="card-title">Movie Edit</h4>
                                     </div>
-                                </form>
+                                    <div className="card-body">
+                                        <form onSubmit={handleSubmit}>
+                                            <div className="row">
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">
+                                                            Movie Name <span className="text-danger">*</span>
+                                                        </label>
+                                                        <input
+                                                            type="text"
+                                                            value={movieData.title}
+                                                            onChange={(e) =>
+                                                                setMovieData({
+                                                                    ...movieData,
+                                                                    title: e.target.value,
+                                                                })
+                                                            }
+                                                            className="form-control"
+                                                        />
+                                                        {errors.title && <div className="text-danger">{errors.title}</div>}
+                                                        {nameExistsError && <div className="text-danger">{nameExistsError}</div>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">Description</label>
+                                                        <textarea
+                                                            value={movieData.describe}
+                                                            onChange={(e) =>
+                                                                setMovieData({
+                                                                    ...movieData,
+                                                                    describe: e.target.value,
+                                                                })
+                                                            }
+                                                            className="form-control"
+                                                        ></textarea>
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">
+                                                            Actor <span className="text-danger">*</span>
+                                                        </label>
+                                                        <input
+                                                            type="text"
+                                                            value={movieData.actor}
+                                                            onChange={(e) =>
+                                                                setMovieData({
+                                                                    ...movieData,
+                                                                    actor: e.target.value,
+                                                                })
+                                                            }
+                                                            className="form-control"
+                                                        />
+                                                        {errors.actor && <div className="text-danger">{errors.actor}</div>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">
+                                                            Director <span className="text-danger">*</span>
+                                                        </label>
+                                                        <input
+                                                            type="text"
+                                                            value={movieData.director}
+                                                            onChange={(e) =>
+                                                                setMovieData({
+                                                                    ...movieData,
+                                                                    director: e.target.value,
+                                                                })
+                                                            }
+                                                            className="form-control"
+                                                        />
+                                                        {errors.director && <div className="text-danger">{errors.director}</div>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">
+                                                            Release date <span className="text-danger">*</span>
+                                                        </label>
+                                                        <input
+                                                            type="date"
+                                                            value={movieData.release_date}
+                                                            onChange={(e) =>
+                                                                setMovieData({
+                                                                    ...movieData,
+                                                                    release_date: e.target.value,
+                                                                })
+                                                            }
+                                                            className="form-control"
+                                                        />
+                                                        {errors.release_date && <div className="text-danger">{errors.release_date}</div>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">
+                                                            Movie duration (Hours) <span className="text-danger">*</span>
+                                                        </label>
+                                                        <input
+                                                            type="number"
+                                                            value={movieData.duration}
+                                                            onChange={(e) =>
+                                                                setMovieData({
+                                                                    ...movieData,
+                                                                    duration: e.target.value,
+                                                                })
+                                                            }
+                                                            className="form-control"
+                                                        />
+                                                        {errors.duration && <div className="text-danger">{errors.duration}</div>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">
+                                                            Movie photos <span className="text-danger">*</span>
+                                                        </label>
+                                                        <input
+                                                            type="file"
+                                                            onChange={(e) => {
+                                                                const file = e.target.files[0];
+                                                                if (file && /\.(jpg|png|jpeg)$/.test(file.name)) {
+                                                                    // Update image preview state
+                                                                    setMovieImagePreview(URL.createObjectURL(file));
+
+                                                                    // Tiếp tục xử lý
+                                                                    setMovieData({
+                                                                        ...movieData,
+                                                                        movie_image: file,
+                                                                    });
+                                                                } else {
+                                                                    console.error("Unsupported file format or no file selected");
+                                                                }
+                                                            }}
+                                                            className="form-control"
+                                                            accept=".jpg, .png, .jpeg"
+                                                        />
+                                                        {errors.movie_image && <div className="text-danger">{errors.movie_image}</div>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">
+                                                            Movie cover photo <span className="text-danger">*</span>
+                                                        </label>
+                                                        <input
+                                                            type="file"
+                                                            onChange={(e) => {
+                                                                const file = e.target.files[0];
+                                                                if (file && /\.(jpg|png|jpeg)$/.test(file.name)) {
+                                                                    // Update image preview state
+                                                                    setCoverImagePreview(URL.createObjectURL(file));
+
+                                                                    // Tiếp tục xử lý
+                                                                    setMovieData({
+                                                                        ...movieData,
+                                                                        cover_image: file,
+                                                                    });
+                                                                } else {
+                                                                    console.error("Unsupported file format or no file selected");
+                                                                }
+                                                            }}
+                                                            className="form-control"
+                                                            accept=".jpg, .png, .jpeg"
+                                                        />
+                                                        {errors.cover_image && <div className="text-danger">{errors.cover_image}</div>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">Video Trailer</label>
+                                                        <input
+                                                            type="text"
+                                                            name="trailer"
+                                                            className="form-control"
+                                                            value={movieData.trailer}
+                                                            onChange={(e) => {
+                                                                setVideoUrl(e.target.value);
+                                                                setMovieData({ ...movieData, trailer: e.target.value });
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-2 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">Preview movie photos</label>
+                                                        <img
+                                                            id="imgPreview"
+                                                            src={movieImgePreview || movieData.movie_image}
+                                                            alt="Product Preview"
+                                                            style={{ width: "100%", height: "200px", objectFit: "cover" }}
+                                                            onError={(e) => console.error("Image Preview Error:", e)}
+                                                        />{" "}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-2 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">Preview movie cover photo</label>
+                                                        <img
+                                                            id="imgPreview"
+                                                            src={coverImgePreview || movieData.cover_image}
+                                                            alt="Product Preview"
+                                                            style={{ width: "100%", height: "200px", objectFit: "cover" }}
+                                                            onError={(e) => console.error("Image Preview Error:", e)}
+                                                        />{" "}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-2 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">Preview Trailer</label>
+                                                        {movieData.trailer && <ReactPlayer url={movieData.trailer} width="100%" height="200px" controls />}
+                                                    </div>
+                                                </div>
+
+                                                <div className="text-end">
+                                                    <button type="submit" className="btn btn-default">
+                                                        Update Movie
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </Layout>
+                    </Layout>
+                </>
+            )}
         </>
     );
 }

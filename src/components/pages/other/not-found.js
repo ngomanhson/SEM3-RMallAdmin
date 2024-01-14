@@ -1,7 +1,33 @@
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 function NotFound() {
+    const [userRole, setUserRole] = useState(null);
+    const [homePath, setHomePath] = useState(null);
+
+    const getHomePath = async () => {
+        const token = localStorage.getItem("access_token");
+        try {
+            const decodedToken = JSON.parse(atob(token.split(".")[1]));
+            const userRole = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+            setUserRole(userRole);
+
+            if (userRole === "Movie Theater Manager Staff") {
+                setHomePath("/movie-theater-manager-staff-dashboard");
+            } else if (userRole === "Shopping Center Manager Staff") {
+                setHomePath("/shopping-center-manager-staff-dashboard");
+            } else {
+                setHomePath("/");
+            }
+        } catch (error) {
+            console.error("Error loading user role:", error);
+        }
+    };
+
+    useEffect(() => {
+        getHomePath();
+    }, []);
     return (
         <>
             <Helmet>
@@ -62,9 +88,11 @@ function NotFound() {
                                     </h4>
                                     <p>You may have mistyped the address or the page may have moved.</p>
                                     <div>
-                                        <Link to="/" className="btn btn-primary">
-                                            Back to Home
-                                        </Link>
+                                        {homePath && (
+                                            <Link to={homePath} className="btn btn-primary">
+                                                Back to Home
+                                            </Link>
+                                        )}
                                     </div>
                                 </div>
                             </div>

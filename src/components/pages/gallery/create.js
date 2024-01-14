@@ -6,6 +6,8 @@ import url from "../../services/url";
 import api from "../../services/api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import NotFound from "../../pages/other/not-found";
+import { useEffect } from "react";
 
 function GalleryCreate() {
     const [formGallery, setFormGallery] = useState({
@@ -13,6 +15,8 @@ function GalleryCreate() {
         description: "",
         imagePath: null,
     });
+    const [userRole, setUserRole] = useState(null);
+    const [error, setError] = useState(null);
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
@@ -45,6 +49,8 @@ function GalleryCreate() {
         const isFormValid = validateForm();
 
         if (isFormValid) {
+            const userToken = localStorage.getItem("access_token");
+            api.defaults.headers.common["Authorization"] = `Bearer ${userToken}`;
             try {
                 const response = await api.post(url.GALLERY.CREATE, formGallery, {
                     headers: { "Content-Type": "multipart/form-data" },
@@ -92,71 +98,97 @@ function GalleryCreate() {
         }
     };
 
+    // kiểm tra role
+    useEffect(() => {
+        const fetchUserRole = async () => {
+            const token = localStorage.getItem("access_token");
+            try {
+                const decodedToken = JSON.parse(atob(token.split(".")[1]));
+                const userRole = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+                setUserRole(userRole);
+
+                if (userRole === "User" || userRole === "Movie Theater Manager Staff") {
+                    setError(true);
+                }
+            } catch (error) {
+                console.error("Error loading user role:", error);
+            }
+        };
+
+        fetchUserRole();
+    }, []);
+
     return (
         <>
-            <Helmet>
-                <title>Gallery Create | R Mall</title>
-            </Helmet>
-            <Layout>
-                <Breadcrumb title="Gallery Create" />
-                <div className="row">
-                    <div className="col-xl-12 col-xxl-12">
-                        <div className="card">
-                            <div className="card-header">
-                                <h4 className="card-title">Gallery Create</h4>
-                            </div>
-                            <div className="card-body">
-                                <form onSubmit={handleSubmit}>
-                                    <div className="row">
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Gallery Name <span className="text-danger">*</span>
-                                                </label>
-                                                <input type="text" name="productName" onChange={handleChange} className="form-control" placeholder="Please enter name gallery" autoFocus />
-                                                {errors.productName && <div className="text-danger">{errors.productName}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">Description</label>
-                                                <input type="text" name="description" onChange={handleChange} className="form-control" placeholder="Please enter description" />
-                                                {errors.description && <div className="text-danger">{errors.description}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Thumbnail <span className="text-danger">*</span>
-                                                </label>
-                                                <input type="file" name="imagePath" onChange={handleChange} className="form-control" accept=".jpg, .png, .etc" />
-                                                {errors.imagePath && <div className="text-danger">{errors.imagePath}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">Preview gallery photo</label>
-                                                {formGallery.image_preview && (
-                                                    <img src={formGallery.image_preview} alt="Gallery Preview" style={{ width: "100%", height: "300px", objectFit: "cover" }} />
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        <div className="text-end">
-                                            <button type="submit" className="btn btn-default">
-                                                Create
-                                            </button>
-                                        </div>
+            {error ? (
+                <NotFound />
+            ) : (
+                <>
+                    <Helmet>
+                        <title>Gallery Create | R Mall</title>
+                    </Helmet>
+                    <Layout>
+                        <Breadcrumb title="Gallery Create" />
+                        <div className="row">
+                            <div className="col-xl-12 col-xxl-12">
+                                <div className="card">
+                                    <div className="card-header">
+                                        <h4 className="card-title">Gallery Create</h4>
                                     </div>
-                                </form>
+                                    <div className="card-body">
+                                        <form onSubmit={handleSubmit}>
+                                            <div className="row">
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">
+                                                            Gallery Name <span className="text-danger">*</span>
+                                                        </label>
+                                                        <input type="text" name="productName" onChange={handleChange} className="form-control" placeholder="Please enter name gallery" autoFocus />
+                                                        {errors.productName && <div className="text-danger">{errors.productName}</div>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">Description</label>
+                                                        <input type="text" name="description" onChange={handleChange} className="form-control" placeholder="Please enter description" />
+                                                        {errors.description && <div className="text-danger">{errors.description}</div>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">
+                                                            Thumbnail <span className="text-danger">*</span>
+                                                        </label>
+                                                        <input type="file" name="imagePath" onChange={handleChange} className="form-control" accept=".jpg, .png, .etc" />
+                                                        {errors.imagePath && <div className="text-danger">{errors.imagePath}</div>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">Preview gallery photo</label>
+                                                        {formGallery.image_preview && (
+                                                            <img src={formGallery.image_preview} alt="Gallery Preview" style={{ width: "100%", height: "300px", objectFit: "cover" }} />
+                                                        )}
+                                                    </div>
+                                                </div>
+
+                                                <div className="text-end">
+                                                    <button type="submit" className="btn btn-default">
+                                                        Create
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </Layout>
+                    </Layout>
+                </>
+            )}
         </>
     );
 }

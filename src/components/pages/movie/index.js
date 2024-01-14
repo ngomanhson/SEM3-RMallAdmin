@@ -9,7 +9,7 @@ import { format } from "date-fns";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import Loading from "../../layouts/loading";
-
+import NotFound from "../../pages/other/not-found";
 function MovieList() {
     const [loading, setLoading] = useState(false);
     useEffect(() => {
@@ -19,6 +19,8 @@ function MovieList() {
         }, 2000);
     }, []);
 
+    const [userRole, setUserRole] = useState(null);
+    const [error, setError] = useState(null);
     const [movies, setMovies] = useState([]);
     const [isDeleteVisible, setDeleteVisible] = useState(false);
     const [tbodyCheckboxes, setTbodyCheckboxes] = useState([]);
@@ -28,6 +30,8 @@ function MovieList() {
     //hiển thị danh sách movie
     useEffect(() => {
         const loadMovies = async () => {
+            const userToken = localStorage.getItem("access_token");
+            api.defaults.headers.common["Authorization"] = `Bearer ${userToken}`;
             try {
                 const response = await api.get(url.MOVIE.LIST);
                 const filteredBookings = selectedDate
@@ -85,6 +89,8 @@ function MovieList() {
             confirmButtonText: "I'm sure",
         });
         if (isConfirmed.isConfirmed) {
+            const userToken = localStorage.getItem("access_token");
+            api.defaults.headers.common["Authorization"] = `Bearer ${userToken}`;
             try {
                 const deleteResponse = await api.delete(url.MOVIE.DELETE, {
                     data: selectedMovieIds,
@@ -141,172 +147,198 @@ function MovieList() {
         const directorMatch = item.director.toLowerCase().includes(searchDirector.toLowerCase());
         return titleMatch && directorMatch;
     });
+
+    // kiểm tra role
+    useEffect(() => {
+        const fetchUserRole = async () => {
+            const token = localStorage.getItem("access_token");
+            try {
+                const decodedToken = JSON.parse(atob(token.split(".")[1]));
+                const userRole = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+                setUserRole(userRole);
+
+                if (userRole === "User" || userRole === "Shopping Center Manager Staff") {
+                    setError(true);
+                }
+            } catch (error) {
+                console.error("Error loading user role:", error);
+            }
+        };
+
+        fetchUserRole();
+    }, []);
     return (
         <>
-            <Helmet>
-                <title>Movie List | R Mall</title>
-            </Helmet>
-            {loading ? <Loading /> : ""}
-            <Layout>
-                <Breadcrumb title="Movie List" />
+            {error ? (
+                <NotFound />
+            ) : (
+                <>
+                    <Helmet>
+                        <title>Movie List | R Mall</title>
+                    </Helmet>
+                    {loading ? <Loading /> : ""}
+                    <Layout>
+                        <Breadcrumb title="Movie List" />
 
-                <div className="row page-titles">
-                    <div className="col-lg-4">
-                        <input type="text" className="form-control input-rounded" placeholder="Search title movie . . ." value={searchTitle} onChange={handleSearchTitleChange} />
-                    </div>
-                    <div className="col-lg-4">
-                        <input type="text" className="form-control input-rounded" placeholder="Search director movie . . ." value={searchDirector} onChange={handleSearchDirectorChange} />
-                    </div>
-                    <div className="col-lg-4">
-                        <input type="date" className="form-control input-rounded" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} />
-                    </div>
-                </div>
-
-                <div className="card-header">
-                    <div className="col-lg-6"></div>
-                    <div className="col-lg-1 text-end">
-                        <NavLink onClick={handleDeleteMovie}>
-                            <button type="button" className={`btn btn-danger ${isDeleteVisible ? "" : "d-none"}`}>
-                                <i className="fa fa-trash"></i>
-                            </button>
-                        </NavLink>
-                    </div>
-                    <div className="col-lg-2 text-end">
-                        <NavLink to="/movie-delete-at">
-                            <button type="button" className="btn btn-rounded btn-warning">
-                                <span className="btn-icon-start text-warning">
-                                    <i className="fa fa-trash"></i>
-                                </span>
-                                Deleted List
-                            </button>
-                        </NavLink>
-                    </div>
-                    <div className="col-lg-3 text-end">
-                        <NavLink to="/movie-create">
-                            <button type="button" className="btn btn-rounded btn-info">
-                                <span className="btn-icon-start text-info">
-                                    <i className="fa fa-plus color-info"></i>
-                                </span>
-                                Create New Movie
-                            </button>
-                        </NavLink>
-                    </div>
-                </div>
-                <div className="card-body">
-                    <div className="table-responsive">
-                        <div className="text-end"></div>
-                        <table className="table table-sm mb-0">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <div className="form-check custom-checkbox">
-                                            <input
-                                                type="checkbox"
-                                                className="form-check-input"
-                                                onChange={() => {
-                                                    handleSelectAll();
-                                                    handleCheckboxChange();
-                                                }}
-                                                checked={selectAll}
-                                            />
-                                        </div>
-                                    </th>
-                                    <th>
-                                        <strong>Thumbnail</strong>
-                                    </th>
-                                    <th>
-                                        <strong>Movie Name</strong>
-                                    </th>
-                                    <th>
-                                        <strong>Director</strong>
-                                    </th>
-                                    <th>
-                                        <strong>Release Date</strong>
-                                    </th>
-                                    <th>
-                                        <strong>Movie Duration</strong>
-                                    </th>
-                                    <th>
-                                        <strong>Genres</strong>
-                                    </th>
-                                    <th>
-                                        <strong>Action</strong>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody id="orders">
-                                {filteredMovies.map((item, index) => {
-                                    return (
-                                        <tr>
-                                            <td>
-                                                <div className="form-check custom-checkbox checkbox-primary">
-                                                    <input type="checkbox" className="form-check-input" onChange={() => handleTbodyCheckboxChange(index)} checked={tbodyCheckboxes[index]} />
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <img src={item.movie_image} className="rounded-lg me-2 movie-thumb" alt="" />
-                                            </td>
-                                            <td>{item.title}</td>
-                                            <td>
-                                                <div className="d-flex align-items-center">
-                                                    <span className="w-space-no">{item.director}</span>
-                                                </div>
-                                            </td>
-                                            <td>{format(new Date(item.release_date), "yyyy-MM-dd")}</td>
-                                            <td>{item.duration} (Minutes)</td>
-                                            <td>
-                                                <span key={item.genres[0].id} className="badge light badge-dark">
-                                                    {item.genres[0].name}
-                                                </span>
-                                                {item.genres.length > 1 && <span className="badge light badge-dark">+{item.genres.length - 1}</span>}
-                                            </td>
-                                            <td>
-                                                <div className="d-flex">
-                                                    <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
-                                                        <i className="fa fa-eye"></i>
-                                                    </a>
-                                                    <Link to={`/movie-edit/${item.id}`} className="btn btn-primary shadow btn-xs sharp me-1">
-                                                        <i className="fas fa-pencil-alt"></i>
-                                                    </Link>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div className="card-footer">
-                    <div className="row">
-                        <div className="col-lg-5"></div>
-                        <div className="col-lg-4"></div>
-                        <div className="col-lg-3 text-end">
-                            <nav>
-                                <ul className="pagination pagination-gutter pagination-primary no-bg">
-                                    <li className={`page-item page-indicator ${currentPage === 1 ? "disabled" : ""}`}>
-                                        <a className="page-link" href="javascript:void(0)" onClick={handlePrevPage}>
-                                            <i className="la la-angle-left"></i>
-                                        </a>
-                                    </li>
-                                    {Array.from({ length: totalPages }).map((_, index) => (
-                                        <li key={index} className={`page-item ${currentPage === index + 1 ? "active" : ""}`}>
-                                            <a className="page-link" href="javascript:void(0)" onClick={() => handlePageChange(index + 1)}>
-                                                {index + 1}
-                                            </a>
-                                        </li>
-                                    ))}
-                                    <li className={`page-item page-indicator ${currentPage === totalPages ? "disabled" : ""}`}>
-                                        <a className="page-link" href="javascript:void(0)" onClick={handleNextPage}>
-                                            <i className="la la-angle-right"></i>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
+                        <div className="row page-titles">
+                            <div className="col-lg-4">
+                                <input type="text" className="form-control input-rounded" placeholder="Search title movie . . ." value={searchTitle} onChange={handleSearchTitleChange} />
+                            </div>
+                            <div className="col-lg-4">
+                                <input type="text" className="form-control input-rounded" placeholder="Search director movie . . ." value={searchDirector} onChange={handleSearchDirectorChange} />
+                            </div>
+                            <div className="col-lg-4">
+                                <input type="date" className="form-control input-rounded" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} />
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </Layout>
+
+                        <div className="card-header">
+                            <div className="col-lg-6"></div>
+                            <div className="col-lg-1 text-end">
+                                <NavLink onClick={handleDeleteMovie}>
+                                    <button type="button" className={`btn btn-danger ${isDeleteVisible ? "" : "d-none"}`}>
+                                        <i className="fa fa-trash"></i>
+                                    </button>
+                                </NavLink>
+                            </div>
+                            <div className="col-lg-2 text-end">
+                                <NavLink to="/movie-delete-at">
+                                    <button type="button" className="btn btn-rounded btn-warning">
+                                        <span className="btn-icon-start text-warning">
+                                            <i className="fa fa-trash"></i>
+                                        </span>
+                                        Deleted List
+                                    </button>
+                                </NavLink>
+                            </div>
+                            <div className="col-lg-3 text-end">
+                                <NavLink to="/movie-create">
+                                    <button type="button" className="btn btn-rounded btn-info">
+                                        <span className="btn-icon-start text-info">
+                                            <i className="fa fa-plus color-info"></i>
+                                        </span>
+                                        Create New Movie
+                                    </button>
+                                </NavLink>
+                            </div>
+                        </div>
+                        <div className="card-body">
+                            <div className="table-responsive">
+                                <div className="text-end"></div>
+                                <table className="table table-sm mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <div className="form-check custom-checkbox">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="form-check-input"
+                                                        onChange={() => {
+                                                            handleSelectAll();
+                                                            handleCheckboxChange();
+                                                        }}
+                                                        checked={selectAll}
+                                                    />
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <strong>Thumbnail</strong>
+                                            </th>
+                                            <th>
+                                                <strong>Movie Name</strong>
+                                            </th>
+                                            <th>
+                                                <strong>Director</strong>
+                                            </th>
+                                            <th>
+                                                <strong>Release Date</strong>
+                                            </th>
+                                            <th>
+                                                <strong>Movie Duration</strong>
+                                            </th>
+                                            <th>
+                                                <strong>Genres</strong>
+                                            </th>
+                                            <th>
+                                                <strong>Action</strong>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="orders">
+                                        {filteredMovies.map((item, index) => {
+                                            return (
+                                                <tr>
+                                                    <td>
+                                                        <div className="form-check custom-checkbox checkbox-primary">
+                                                            <input type="checkbox" className="form-check-input" onChange={() => handleTbodyCheckboxChange(index)} checked={tbodyCheckboxes[index]} />
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <img src={item.movie_image} className="rounded-lg me-2 movie-thumb" alt="" />
+                                                    </td>
+                                                    <td>{item.title}</td>
+                                                    <td>
+                                                        <div className="d-flex align-items-center">
+                                                            <span className="w-space-no">{item.director}</span>
+                                                        </div>
+                                                    </td>
+                                                    <td>{format(new Date(item.release_date), "yyyy-MM-dd")}</td>
+                                                    <td>{item.duration} (Minutes)</td>
+                                                    <td>
+                                                        <span key={item.genres[0].id} className="badge light badge-dark">
+                                                            {item.genres[0].name}
+                                                        </span>
+                                                        {item.genres.length > 1 && <span className="badge light badge-dark">+{item.genres.length - 1}</span>}
+                                                    </td>
+                                                    <td>
+                                                        <div className="d-flex">
+                                                            <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
+                                                                <i className="fa fa-eye"></i>
+                                                            </a>
+                                                            <Link to={`/movie-edit/${item.id}`} className="btn btn-primary shadow btn-xs sharp me-1">
+                                                                <i className="fas fa-pencil-alt"></i>
+                                                            </Link>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div className="card-footer">
+                            <div className="row">
+                                <div className="col-lg-5"></div>
+                                <div className="col-lg-4"></div>
+                                <div className="col-lg-3 text-end">
+                                    <nav>
+                                        <ul className="pagination pagination-gutter pagination-primary no-bg">
+                                            <li className={`page-item page-indicator ${currentPage === 1 ? "disabled" : ""}`}>
+                                                <a className="page-link" href="javascript:void(0)" onClick={handlePrevPage}>
+                                                    <i className="la la-angle-left"></i>
+                                                </a>
+                                            </li>
+                                            {Array.from({ length: totalPages }).map((_, index) => (
+                                                <li key={index} className={`page-item ${currentPage === index + 1 ? "active" : ""}`}>
+                                                    <a className="page-link" href="javascript:void(0)" onClick={() => handlePageChange(index + 1)}>
+                                                        {index + 1}
+                                                    </a>
+                                                </li>
+                                            ))}
+                                            <li className={`page-item page-indicator ${currentPage === totalPages ? "disabled" : ""}`}>
+                                                <a className="page-link" href="javascript:void(0)" onClick={handleNextPage}>
+                                                    <i className="la la-angle-right"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </Layout>
+                </>
+            )}
         </>
     );
 }
