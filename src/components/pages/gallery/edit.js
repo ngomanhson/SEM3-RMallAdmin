@@ -122,7 +122,7 @@ function GalleryEdit() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Gallery Edit | R Mall</title>
+                        <title>Gallery Edit | R Admin</title>
                     </Helmet>
                     {loading ? <Loading /> : ""}
                     <Layout>

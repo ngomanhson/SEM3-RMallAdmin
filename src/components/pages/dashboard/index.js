@@ -555,7 +555,7 @@ function Dashboard() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Dashboard | R Mall</title>
+                        <title>Dashboard | R Admin</title>
                     </Helmet>
                     {loading ? <Loading /> : ""}
                     <Layout>

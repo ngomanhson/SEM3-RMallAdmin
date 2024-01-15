@@ -135,7 +135,7 @@ function FoodEdit() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Food Edit | R Mall</title>
+                        <title>Food Edit | R Admin</title>
                     </Helmet>
                     {loading ? <Loading /> : ""}
                     <Layout>

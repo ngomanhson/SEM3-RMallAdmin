@@ -121,7 +121,7 @@ function ResetPassword() {
     return (
         <>
             <Helmet>
-                <title>Reset Password | R Mall</title>
+                <title>Reset Password | R Admin</title>
             </Helmet>
             {loading ? <Loading /> : ""}
             <div className="vh-100">

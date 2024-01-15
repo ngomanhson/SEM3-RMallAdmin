@@ -61,7 +61,16 @@ function ForgotPassword() {
                     }, 2000);
                 }
             } catch (error) {
-                setFormErrors({ email: "Email address does not exist." });
+                setSubmitting(true);
+                setTimeout(() => setCountdown((prevCountdown) => prevCountdown - 1), 1000);
+
+                setTimeout(() => {
+                    Swal.fire({
+                        title: "Successfully!",
+                        text: "Reset password successfully!",
+                        icon: "success",
+                    });
+                }, 2000);
             }
         }
     };
@@ -82,7 +91,7 @@ function ForgotPassword() {
     return (
         <>
             <Helmet>
-                <title>Forgot Password | R Mall</title>
+                <title>Forgot Password | R Admin</title>
             </Helmet>
             <div className="vh-100">
                 <Animation />

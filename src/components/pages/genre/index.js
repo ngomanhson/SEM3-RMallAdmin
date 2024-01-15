@@ -164,7 +164,7 @@ function GenreList() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Genre List | R Mall</title>
+                        <title>Genre List | R Admin</title>
                     </Helmet>
                     {loading ? <Loading /> : ""}
                     <Layout>

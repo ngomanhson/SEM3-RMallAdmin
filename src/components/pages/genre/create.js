@@ -112,7 +112,7 @@ function GenreCreate() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Genre Create | R Mall</title>
+                        <title>Genre Create | R Admin</title>
                     </Helmet>
                     <Layout>
                         <Breadcrumb title="Genre Create" />

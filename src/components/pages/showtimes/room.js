@@ -60,7 +60,7 @@ function Room() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Room | R Mall</title>
+                        <title>Room | R Admin</title>
                     </Helmet>
                     {loading ? <Loading /> : ""}
                     <Layout>

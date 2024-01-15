@@ -108,7 +108,7 @@ function Login() {
     return (
         <>
             <Helmet>
-                <title>Login | R Mall</title>
+                <title>Login | R Admin</title>
             </Helmet>
             {loading ? <Loading /> : ""}
             <div className="vh-100">

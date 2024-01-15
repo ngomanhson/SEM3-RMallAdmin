@@ -137,7 +137,7 @@ function ProductEdit() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Product Edit | R Mall</title>
+                        <title>Product Edit | R Admin</title>
                     </Helmet>
                     {loading ? <Loading /> : ""}
                     <Layout>

@@ -99,7 +99,7 @@ function CustomerList() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Feedback List | R Mall</title>
+                        <title>Feedback List | R Admin</title>
                     </Helmet>
                     {loading ? <Loading /> : ""}
                     <Layout>

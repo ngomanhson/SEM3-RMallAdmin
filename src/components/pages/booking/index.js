@@ -134,7 +134,7 @@ function BookingList() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Booking List | R Mall</title>
+                        <title>Booking List | R Admin</title>
                     </Helmet>
 
                     {loading ? <Loading /> : ""}

@@ -176,7 +176,7 @@ function PromotionList() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Promotion List | R Mall</title>
+                        <title>Promotion List | R Admin</title>
                     </Helmet>
                     {loading ? <Loading /> : ""}
                     <Layout>

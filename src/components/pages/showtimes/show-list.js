@@ -179,7 +179,7 @@ function ShowList() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Showtime List | R Mall</title>
+                        <title>Showtime List | R Admin</title>
                     </Helmet>
                     {loading ? <Loading /> : ""}
                     <Layout>

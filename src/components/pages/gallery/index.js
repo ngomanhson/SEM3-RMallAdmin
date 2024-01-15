@@ -165,7 +165,7 @@ function GalleryList() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Gallery List | R Mall</title>
+                        <title>Gallery List | R Admin</title>
                     </Helmet>
                     {loading ? <Loading /> : ""}
                     <Layout>

@@ -249,7 +249,7 @@ function Profile() {
     return (
         <>
             <Helmet>
-                <title>Profile | R Mall Admin</title>
+                <title>Profile | R Admin</title>
             </Helmet>
             {loading ? <Loading /> : ""}
             <Layout>

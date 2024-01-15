@@ -106,7 +106,7 @@ function FoodDeleteAt() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Food Delete At | R Mall</title>
+                        <title>Food Delete At | R Admin</title>
                     </Helmet>
                     {loading ? <Loading /> : ""}
                     <Layout>

@@ -165,7 +165,7 @@ function FoodList() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Food List | R Mall</title>
+                        <title>Food List | R Admin</title>
                     </Helmet>
                     {loading ? <Loading /> : ""}
                     <Layout>

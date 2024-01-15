@@ -105,7 +105,7 @@ function ProductDeleteAt() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Product Delete At | R Mall</title>
+                        <title>Product Delete At | R Admin</title>
                     </Helmet>
                     {loading ? <Loading /> : ""}
                     <Layout>

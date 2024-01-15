@@ -327,7 +327,7 @@ function ShowTimes() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Show Times | R Mall</title>
+                        <title>Show Times | R Admin</title>
                     </Helmet>
                     {loading ? <Loading /> : ""}
                     <Layout>

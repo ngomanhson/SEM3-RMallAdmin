@@ -140,7 +140,7 @@ function FoodCreate() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Food Create | R Mall</title>
+                        <title>Food Create | R Admin</title>
                     </Helmet>
                     <Layout>
                         <Breadcrumb title="Food Create" />
