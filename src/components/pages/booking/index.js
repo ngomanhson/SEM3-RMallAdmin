@@ -66,6 +66,17 @@ function BookingList() {
     };
 
     const navigateToLink = (qrCodeData) => {
+        // Close the modal after successful scan
+        const modalElement = document.getElementById("scanner");
+        if (modalElement) {
+            modalElement.classList.remove("show");
+            modalElement.style.display = "none";
+            document.body.classList.remove("modal-open");
+            const modalBackdrop = document.querySelector(".modal-backdrop");
+            if (modalBackdrop) {
+                modalBackdrop.remove();
+            }
+        }
         navigate(`/booking-detail/${qrCodeData}`);
     };
 

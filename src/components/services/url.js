@@ -24,6 +24,8 @@ const url = {
         CHARTMONTHLY: "/dashboard/revenue/monthly/{}",
         CHARTYEARLY: "/dashboard/revenue/yearly",
         CHARTPERFORMANCE: "/dashboard/shows/performance-chart",
+        TOTAL_PROMOTION: "/dashboard/total-promotion",
+        TOTAL_FOOD: "/dashboard/total-food",
     },
     MOVIE: {
         LIST: "/movie",
