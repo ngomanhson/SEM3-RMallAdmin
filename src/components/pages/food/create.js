@@ -6,6 +6,8 @@ import url from "../../services/url";
 import api from "../../services/api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import NotFound from "../../pages/other/not-found";
+import { useEffect } from "react";
 
 function FoodCreate() {
     const [formFood, setFormFood] = useState({
@@ -15,6 +17,9 @@ function FoodCreate() {
         price: "",
         quantity: "",
     });
+
+    const [userRole, setUserRole] = useState(null);
+    const [error, setError] = useState(null);
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
@@ -59,6 +64,8 @@ function FoodCreate() {
         const isFormValid = validateForm();
 
         if (isFormValid) {
+            const userToken = localStorage.getItem("access_token");
+            api.defaults.headers.common["Authorization"] = `Bearer ${userToken}`;
             try {
                 const response = await api.post(url.FOOD.CREATE, formFood, {
                     headers: { "Content-Type": "multipart/form-data" },
@@ -106,91 +113,119 @@ function FoodCreate() {
         }
     };
 
+    // kiểm tra role
+    useEffect(() => {
+        const fetchUserRole = async () => {
+            const token = localStorage.getItem("access_token");
+            try {
+                const decodedToken = JSON.parse(atob(token.split(".")[1]));
+                const userRole = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+                setUserRole(userRole);
+
+                if (userRole === "User" || userRole === "Shopping Center Manager Staff") {
+                    setError(true);
+                }
+            } catch (error) {
+                console.error("Error loading user role:", error);
+            }
+        };
+
+        fetchUserRole();
+    }, []);
+
     return (
         <>
-            <Helmet>
-                <title>Food Create | R Mall</title>
-            </Helmet>
-            <Layout>
-                <Breadcrumb title="Food Create" />
-                <div className="row">
-                    <div className="col-xl-12 col-xxl-12">
-                        <div className="card">
-                            <div className="card-header">
-                                <h4 className="card-title">Food Create</h4>
-                            </div>
-                            <div className="card-body">
-                                <form onSubmit={handleSubmit}>
-                                    <div className="row">
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Food Name <span className="text-danger">*</span>
-                                                </label>
-                                                <input type="text" name="name" onChange={handleChange} className="form-control" placeholder="Please enter name food" autoFocus />
-                                                {errors.name && <div className="text-danger">{errors.name}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Description <span className="text-danger">*</span>
-                                                </label>
-                                                <input type="text" name="description" onChange={handleChange} className="form-control" placeholder="Please enter description" />
-                                                {errors.description && <div className="text-danger">{errors.description}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Thumbnail <span className="text-danger">*</span>
-                                                </label>
-                                                <input type="file" name="image" onChange={handleChange} className="form-control" accept=".jpg, .png, .etc" />
-                                                {errors.image && <div className="text-danger">{errors.image}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Price ($)<span className="text-danger">*</span>
-                                                </label>
-                                                <input type="number" name="price" onChange={handleChange} className="form-control" placeholder="Please enter price" />
-                                                {errors.price && <div className="text-danger">{errors.price}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Quantity <span className="text-danger">*</span>
-                                                </label>
-                                                <input type="number" name="quantity" onChange={handleChange} className="form-control" placeholder="Please enter quantity" />
-                                                {errors.quantity && <div className="text-danger">{errors.quantity}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">Preview food photo</label>
-                                                {formFood.image_preview && <img src={formFood.image_preview} alt="Food Preview" style={{ width: "100%", height: "300px", objectFit: "cover" }} />}
-                                            </div>
-                                        </div>
-
-                                        <div className="text-end">
-                                            <button type="submit" className="btn btn-default">
-                                                Create
-                                            </button>
-                                        </div>
+            {error ? (
+                <NotFound />
+            ) : (
+                <>
+                    <Helmet>
+                        <title>Food Create | R Mall</title>
+                    </Helmet>
+                    <Layout>
+                        <Breadcrumb title="Food Create" />
+                        <div className="row">
+                            <div className="col-xl-12 col-xxl-12">
+                                <div className="card">
+                                    <div className="card-header">
+                                        <h4 className="card-title">Food Create</h4>
                                     </div>
-                                </form>
+                                    <div className="card-body">
+                                        <form onSubmit={handleSubmit}>
+                                            <div className="row">
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">
+                                                            Food Name <span className="text-danger">*</span>
+                                                        </label>
+                                                        <input type="text" name="name" onChange={handleChange} className="form-control" placeholder="Please enter name food" autoFocus />
+                                                        {errors.name && <div className="text-danger">{errors.name}</div>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">
+                                                            Description <span className="text-danger">*</span>
+                                                        </label>
+                                                        <input type="text" name="description" onChange={handleChange} className="form-control" placeholder="Please enter description" />
+                                                        {errors.description && <div className="text-danger">{errors.description}</div>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">
+                                                            Thumbnail <span className="text-danger">*</span>
+                                                        </label>
+                                                        <input type="file" name="image" onChange={handleChange} className="form-control" accept=".jpg, .png, .etc" />
+                                                        {errors.image && <div className="text-danger">{errors.image}</div>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">
+                                                            Price ($)<span className="text-danger">*</span>
+                                                        </label>
+                                                        <input type="number" name="price" onChange={handleChange} className="form-control" placeholder="Please enter price" />
+                                                        {errors.price && <div className="text-danger">{errors.price}</div>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">
+                                                            Quantity <span className="text-danger">*</span>
+                                                        </label>
+                                                        <input type="number" name="quantity" onChange={handleChange} className="form-control" placeholder="Please enter quantity" />
+                                                        {errors.quantity && <div className="text-danger">{errors.quantity}</div>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">Preview food photo</label>
+                                                        {formFood.image_preview && (
+                                                            <img src={formFood.image_preview} alt="Food Preview" style={{ width: "100%", height: "300px", objectFit: "cover" }} />
+                                                        )}
+                                                    </div>
+                                                </div>
+
+                                                <div className="text-end">
+                                                    <button type="submit" className="btn btn-default">
+                                                        Create
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </Layout>
+                    </Layout>
+                </>
+            )}
         </>
     );
 }

@@ -13,6 +13,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import interactionPlugin from "@fullcalendar/interaction";
 import Loading from "../../layouts/loading";
+import NotFound from "../../pages/other/not-found";
 
 function ShowTimes() {
     const [loading, setLoading] = useState(false);
@@ -23,6 +24,8 @@ function ShowTimes() {
         }, 2000);
     }, []);
 
+    const [userRole, setUserRole] = useState(null);
+    const [error, setError] = useState(null);
     const { id } = useParams();
     const [currentRoomId, setCurrentRoomId] = useState(id);
     const location = useLocation();
@@ -115,6 +118,8 @@ function ShowTimes() {
     //hien thi select phim
     useEffect(() => {
         const fetchMovies = async () => {
+            const userToken = localStorage.getItem("access_token");
+            api.defaults.headers.common["Authorization"] = `Bearer ${userToken}`;
             try {
                 const response = await api.get(url.MOVIE.LIST);
                 setMovies(response.data);
@@ -125,6 +130,8 @@ function ShowTimes() {
     //hiển thị select language
     useEffect(() => {
         const fetchLanguages = async () => {
+            const userToken = localStorage.getItem("access_token");
+            api.defaults.headers.common["Authorization"] = `Bearer ${userToken}`;
             try {
                 if (selectedMovieId) {
                     const response = await api.get(`${url.LANGUAGE.GETBYMOVIE.replace("{}", selectedMovieId)}`);
@@ -165,6 +172,8 @@ function ShowTimes() {
         e.preventDefault();
         const isFormValid = validateForm();
         if (isFormValid) {
+            const userToken = localStorage.getItem("access_token");
+            api.defaults.headers.common["Authorization"] = `Bearer ${userToken}`;
             try {
                 const response = await api.post(url.SHOW.CREATE, formShow);
                 if (response && response.data) {
@@ -249,6 +258,8 @@ function ShowTimes() {
     const [showslist, setShowsList] = useState([]);
     useEffect(() => {
         const loadShowsList = async () => {
+            const userToken = localStorage.getItem("access_token");
+            api.defaults.headers.common["Authorization"] = `Bearer ${userToken}`;
             try {
                 const response = await api.get(`${url.SHOW.GETBYROOM.replace("{}", currentRoomId)}`);
                 setShowsList(response.data);
@@ -279,6 +290,8 @@ function ShowTimes() {
     // lấy ra danh sách phòng
     useEffect(() => {
         const fetchRooms = async () => {
+            const userToken = localStorage.getItem("access_token");
+            api.defaults.headers.common["Authorization"] = `Bearer ${userToken}`;
             try {
                 const response = await api.get(url.ROOM.LIST);
                 setRooms(response.data);
@@ -288,149 +301,174 @@ function ShowTimes() {
         fetchRooms();
     }, []);
 
+    // kiểm tra role
+    useEffect(() => {
+        const fetchUserRole = async () => {
+            const token = localStorage.getItem("access_token");
+            try {
+                const decodedToken = JSON.parse(atob(token.split(".")[1]));
+                const userRole = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+                setUserRole(userRole);
+
+                if (userRole === "User" || userRole === "Shopping Center Manager Staff") {
+                    setError(true);
+                }
+            } catch (error) {
+                console.error("Error loading user role:", error);
+            }
+        };
+
+        fetchUserRole();
+    }, []);
     return (
         <>
-            <Helmet>
-                <title>Show Times | R Mall</title>
-            </Helmet>
-            {loading ? <Loading /> : ""}
-            <Layout>
-                <Breadcrumb title="Show Times" />
-                <div className="row">
-                    <div className="col-xl-3 col-xxl-4">
-                        <div className="card">
-                            <div className="card-body">
-                                <h4 className="card-intro-title">Rooms List</h4>
-                                <div id="external-events" className="my-3">
-                                    <p>Click on each room to see that room's showtime!</p>
-                                    <div className="nav flex-column nav-pills mb-3">
-                                        {rooms.map((item, index) => (
-                                            <NavLink key={index} to={`/show-times/${item.id}`}>
-                                                <a className={`nav-link ${isActive(`/show-times/${item.id}`) ? "active show" : ""}`} onClick={() => setCurrentRoomId(item.id)}>
-                                                    {item.name}
-                                                </a>
-                                            </NavLink>
-                                        ))}
-                                    </div>
-                                </div>
+            {error ? (
+                <NotFound />
+            ) : (
+                <>
+                    <Helmet>
+                        <title>Show Times | R Mall</title>
+                    </Helmet>
+                    {loading ? <Loading /> : ""}
+                    <Layout>
+                        <Breadcrumb title="Show Times" />
+                        <div className="row">
+                            <div className="col-xl-3 col-xxl-4">
+                                <div className="card">
+                                    <div className="card-body">
+                                        <h4 className="card-intro-title">Rooms List</h4>
+                                        <div id="external-events" className="my-3">
+                                            <p>Click on each room to see that room's showtime!</p>
+                                            <div className="nav flex-column nav-pills mb-3">
+                                                {rooms.map((item, index) => (
+                                                    <NavLink key={index} to={`/show-times/${item.id}`}>
+                                                        <a className={`nav-link ${isActive(`/show-times/${item.id}`) ? "active show" : ""}`} onClick={() => setCurrentRoomId(item.id)}>
+                                                            {item.name}
+                                                        </a>
+                                                    </NavLink>
+                                                ))}
+                                            </div>
+                                        </div>
 
-                                {/* <a href="javascript:void()" className="btn btn-primary btn-event w-100">
+                                        {/* <a href="javascript:void()" className="btn btn-primary btn-event w-100">
                                     <span className="align-middle">
                                         <i className="ti-plus me-1"></i>
                                     </span>{" "}
                                     Create New Room
                                 </a> */}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-xl-9 col-xxl-8">
-                        <div className="card">
-                            <div className="card-body">
-                                <FullCalendar
-                                    plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
-                                    headerToolbar={{
-                                        left: "prev,next today",
-                                        center: "title",
-                                        right: "dayGridMonth,timeGridWeek,timeGridDay,listDay",
-                                    }}
-                                    initialView="dayGridMonth"
-                                    editable={false}
-                                    selectable={true}
-                                    selectMirror={true}
-                                    dayMaxEvents={true}
-                                    events={events}
-                                    selectAllow={handleSelectAllow}
-                                    select={handleDateSelect}
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="modal fade none-border" id="add-movie">
-                        <div className="modal-dialog">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h4 className="modal-title">
-                                        <strong>Add Movie To Showtime At {selectedTime}</strong>
-                                    </h4>
+                                    </div>
                                 </div>
-                                <div className="modal-body">
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">Choose Movie</label>
-                                                <select className="form-control" name="movieId" value={formShow.movieId} onChange={handleChange}>
-                                                    <option value="">Please select movie</option>
-                                                    {movies.map((movieItem) => (
-                                                        <option key={movieItem.id} value={movieItem.id}>
-                                                            {movieItem.title}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                                {errors.movieId && <div className="text-danger">{errors.movieId}</div>}
+                            </div>
+                            <div className="col-xl-9 col-xxl-8">
+                                <div className="card">
+                                    <div className="card-body">
+                                        <FullCalendar
+                                            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
+                                            headerToolbar={{
+                                                left: "prev,next today",
+                                                center: "title",
+                                                right: "dayGridMonth,timeGridWeek,timeGridDay,listDay",
+                                            }}
+                                            initialView="dayGridMonth"
+                                            editable={false}
+                                            selectable={true}
+                                            selectMirror={true}
+                                            dayMaxEvents={true}
+                                            events={events}
+                                            selectAllow={handleSelectAllow}
+                                            select={handleDateSelect}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="modal fade none-border" id="add-movie">
+                                <div className="modal-dialog">
+                                    <div className="modal-content">
+                                        <div className="modal-header">
+                                            <h4 className="modal-title">
+                                                <strong>Add Movie To Showtime At {selectedTime}</strong>
+                                            </h4>
+                                        </div>
+                                        <div className="modal-body">
+                                            <div className="row">
+                                                <div className="col-md-6">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">Choose Movie</label>
+                                                        <select className="form-control" name="movieId" value={formShow.movieId} onChange={handleChange}>
+                                                            <option value="">Please select movie</option>
+                                                            {movies.map((movieItem) => (
+                                                                <option key={movieItem.id} value={movieItem.id}>
+                                                                    {movieItem.title}
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                        {errors.movieId && <div className="text-danger">{errors.movieId}</div>}
+                                                    </div>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">Language</label>
+                                                        <select className="form-control select" name="language" value={formShow.language} onChange={handleChange}>
+                                                            <option value="">Please select language</option>
+                                                            {languages.map((languageItem) => (
+                                                                <option key={languageItem.id} value={languageItem.name}>
+                                                                    {languageItem.name}
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                        {errors.language && <div className="text-danger">{errors.language}</div>}
+                                                    </div>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">Normal seat price</label>
+                                                        {/* phần này dành cho ghế normal (seatTypeId là 1) */}
+                                                        <select className="form-control" value={formShow.seatPricings[0].price} onChange={handleNormalSeatPriceChange}>
+                                                            <option value="">Please select price</option>
+                                                            <option value="6">6$</option>
+                                                            <option value="8">8$</option>
+                                                            <option value="10">10$</option>
+                                                            <option value="12">12$</option>
+                                                        </select>
+                                                        {errors.seatPricings && <div className="text-danger">{errors.seatPricings}</div>}
+                                                    </div>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">Vip seat price</label>
+                                                        {/* phần này dành cho ghế vip (seatTypeId là 2) */}
+                                                        <select className="form-control" value={formShow.seatPricings[1].price} disabled>
+                                                            <option value={formShow.seatPricings[1].price}>{formShow.seatPricings[1].price}$</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">Couple seat price</label>
+                                                        {/* phần này dành cho ghế couple (seatTypeId là 3) */}
+                                                        <select className="form-control" value={formShow.seatPricings[2].price} disabled>
+                                                            <option value={formShow.seatPricings[2].price}>{formShow.seatPricings[2].price}$</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className="col-md-6">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">Language</label>
-                                                <select className="form-control select" name="language" value={formShow.language} onChange={handleChange}>
-                                                    <option value="">Please select language</option>
-                                                    {languages.map((languageItem) => (
-                                                        <option key={languageItem.id} value={languageItem.name}>
-                                                            {languageItem.name}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                                {errors.language && <div className="text-danger">{errors.language}</div>}
-                                            </div>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">Normal seat price</label>
-                                                {/* phần này dành cho ghế normal (seatTypeId là 1) */}
-                                                <select className="form-control" value={formShow.seatPricings[0].price} onChange={handleNormalSeatPriceChange}>
-                                                    <option value="">Please select price</option>
-                                                    <option value="6">6$</option>
-                                                    <option value="8">8$</option>
-                                                    <option value="10">10$</option>
-                                                    <option value="12">12$</option>
-                                                </select>
-                                                {errors.seatPricings && <div className="text-danger">{errors.seatPricings}</div>}
-                                            </div>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">Vip seat price</label>
-                                                {/* phần này dành cho ghế vip (seatTypeId là 2) */}
-                                                <select className="form-control" value={formShow.seatPricings[1].price} disabled>
-                                                    <option value={formShow.seatPricings[1].price}>{formShow.seatPricings[1].price}$</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">Couple seat price</label>
-                                                {/* phần này dành cho ghế couple (seatTypeId là 3) */}
-                                                <select className="form-control" value={formShow.seatPricings[2].price} disabled>
-                                                    <option value={formShow.seatPricings[2].price}>{formShow.seatPricings[2].price}$</option>
-                                                </select>
-                                            </div>
+                                        <div className="modal-footer">
+                                            <button type="button" className="btn btn-default waves-effect" data-bs-dismiss="modal" onClick={handleCloseModal}>
+                                                Close
+                                            </button>
+                                            <button type="button" onClick={handleSubmit} className="btn btn-primary">
+                                                Save
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="modal-footer">
-                                    <button type="button" className="btn btn-default waves-effect" data-bs-dismiss="modal" onClick={handleCloseModal}>
-                                        Close
-                                    </button>
-                                    <button type="button" onClick={handleSubmit} className="btn btn-primary">
-                                        Save
-                                    </button>
-                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </Layout>
+                    </Layout>
+                </>
+            )}
         </>
     );
 }

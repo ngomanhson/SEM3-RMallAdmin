@@ -8,6 +8,7 @@ import url from "../../services/url";
 import api from "../../services/api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import NotFound from "../../pages/other/not-found";
 
 function MovieCreate() {
     const [formMovie, setFormMovie] = useState({
@@ -25,6 +26,8 @@ function MovieCreate() {
         movie_image_preview: null,
         movie_cover_image_preview: null,
     });
+    const [userRole, setUserRole] = useState(null);
+    const [error, setError] = useState(null);
     const [errors, setErrors] = useState({});
     const [nameExistsError, setNameExistsError] = useState("");
     const [languages, setLanguages] = useState([]);
@@ -46,6 +49,8 @@ function MovieCreate() {
     //hiển thị select langueage
     useEffect(() => {
         const fetchLanguages = async () => {
+            const userToken = localStorage.getItem("access_token");
+            api.defaults.headers.common["Authorization"] = `Bearer ${userToken}`;
             try {
                 const response = await api.get(url.LANGUAGE.LIST);
                 const languageData = response.data.map((language) => ({
@@ -60,6 +65,8 @@ function MovieCreate() {
     //hien thi select genre
     useEffect(() => {
         const fetchGenres = async () => {
+            const userToken = localStorage.getItem("access_token");
+            api.defaults.headers.common["Authorization"] = `Bearer ${userToken}`;
             try {
                 const response = await api.get(url.GENRE.LIST);
                 const genreData = response.data.map((genre) => ({
@@ -137,6 +144,8 @@ function MovieCreate() {
         const isFormValid = validateForm();
 
         if (isFormValid) {
+            const userToken = localStorage.getItem("access_token");
+            api.defaults.headers.common["Authorization"] = `Bearer ${userToken}`;
             try {
                 const response = await api.post(url.MOVIE.CREATE, formMovie, {
                     headers: { "Content-Type": "multipart/form-data" },
@@ -205,196 +214,221 @@ function MovieCreate() {
         setNameExistsError("");
     };
 
+    // kiểm tra role
+    useEffect(() => {
+        const fetchUserRole = async () => {
+            const token = localStorage.getItem("access_token");
+            try {
+                const decodedToken = JSON.parse(atob(token.split(".")[1]));
+                const userRole = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+                setUserRole(userRole);
+
+                if (userRole === "User" || userRole === "Shopping Center Manager Staff") {
+                    setError(true);
+                }
+            } catch (error) {
+                console.error("Error loading user role:", error);
+            }
+        };
+
+        fetchUserRole();
+    }, []);
     return (
         <>
-            <Helmet>
-                <title>Movie Create | R Mall</title>
-            </Helmet>
-            <Layout>
-                <Breadcrumb title="Movie Create" />
-                <div className="row">
-                    <div className="col-xl-12 col-xxl-12">
-                        <div className="card">
-                            <div className="card-header">
-                                <h4 className="card-title">Movie Create</h4>
-                            </div>
-                            <div className="card-body">
-                                <form onSubmit={handleSubmit}>
-                                    <div className="row">
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Movie Name <span className="text-danger">*</span>
-                                                </label>
-                                                <input type="text" name="title" onChange={handleChange} className="form-control" placeholder="Please enter movie name" autoFocus />
-                                                {errors.title && <div className="text-danger">{errors.title}</div>}
-                                                {nameExistsError && <div className="text-danger">{nameExistsError}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">Description</label>
-                                                <textarea name="describe" onChange={handleChange} className="form-control"></textarea>
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Actor <span className="text-danger">*</span>
-                                                </label>
-                                                <input type="text" name="actor" onChange={handleChange} className="form-control" placeholder="Please enter actor name" />
-                                                {errors.actor && <div className="text-danger">{errors.actor}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Director <span className="text-danger">*</span>
-                                                </label>
-                                                <input type="text" name="director" onChange={handleChange} className="form-control" placeholder="Please enter director name" />
-                                                {errors.director && <div className="text-danger">{errors.director}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Languages <span className="text-danger">*</span>
-                                                </label>
-                                                <Select
-                                                    name="languageIds"
-                                                    value={languages.filter((option) => formMovie.languageIds.includes(option.value))}
-                                                    isMulti
-                                                    closeMenuOnSelect={false}
-                                                    styles={customStyles}
-                                                    onChange={(selectedOption) => {
-                                                        setFormMovie({ ...formMovie, languageIds: selectedOption.map((option) => option.value) });
-                                                    }}
-                                                    options={languages}
-                                                    placeholder="Select Languages"
-                                                />
-                                                {errors.languageIds && <div className="text-danger">{errors.languageIds}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Movie Genre <span className="text-danger">*</span>
-                                                </label>
-                                                <Select
-                                                    name="genreIds"
-                                                    value={genres.filter((option) => formMovie.genreIds.includes(option.value))}
-                                                    isMulti
-                                                    closeMenuOnSelect={false}
-                                                    styles={customStyles}
-                                                    onChange={(selectedOption) => {
-                                                        setFormMovie({ ...formMovie, genreIds: selectedOption.map((option) => option.value) });
-                                                    }}
-                                                    options={genres}
-                                                    placeholder="Select Genres"
-                                                />
-                                                {errors.genreIds && <div className="text-danger">{errors.genreIds}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Release date <span className="text-danger">*</span>
-                                                </label>
-                                                <input type="date" name="release_date" onChange={handleChange} className="form-control" placeholder="example@gmail.com" />
-                                                {errors.release_date && <div className="text-danger">{errors.release_date}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Movie duration (Minute) <span className="text-danger">*</span>
-                                                </label>
-                                                <input type="number" name="duration" onChange={handleChange} className="form-control" placeholder="Please enter duration" />
-                                                {errors.duration && <div className="text-danger">{errors.duration}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Movie photos <span className="text-danger">*</span>
-                                                </label>
-                                                <input type="file" name="movie_image" onChange={handleChange} className="form-control" accept=".jpg, .png, .etc" />
-                                                {errors.movie_image && <div className="text-danger">{errors.movie_image}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">
-                                                    Movie cover photo <span className="text-danger">*</span>
-                                                </label>
-                                                <input type="file" name="cover_image" onChange={handleChange} className="form-control" accept=".jpg, .png, .etc" />
-                                                {errors.cover_image && <div className="text-danger">{errors.cover_image}</div>}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-6 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">Video Trailer</label>
-                                                <input
-                                                    type="text"
-                                                    name="trailer"
-                                                    className="form-control"
-                                                    placeholder="Please enter YouTube video URL"
-                                                    value={videoUrl}
-                                                    onChange={(e) => {
-                                                        setVideoUrl(e.target.value);
-                                                        setFormMovie({ ...formMovie, trailer: e.target.value });
-                                                    }}
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-2 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">Preview movie photos</label>
-                                                {formMovie.movie_image_preview && (
-                                                    <img src={formMovie.movie_image_preview} alt="Movie Preview" style={{ width: "100%", height: "200px", objectFit: "cover" }} />
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-2 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">Preview movie cover photo</label>
-                                                {formMovie.movie_cover_image_preview && (
-                                                    <img src={formMovie.movie_cover_image_preview} alt="Movie Preview" style={{ width: "100%", height: "200px", objectFit: "cover" }} />
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        <div className="col-lg-2 mb-2">
-                                            <div className="mb-3">
-                                                <label className="text-label form-label">Preview Trailer</label>
-                                                {videoUrl && <ReactPlayer url={videoUrl} width="100%" height="200px" controls />}
-                                            </div>
-                                        </div>
-
-                                        <div className="text-end">
-                                            <button type="submit" className="btn btn-default">
-                                                Create Movie
-                                            </button>
-                                        </div>
+            {error ? (
+                <NotFound />
+            ) : (
+                <>
+                    <Helmet>
+                        <title>Movie Create | R Mall</title>
+                    </Helmet>
+                    <Layout>
+                        <Breadcrumb title="Movie Create" />
+                        <div className="row">
+                            <div className="col-xl-12 col-xxl-12">
+                                <div className="card">
+                                    <div className="card-header">
+                                        <h4 className="card-title">Movie Create</h4>
                                     </div>
-                                </form>
+                                    <div className="card-body">
+                                        <form onSubmit={handleSubmit}>
+                                            <div className="row">
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">
+                                                            Movie Name <span className="text-danger">*</span>
+                                                        </label>
+                                                        <input type="text" name="title" onChange={handleChange} className="form-control" placeholder="Please enter movie name" autoFocus />
+                                                        {errors.title && <div className="text-danger">{errors.title}</div>}
+                                                        {nameExistsError && <div className="text-danger">{nameExistsError}</div>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">Description</label>
+                                                        <textarea name="describe" onChange={handleChange} className="form-control"></textarea>
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">
+                                                            Actor <span className="text-danger">*</span>
+                                                        </label>
+                                                        <input type="text" name="actor" onChange={handleChange} className="form-control" placeholder="Please enter actor name" />
+                                                        {errors.actor && <div className="text-danger">{errors.actor}</div>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">
+                                                            Director <span className="text-danger">*</span>
+                                                        </label>
+                                                        <input type="text" name="director" onChange={handleChange} className="form-control" placeholder="Please enter director name" />
+                                                        {errors.director && <div className="text-danger">{errors.director}</div>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">
+                                                            Languages <span className="text-danger">*</span>
+                                                        </label>
+                                                        <Select
+                                                            name="languageIds"
+                                                            value={languages.filter((option) => formMovie.languageIds.includes(option.value))}
+                                                            isMulti
+                                                            closeMenuOnSelect={false}
+                                                            styles={customStyles}
+                                                            onChange={(selectedOption) => {
+                                                                setFormMovie({ ...formMovie, languageIds: selectedOption.map((option) => option.value) });
+                                                            }}
+                                                            options={languages}
+                                                            placeholder="Select Languages"
+                                                        />
+                                                        {errors.languageIds && <div className="text-danger">{errors.languageIds}</div>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">
+                                                            Movie Genre <span className="text-danger">*</span>
+                                                        </label>
+                                                        <Select
+                                                            name="genreIds"
+                                                            value={genres.filter((option) => formMovie.genreIds.includes(option.value))}
+                                                            isMulti
+                                                            closeMenuOnSelect={false}
+                                                            styles={customStyles}
+                                                            onChange={(selectedOption) => {
+                                                                setFormMovie({ ...formMovie, genreIds: selectedOption.map((option) => option.value) });
+                                                            }}
+                                                            options={genres}
+                                                            placeholder="Select Genres"
+                                                        />
+                                                        {errors.genreIds && <div className="text-danger">{errors.genreIds}</div>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">
+                                                            Release date <span className="text-danger">*</span>
+                                                        </label>
+                                                        <input type="date" name="release_date" onChange={handleChange} className="form-control" placeholder="example@gmail.com" />
+                                                        {errors.release_date && <div className="text-danger">{errors.release_date}</div>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">
+                                                            Movie duration (Minute) <span className="text-danger">*</span>
+                                                        </label>
+                                                        <input type="number" name="duration" onChange={handleChange} className="form-control" placeholder="Please enter duration" />
+                                                        {errors.duration && <div className="text-danger">{errors.duration}</div>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">
+                                                            Movie photos <span className="text-danger">*</span>
+                                                        </label>
+                                                        <input type="file" name="movie_image" onChange={handleChange} className="form-control" accept=".jpg, .png, .etc" />
+                                                        {errors.movie_image && <div className="text-danger">{errors.movie_image}</div>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">
+                                                            Movie cover photo <span className="text-danger">*</span>
+                                                        </label>
+                                                        <input type="file" name="cover_image" onChange={handleChange} className="form-control" accept=".jpg, .png, .etc" />
+                                                        {errors.cover_image && <div className="text-danger">{errors.cover_image}</div>}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-6 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">Video Trailer</label>
+                                                        <input
+                                                            type="text"
+                                                            name="trailer"
+                                                            className="form-control"
+                                                            placeholder="Please enter YouTube video URL"
+                                                            value={videoUrl}
+                                                            onChange={(e) => {
+                                                                setVideoUrl(e.target.value);
+                                                                setFormMovie({ ...formMovie, trailer: e.target.value });
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-2 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">Preview movie photos</label>
+                                                        {formMovie.movie_image_preview && (
+                                                            <img src={formMovie.movie_image_preview} alt="Movie Preview" style={{ width: "100%", height: "200px", objectFit: "cover" }} />
+                                                        )}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-2 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">Preview movie cover photo</label>
+                                                        {formMovie.movie_cover_image_preview && (
+                                                            <img src={formMovie.movie_cover_image_preview} alt="Movie Preview" style={{ width: "100%", height: "200px", objectFit: "cover" }} />
+                                                        )}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-lg-2 mb-2">
+                                                    <div className="mb-3">
+                                                        <label className="text-label form-label">Preview Trailer</label>
+                                                        {videoUrl && <ReactPlayer url={videoUrl} width="100%" height="200px" controls />}
+                                                    </div>
+                                                </div>
+
+                                                <div className="text-end">
+                                                    <button type="submit" className="btn btn-default">
+                                                        Create Movie
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </Layout>
+                    </Layout>
+                </>
+            )}
         </>
     );
 }
