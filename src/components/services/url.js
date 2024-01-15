@@ -38,6 +38,7 @@ const url = {
         LIST: "/show",
         CREATE: "/show",
         DELETE: "/show/{}",
+        GETBYMOVIE: "/show/get-by-movie/{}",
         GETBYROOM: "/show/get-by-room/{}",
     },
     GALLERY: {
