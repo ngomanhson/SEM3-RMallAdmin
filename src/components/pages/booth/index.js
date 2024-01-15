@@ -178,7 +178,7 @@ function ShopList() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Shop List | R Mall</title>
+                        <title>Shop List | R Admin</title>
                     </Helmet>
                     {loading ? <Loading /> : ""}
                     <Layout>

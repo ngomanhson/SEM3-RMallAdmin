@@ -145,7 +145,7 @@ function ProductCreate() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Product Create | R Mall</title>
+                        <title>Product Create | R Admin</title>
                     </Helmet>
                     <Layout>
                         <Breadcrumb title="Product Create" />

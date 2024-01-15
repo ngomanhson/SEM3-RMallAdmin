@@ -167,7 +167,7 @@ function MovieEdit() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Movie Edit | R Mall</title>
+                        <title>Movie Edit | R Admin</title>
                     </Helmet>
                     {loading ? <Loading /> : ""}
                     <Layout>

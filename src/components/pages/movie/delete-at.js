@@ -105,7 +105,7 @@ function MovieDeleteAt() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Movie Delete At | R Mall</title>
+                        <title>Movie Delete At | R Admin</title>
                     </Helmet>
 
                     <Layout>

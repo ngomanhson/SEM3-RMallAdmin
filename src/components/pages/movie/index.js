@@ -174,7 +174,7 @@ function MovieList() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Movie List | R Mall</title>
+                        <title>Movie List | R Admin</title>
                     </Helmet>
                     {loading ? <Loading /> : ""}
                     <Layout>

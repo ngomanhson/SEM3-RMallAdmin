@@ -106,7 +106,7 @@ function PromotionDeleteAt() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Promotion Delete At | R Mall</title>
+                        <title>Promotion Delete At | R Admin</title>
                     </Helmet>
                     {loading ? <Loading /> : ""}
                     <Layout>

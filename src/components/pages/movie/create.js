@@ -240,7 +240,7 @@ function MovieCreate() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Movie Create | R Mall</title>
+                        <title>Movie Create | R Admin</title>
                     </Helmet>
                     <Layout>
                         <Breadcrumb title="Movie Create" />

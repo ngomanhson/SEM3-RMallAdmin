@@ -187,7 +187,7 @@ function ShopCreate() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Shop Create | R Mall</title>
+                        <title>Shop Create | R Admin</title>
                     </Helmet>
                     {loading ? <Loading /> : ""}
                     <Layout>

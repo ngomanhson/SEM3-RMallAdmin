@@ -125,7 +125,7 @@ function GenreEdit() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Genre Edit | R Mall</title>
+                        <title>Genre Edit | R Admin</title>
                     </Helmet>
                     {loading ? <Loading /> : ""}
                     <Layout>

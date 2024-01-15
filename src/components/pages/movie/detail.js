@@ -68,7 +68,7 @@ function MovieDetail() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Movie Detail | R Mall</title>
+                        <title>Movie Detail | R Admin</title>
                     </Helmet>
                     {loading ? <Loading /> : ""}
                     <Layout>

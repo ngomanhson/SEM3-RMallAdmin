@@ -106,7 +106,7 @@ function GalleryDeleteAt() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Gallery Delete At | R Mall</title>
+                        <title>Gallery Delete At | R Admin</title>
                     </Helmet>
                     {loading ? <Loading /> : ""}
                     <Layout>

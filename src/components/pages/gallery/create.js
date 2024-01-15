@@ -125,7 +125,7 @@ function GalleryCreate() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Gallery Create | R Mall</title>
+                        <title>Gallery Create | R Admin</title>
                     </Helmet>
                     <Layout>
                         <Breadcrumb title="Gallery Create" />

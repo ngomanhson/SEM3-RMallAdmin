@@ -105,7 +105,7 @@ function GenreDeleteAt() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Genre Delete At | R Mall</title>
+                        <title>Genre Delete At | R Admin</title>
                     </Helmet>
                     {loading ? <Loading /> : ""}
                     <Layout>

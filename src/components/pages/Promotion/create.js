@@ -157,7 +157,7 @@ function PromotionCreate() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Promotion Create | R Mall</title>
+                        <title>Promotion Create | R Admin</title>
                     </Helmet>
                     <Layout>
                         <Breadcrumb title="Promotion Create" />

@@ -172,7 +172,7 @@ function PromotionEdit() {
             ) : (
                 <>
                     <Helmet>
-                        <title>Promotion Edit | R Mall</title>
+                        <title>Promotion Edit | R Admin</title>
                     </Helmet>
                     {loading ? <Loading /> : ""}
                     <Layout>

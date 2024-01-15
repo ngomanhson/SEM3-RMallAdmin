@@ -71,7 +71,7 @@ function BookingDetail() {
     return (
         <>
             <Helmet>
-                <title>Booking Detail | R Mall</title>
+                <title>Booking Detail | R Admin</title>
             </Helmet>
 
             {loading ? <Loading /> : ""}
