@@ -6,7 +6,7 @@ function NavHeader() {
             <Link to="/" className="brand-logo">
                 <div className="logo">
                     <div className="text-center">
-                        <img src="/assets/images/logo/logo.png" alt="" />
+                        <img src="/assets/images/logo/logo.png" alt="" width={"100%"} />
                     </div>
                 </div>
             </Link>
