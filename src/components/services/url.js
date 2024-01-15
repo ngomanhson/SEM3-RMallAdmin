@@ -5,6 +5,9 @@ const url = {
     },
     DASHBOARD: {
         TOTAL_SHOP: "/dashboard/total-shop",
+        TOTAL_GALLERY: "/dashboard/total-gallery",
+        TOTAL_FEEDBACK: "/dashboard/total-feedback",
+        LIST10PRODUCT: "/dashboard/list-top10-product",
         TOTAL_MOVIE: "/dashboard/total-movie",
         TOTAL_SHOW_TODAY: "/dashboard/total-show-today",
         LIST_SHOW_TODAY: "/dashboard/list-show-today",
@@ -16,6 +19,7 @@ const url = {
         ORDEROVERVIEW: "/dashboard/order-overview",
         TOPMOVIESELLING: "/dashboard/movie/top-10-selling",
         TOPSHOPTRAFFIC: "/dashboard/shop/top-10-with-traffic",
+        TOTAL_PRODUCT: "/dashboard/total-product",
         CHARTWEEKLY: "/dashboard/revenue/weekly",
         CHARTMONTHLY: "/dashboard/revenue/monthly/{}",
         CHARTYEARLY: "/dashboard/revenue/yearly",

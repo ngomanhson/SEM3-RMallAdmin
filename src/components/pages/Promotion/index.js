@@ -283,9 +283,6 @@ function PromotionList() {
                                                                 <td className="py-2 text-center">${item.minPurchaseAmount}</td>
                                                                 <td className="py-2 text-end">
                                                                     <div className="d-flex">
-                                                                        <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
-                                                                            <i className="fa fa-eye"></i>
-                                                                        </a>
                                                                         <Link to={`/promotion-edit/${item.id}`} className="btn btn-primary shadow btn-xs sharp me-1">
                                                                             <i className="fas fa-pencil-alt"></i>
                                                                         </Link>

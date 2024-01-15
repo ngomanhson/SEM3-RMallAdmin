@@ -906,10 +906,16 @@ function Dashboard() {
                                                         <thead>
                                                             <tr>
                                                                 <th>
+                                                                    <strong>Image</strong>
+                                                                </th>
+                                                                <th>
                                                                     <strong>Movie Title</strong>
                                                                 </th>
                                                                 <th>
                                                                     <strong>Tickets sold</strong>
+                                                                </th>
+                                                                <th>
+                                                                    <strong>Collected</strong>
                                                                 </th>
                                                                 <th>
                                                                     <strong>Action</strong>
@@ -920,11 +926,15 @@ function Dashboard() {
                                                             {topMovieSelling.map((item, index) => {
                                                                 return (
                                                                     <tr>
+                                                                        <td>
+                                                                            <img src={item.movieImage} className="rounded-lg me-2 movie-thumb" alt="" />
+                                                                        </td>
                                                                         <td>{item.movieTitle}</td>
                                                                         <td>{item.ticketCount}</td>
+                                                                        <td>{item.money}</td>
                                                                         <td>
                                                                             <div className="d-flex">
-                                                                                <NavLink to="" className="btn btn-success shadow btn-xs sharp me-1">
+                                                                                <NavLink to={`/movie-detail/${item.movieId}`} className="btn btn-success shadow btn-xs sharp me-1">
                                                                                     <i className="fa fa-eye"></i>
                                                                                 </NavLink>
                                                                             </div>

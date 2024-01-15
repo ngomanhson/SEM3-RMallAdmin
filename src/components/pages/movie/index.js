@@ -292,9 +292,9 @@ function MovieList() {
                                                     </td>
                                                     <td>
                                                         <div className="d-flex">
-                                                            <a href="#!" className="btn btn-success shadow btn-xs sharp me-1">
+                                                            <Link to={`/movie-detail/${item.id}`} className="btn btn-success shadow btn-xs sharp me-1">
                                                                 <i className="fa fa-eye"></i>
-                                                            </a>
+                                                            </Link>
                                                             <Link to={`/movie-edit/${item.id}`} className="btn btn-primary shadow btn-xs sharp me-1">
                                                                 <i className="fas fa-pencil-alt"></i>
                                                             </Link>

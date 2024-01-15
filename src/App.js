@@ -44,6 +44,7 @@ import GalleryList from "./components/pages/gallery";
 import GalleryCreate from "./components/pages/gallery/create";
 import GalleryEdit from "./components/pages/gallery/edit";
 import GalleryDeleteAt from "./components/pages/gallery/delete-at";
+import MovieDetail from "./components/pages/movie/detail";
 function App() {
     const ProtectedRoute = ({ element }) => {
         const token = getAccessToken();
@@ -98,6 +99,7 @@ function App() {
 
                 {/* Start Movie */}
                 <Route path="/movie-list" element={<ProtectedRoute element={<MovieList />} />} />
+                <Route path="/movie-detail/:id" element={<ProtectedRoute element={<MovieDetail />} />} />
                 <Route path="/movie-create" element={<ProtectedRoute element={<MovieCreate />} />} />
                 <Route path="/movie-edit/:id" element={<ProtectedRoute element={<MovieEdit />} />} />
                 <Route path="/movie-delete-at" element={<ProtectedRoute element={<MovieDeleteAt />} />} />
